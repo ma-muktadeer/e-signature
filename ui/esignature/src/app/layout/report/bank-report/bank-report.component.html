@@ -1,0 +1,55 @@
+
+<div class="card-body">
+    <div class="form-group row justify-content-center">
+        <div class="form-group col-md-3 d-flex align-items-center institution">
+        <ng-multiselect-dropdown style="z-index: 150; width: 300px;"
+        [ngModelOptions]="{standalone: true}" [(ngModel)]="selectedInstitutionName"
+        [placeholder]="'Select institution'" [settings]="dropdownSettingsInstitution"
+        [data]="institutionList" (onSelect)="getInstitutionIdS($event)" (onDeSelect)="deselect($event)"
+     >
+    </ng-multiselect-dropdown>
+    </div>
+        <!-- <div class="form-group col-md-3 d-flex align-items-center institution">
+            <input class="form-control" 
+                   list="institutionList" 
+                   [(ngModel)]="selectedInstitutionName"
+                   (change)="getInstitutionId()" 
+                   placeholder="Select institution name"/>
+        </div>
+        <datalist id="institutionList">
+            <option *ngFor="let institution of institutionList">
+                {{ institution.institutionName }}</option>
+        </datalist> -->
+        <div class="form-group col-md-3 d-flex align-items-center">
+            <label for="fromDate" class="col-form-label mr-2" style="width: 100px;">From Date</label>
+            <input [(ngModel)]="filterFromDate" type="date" class="form-control" id="fromDate">
+        </div>
+        <div class="form-group col-md-3 d-flex align-items-center">
+            <label for="toDate" class="col-form-label mr-2" style="width: 70px;">To Date</label>
+            <input [(ngModel)]="filterToDate" type="date" class="form-control" id="toDate">
+        </div>
+
+
+
+        <div class="form-group col-sm-2 mt-2">
+            <button (click)="filterSearch()" class="btn btn-primary m-1 text-white btn-change"  [ngxInputLoader]="showProgress" [ngxInputLoaderConfig]="loaderConfig">Search
+
+            </button>
+
+        </div>
+    </div>
+</div>
+
+<div *ngIf="showGrid" style="width: 100%;" class="mt-1">
+    <angular-slickgrid #remittanceListGrid gridId="remittanceListGrid" [columnDefinitions]="columnDefinitions"
+        [gridOptions]="gridOptions" [dataset]="searchReport" (onAngularGridCreated)="angularGridReady($event)">
+    </angular-slickgrid>
+</div>
+
+<ngx-loading [show]="loading" [config]="{
+    primaryColour: '#dd0031',
+    secondaryColour: '#1976d2',
+    tertiaryColour: '#dd0031',
+    backdropBorderRadius: '3px'
+  }">
+</ngx-loading>

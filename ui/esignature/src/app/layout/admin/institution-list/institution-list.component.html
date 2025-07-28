@@ -1,0 +1,18 @@
+<div class="mb-2" *ngIf="permissionStoreService.hasPermission(appPermission.INSTITUTION_MAKER)">
+    <button class="btn btn-success" (click)="addInstitution('Save')">
+        <i class="fa fa-plus" aria-hidden="true"></i>
+        | Add Institution
+    </button>
+</div>
+
+<div *ngIf="showGrid" class="">
+    <angular-slickgrid #insGrid id="insGridId" gridId="insGrid"  class="m-0"
+        [columnDefinitions]="columnDefinitions" 
+        [gridOptions]="gridOptions"
+        [dataset]="institutionList" 
+        [gridHeight] = height
+        (onAngularGridCreated)="angularGridReady($event)"
+        >
+    </angular-slickgrid>
+</div>
+<div id="id"></div>

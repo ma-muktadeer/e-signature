@@ -1,0 +1,27 @@
+<h1 style="text-align: center;" class="mb-3"><u>{{fullName}}</u></h1>
+<div cdkDropListGroup>
+  <div class="example-container">
+    <h2>Available Role Group</h2>
+
+    <div style="height: 60vh; overflow: scroll;" cdkDropList [cdkDropListData]="unassignRoleGroupList"
+      class="example-list" (cdkDropListDropped)="drop($event)">
+      <div class="example-box" *ngFor="let role of unassignRoleGroupList" cdkDrag>{{role.roleGroupName}}</div>
+    </div>
+  </div>
+
+  <div class="example-container">
+    <h2>Assign Role Group</h2>
+
+    <div cdkDropList [cdkDropListData]="roleGroupList" class="example-list" (cdkDropListDropped)="drop($event)">
+      <div class="example-box" *ngFor="let role of roleGroupList" cdkDrag>{{role.roleGroupName}}</div>
+    </div>
+    <div style="margin-top: 20px;">
+      <button style="margin: auto;" *ngIf="showManageBtn" [(disabled)]="manageRoleBtnDisabled" (click)="manageRoleBtnClick()" type="button"
+        class="btn btn-primary" pButton>Manage</button>
+  
+      <button style="margin-left: 10px;" (click)="backBtnClick()" type="button" class="btn btn-primary"
+        pButton>Back</button>
+    </div>
+  </div>
+  
+</div>

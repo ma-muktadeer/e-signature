@@ -1,0 +1,59 @@
+<!-- <form class="mb-3" role="form" [formGroup]="loginForm" autocomplete="off"> -->
+<div class="modal-content">
+    <div class="modal-header p-2 bg-color">
+        <h4 class="modal-title pull-left">Unlock</h4>
+        <div class="align-self-center">
+            <button type="button" class="" data-dismiss="modal" aria-label="Close" (click)="closePopup()">
+                <span class="p-2 text-danger" aria-hidden="true">&times;</span>
+            </button>
+        </div>
+    </div>
+
+    <div class="modal-body p-1 m-3">
+        <div class="row">
+
+            <div class="col-12">
+
+                <div class="form-group">
+                    <label for="otp" class="form-label" style="font-weight: bold;">OTP</label>
+                    <input type="text" [(ngModel)]="otpCode" class="form-control input input-underline input-lg"
+                        id="otp" placeholder="OTP" (input)="onOtpInput($event)" id="otp" [maxLength]="6"
+                        [ngClass]="{'is-invalid': otpMessage?.length}">
+                        <div *ngIf="otpMessage" class="invalid-feedback invalid-feedback-p">
+                            {{ otpMessage }}
+                        </div>
+                </div>
+
+            </div>
+            <div class="col-12">
+                <button
+                    class="btn btn-primary d-flex align-items-center justify-content-center w-100 border border-white rounded-3"
+                    (click)="submitOtp()">
+                    <span>Submit</span>
+                    <span class="spinner-border spinner-border-sm ms-2" *ngIf="showProgress && !isResend" role="status"
+                        aria-hidden="true"></span>
+                </button>
+            </div>
+            <div class="col-12">
+
+                <button class="btn btn-primary d-grid w-100" style="color: white;"
+                    (click)="internalUserUnlock(true)" [disabled]="!showButton">Resend OTP
+                    <span class="spinner-border spinner-border-sm ms-2" *ngIf="showProgress && isResend" role="status"
+                        aria-hidden="true"></span>
+                </button>
+
+                <div class="countdown-container">
+                    <p class="countdown-message mt-1">
+                        <span *ngIf="!showButton">
+                            Resend OTP will be enabled after {{ countdown }}
+                            seconds.</span>
+                        {{validUser?.msg }}
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- </form> -->

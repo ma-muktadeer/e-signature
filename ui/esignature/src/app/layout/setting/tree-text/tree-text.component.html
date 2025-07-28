@@ -1,0 +1,11 @@
+<div class="">
+    <button class="btn btn-primary mb-1" (click)="openPopup()">Add Free Text Template</button>
+</div>
+
+
+
+<div *ngIf="showGrid" class="">
+    <angular-slickgrid #freeText gridId="freeText" [columnDefinitions]="columnDefinitions" [gridOptions]="gridOptions"
+        [dataset]="freetextList" (onAngularGridCreated)="angularGridReady($event)">
+    </angular-slickgrid>
+</div>

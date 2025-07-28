@@ -1,0 +1,344 @@
+<div class="p-2" style="height: 100%;">
+    <form [formGroup]="signatureSearchForm">
+        <!-- *ngIf="permissionStorageService.hasAnyPermission([appPermission.SEARCH_SIGNATURE]) -->
+        <div class="col-12 d-flex align-items-center">
+            <ng-container *ngIf="requestFrom === 'internal'">
+                <!-- <div class="row"> -->
+                <div class="col-md-12 col-xl-12">
+                    <div class="demo-vertical-spacing demo-only-element" style="padding: 2% 0px 3%;">
+                        <div class="input-group input-group-lg">
+                            <input id="typeahead-basic" [appNoSpecialCharacters]="'numericNumber'" maxlength="15"
+                                class="form-control app-input-field" type="text" placeholder="Search by PA"
+                                [ngModelOptions]="{standalone: true}" [(ngModel)]="pa" [ngbTypeahead]="searchByPa"
+                                (selectItem)="selectedPa($event)" [ngxInputLoader]="searchBy == 'pa' && showProgress"
+                                [ngxInputLoaderConfig]="inputLoaderConfig" aria-label="PA Number">
+
+                            <input id="typeahead-basic-name" [appNoSpecialCharacters]="'name'" maxlength="50"
+                                class="form-control app-input-field" type="text" placeholder="Search by Name"
+                                [ngModelOptions]="{standalone: true}" [(ngModel)]="name" [ngbTypeahead]="searchByName"
+                                (selectItem)="selectedName($event)" [inputFormatter]="nameFormatter"
+                                [ngxInputLoader]="searchBy == 'name' && showProgress"
+                                [ngxInputLoaderConfig]="inputLoaderConfig" aria-label="Name">
+
+                            <button class="btn btn-primary active" type="button" style="z-index: 1;"
+                                (click)="searchSignature()" [ngxInputLoader]="searchBy === 'btn' && showProgress"
+                                [ngxInputLoaderConfig]="loaderConfig">Search</button>
+                        </div>
+                    </div>
+                </div>
+                <!-- </div> -->
+            </ng-container>
+
+            <ng-container *ngIf="requestFrom === 'external'">
+
+                <div class="row">
+                    <div class="col-md-12 col-xl-12">
+                        <div class="card-body demo-vertical-spacing demo-only-element" style="padding: 2% 0px 3%;">
+                            <div class="input-group input-group-lg">
+
+                                <!-- <input class="form-select" list="institutionList" id="floatingSelect1"
+                                    autocomplete="off" [readOnly]="readOnly" placeholder="Select Institution"
+                                    [ngModelOptions]="{standalone: true}" [(ngModel)]="selectedInstitutionName"
+                                    (change)="getInstitutionId()" />
+                                <datalist id="institutionList">
+                                    <option *ngFor="let institution of institutionList">
+                                        {{ institution.institutionName }}</option>
+                                </datalist> -->
+                                <ng-multiselect-dropdown style="z-index: 150; width: 300px;"
+                                    [ngModelOptions]="{standalone: true}" [(ngModel)]="selectedInstitutionName"
+                                    [placeholder]="'Select institution'" [settings]="dropdownSettingsInstitution"
+                                    [data]="institutionList" (onSelect)="getInstitutionIdS($event)" (onDeSelect)="decelect()"
+                                    [ngClass]="{ 'is-invalid': (clicked || isSearch) && profileForm.controls.institutionId?.errors}">
+                                </ng-multiselect-dropdown>
+
+
+                                <input id="typeahead-basic2" [appNoSpecialCharacters]="'numericNumber'" maxlength="15"
+                                    class="form-control ml-3" type="text" placeholder="Search by PA/ Employee ID"
+                                    [ngModelOptions]="{standalone: true}" [(ngModel)]="employeeId" [inputFormatter]="empFormatter"
+                                    [ngbTypeahead]="searchByPaEmp" (selectItem)="selectedEmployeeId($event)"
+                                    [ngxInputLoader]="searchBy == 'employeeId' && showProgress"
+                                    [ngxInputLoaderConfig]="inputLoaderConfig" [disabled]="!selectedInstitutionName" />
+
+                                <input id="typeahead-basic-name" [appNoSpecialCharacters]="'name'" maxlength="50"
+                                    class="form-control app-input-field" type="text" placeholder="Search by Name"
+                                    [ngModelOptions]="{standalone: true}" [(ngModel)]="name" [inputFormatter]="nameFormatter"
+                                    [ngbTypeahead]="searchByName" (selectItem)="selectedName($event)"
+                                    [ngxInputLoader]="searchBy == 'name' && showProgress"
+                                    [ngxInputLoaderConfig]="inputLoaderConfig" aria-label="Name"
+                                    [disabled]="!selectedInstitutionName">
+
+                                <button class="btn btn-primary active" type="button" style="z-index: 1;"
+                                    (click)="searchExternalSignature()"
+                                    [ngxInputLoader]="searchBy === 'btn' && showProgress"
+                                    [ngxInputLoaderConfig]="loaderConfig"
+                                    [disabled]="!selectedInstitutionName">Search</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </ng-container>
+
+        </div>
+
+    </form>
+    
+
+    <div class="col-md-12">
+        <div class="row">
+            <div class="col-md-8 p-0 mt-3">
+                <div class="mb-3">
+
+                    <div *ngIf="!imageSrc" class="col-12" style="height: 320px;">
+                        <div class="h3 static-div">
+
+                        </div>
+                    </div>
+                    <div *ngIf="imageSrc" class="col-12">
+                        <app-image-view [imageSrc]="imageSrc" [signatureInfo]="signatureInfo"></app-image-view>
+
+                    </div>
+
+                    <div class="col-12 info row  align-items-center justify-content-center "
+                        *ngIf="signatureInfo && signatureInfo?.signatureStatus != 'ACTIVE'">
+
+                        <div class="row h4 text-light mb-1">
+                            <div class="col-12 p-2 rounded shadow-sm" style="background-color: #db1919;">
+                                <span style="margin-right: 8%;" class="alert-icon rounded-circle"><i
+                                        class="fa fa-exclamation-circle error-icon icon-rounded"></i> This signature
+                                    is {{blockToCamel(signatureInfo?.signatureStatus)}}</span>
+                            </div>
+                        </div>
+                        <!-- <hr class="m-0 p-2 bg-light"> -->
+                        <ng-container *ngFor="let contractInfo of contractUserInfo">
+                            <div class="row h4 text-light mb-1" *ngIf="contractInfo?.value5 === 'NAME'">
+                                <div class="col-12 p-2 rounded shadow-sm" style="background-color: #293c8b;">
+                                    <i class="fa fa-user icon-rounded"></i> Name:
+                                    {{contractInfo?.value1}}
+                                </div>
+                            </div>
+
+
+                            <div class="row h4 text-light mb-1" *ngIf="contractInfo?.value5 === 'EMAIL'">
+                                <div class="col-12 p-2  rounded shadow-sm" style="background-color: #008000;">
+                                    <i class="fa fa-envelope icon-rounded"></i> Email: {{contractInfo?.value1}}
+                                </div>
+                            </div>
+                            <div class="row h4 text-light mb-1" *ngIf="contractInfo?.value5 === 'NUMBER'">
+                                <div class="col-12 p-2 rounded shadow-sm" style="background-color: #293c8b">
+                                    <i class="fa fa-phone icon-rounded"></i> Number: {{contractInfo?.value1}}
+                                </div>
+                            </div>
+                        </ng-container>
+                    </div>
+                </div>
+                <div *ngIf="imageSrc" class="mt-2">
+                    <div class="row justify-content-around btn_row"
+                        *ngIf="signatureInfo && signatureInfo?.signatureStatus == 'ACTIVE'">
+                        <div class="col-6 text-center ">
+                            <button class="btn btn-warning" type="button" (click)="openSignatureView()">
+                                Preview
+                            </button>
+                        </div>
+                        <div class="col-6 text-center"
+                            *ngIf="signatureInfo && permissionStorageService.hasPermission(appPermission.DOWNLOAD_SINGLE_SIGNATURE) && signatureInfo?.signatureStatus == 'ACTIVE'">
+                            <button class="btn btn-primary" type="button" (click)="openPopup()"
+                                [ngxInputLoader]="bownloadBtnClick" [ngxInputLoaderConfig]="loaderConfig">
+                                Download
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 mt-3">
+                <div [ngClass]="{'static-div2':!signatureInfo}">
+                    <div *ngIf="!signatureInfo" class="h5 mt-3 center-text">
+                        <!-- Signature Information -->
+                    </div>
+
+                    <div *ngIf="signatureInfo && viewConfigValue?.length > 0">
+
+
+                        <div class="card">
+                            <h5 class="card-header text-center" style="background: #293c8b; color: #fff;">Signature
+                                Information</h5>
+                            <div class="table-responsive">
+                                <table class="table-hover table the-table">
+                                    <thead class="header">
+                                        <!-- <tr>
+                                                <th colspan="2" class="text-white sig-info-title"
+                                                    style="text-align: center; border-radius: 10ox;">Signature
+                                                    Information</th>
+                                            </tr> -->
+                                        <tr class="title-head">
+                                            <th colspan="1">Title</th>
+                                            <th colspan="1">Details</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody class="table">
+                                        <ng-container *ngFor="let v of viewConfigValue">
+                                            <tr scope="row" *ngIf="v.value === 'employeeId'">
+                                                <td>
+                                                    Employee ID:
+                                                </td>
+                                                <td>
+                                                    {{signatureInfo[v.value]}}
+                                                </td>
+                                            </tr>
+                                            <tr scope="row" *ngIf="v.value === 'name'">
+                                                <td>
+                                                    Name:
+                                                </td>
+                                                <td>
+                                                    {{signatureInfo[v.value]}}
+                                                </td>
+                                            </tr>
+                                            <tr scope="row" *ngIf="v.value === 'pa'">
+                                                <td>
+                                                    PA:
+                                                </td>
+                                                <td>
+                                                    {{signatureInfo[v.value]}}
+                                                </td>
+                                            </tr>
+                                            <tr scope="row" *ngIf="v.value === 'deligation'">
+                                                <td>
+                                                    Delegation:
+                                                </td>
+                                                <td>
+                                                    {{blockToCamel(signatureInfo[v.value])}}
+                                                </td>
+                                            </tr>
+                                            <tr scope="row" *ngIf="v.value === 'email'">
+                                                <td class="text-wrap">
+                                                    Email:
+                                                </td>
+                                                <td>
+                                                    {{signatureInfo[v.value]}}
+                                                </td>
+                                            </tr>
+
+                                            <tr *ngIf="v.value === 'signatureStatus'">
+                                                <td
+                                                    [ngClass]="signatureInfo[v.value] !== 'ACTIVE' ? 'bg-status' : 'bg-status-active'">
+                                                    Status:
+                                                </td>
+                                                <td [innerHTML]="stFormatting(signatureInfo[v.value])"
+                                                    [ngClass]="signatureInfo[v.value] !== 'ACTIVE' ? 'bg-status' : 'bg-status-active'">
+                                                </td>
+                                            </tr>
+                                            <tr scope="row" *ngIf="v.value === 'baranchName'">
+                                                <td>
+                                                    Branch:
+                                                </td>
+                                                <td>
+                                                    {{signatureInfo[v.value]}}
+                                                </td>
+                                            </tr>
+                                            <tr scope="row" *ngIf="v.value === 'institutionName'">
+                                                <td>
+                                                    Name of Bank:
+                                                </td>
+                                                <td>
+                                                    {{signatureInfo[v.value]}}
+                                                </td>
+                                            </tr>
+
+                                            <tr scope="row" *ngIf="v.value === 'group'">
+                                                <td>
+                                                    Group:
+                                                </td>
+                                                <td>
+                                                    {{blockToCamel(signatureInfo[v.value])}}
+                                                </td>
+                                            </tr>
+                                            <tr scope="row" *ngIf="v.value === 'nid'">
+                                                <td>
+                                                    NID:
+                                                </td>
+                                                <td>
+                                                    {{signatureInfo[v.value]}}
+                                                </td>
+                                            </tr>
+                                            <tr scope="row" *ngIf="v.value === 'contactNumber'">
+                                                <td>
+                                                    Tel no:
+                                                </td>
+                                                <td>
+                                                    {{signatureInfo[v.value]}}
+                                                </td>
+                                            </tr>
+                                            <tr scope="row" *ngIf="v.value === 'birthday'">
+                                                <td>
+                                                    Date of Birth:
+                                                </td>
+                                                <td>
+                                                    {{signatureInfo[v.value] | date: 'dd-MM-yyyy'}}
+                                                </td>
+                                            </tr>
+
+                                            <tr scope="row" *ngIf="v.value === 'designation'">
+                                                <td>
+                                                    Designation:
+                                                </td>
+                                                <td>
+                                                    {{signatureInfo[v.value]}}
+                                                </td>
+                                            </tr>
+
+                                            <tr scope="row" *ngIf="v.value === 'effictiveDate'">
+                                                <td>
+                                                    Effective Date:
+                                                </td>
+                                                <td>
+                                                    {{formateDate(signatureInfo[v.value]) | date: 'dd-MM-yyyy'}}
+                                                </td>
+                                            </tr>
+
+
+                                            <tr scope="row"
+                                                *ngIf="v.value ==='cancelEffectiveDate' && signatureInfo[v.value] && status.toLowerCase() === 'canceled'">
+                                                <td>
+                                                    Cancellation Effective Date:
+                                                </td>
+                                                <td>
+                                                    {{formateDate(signatureInfo[v.value]) | date: 'dd-MM-yyyy'}}
+                                                </td>
+                                            </tr>
+                                            <tr scope="row"
+                                                *ngIf="v.value ==='calcelCause' && signatureInfo[v.value] && status.toLowerCase() === 'canceled'">
+                                                <td>
+                                                    Cancel Cause:
+                                                </td>
+                                                <td>
+                                                    {{signatureInfo[v.value]}}
+                                                </td>
+                                            </tr>
+                                        </ng-container>
+
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+</div>
+
+
+
+<ngx-loading [show]="loading" [config]="{
+    primaryColour: '#dd0031',
+    secondaryColour: '#1976d2',
+    tertiaryColour: '#dd0031',
+    backdropBorderRadius: '3px'
+  }">
+</ngx-loading>

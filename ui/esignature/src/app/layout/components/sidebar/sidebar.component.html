@@ -1,0 +1,633 @@
+<!-- Hamburger Button for Small Screens -->
+
+<!-- Sidebar -->
+<aside *ngIf="false" id="layout-menu" class="layout-menu menu-vertical menu bg-menu-theme"
+    data-bg-class="bg-menu-theme">
+
+    <ul class="menu-inner py-3 overflow-auto">
+        <!-- Dashboard -->
+        <li class="menu-item">
+            <a href="index.html" class="menu-link">
+                <i class="menu-icon tf-icons bx bx-home-circle"></i>
+                <div data-i18n="Analytics">Dashboard</div>
+            </a>
+        </li>
+        <li class="menu-item">
+            <a href="news-feed.html" class="menu-link">
+                <i class="menu-icon bx bx-comment-add"></i>
+                <div data-i18n="Analytics">News Feed</div>
+            </a>
+        </li>
+        <li class="menu-item active">
+            <a href="javascript:void(0);" class="menu-link menu-toggle">
+                <i class="menu-icon bx bxs-edit"></i>
+                <div data-i18n="Analytics">Signature Pages</div>
+            </a>
+            <ul class="menu-sub">
+                <li class="menu-item active">
+                    <a href="signature-first-view.html" class="menu-link">
+                        <div data-i18n="Basic">Sig. First View</div>
+                    </a>
+                </li>
+                <li class="menu-item">
+                    <a href="signature-view.html" class="menu-link">
+                        <div data-i18n="Basic">Signature View</div>
+                    </a>
+                </li>
+                <li class="menu-item">
+                    <a href="signature-inactive-view.html" class="menu-link">
+                        <div data-i18n="Basic">Sig. Inactive View</div>
+                    </a>
+                </li>
+            </ul>
+        </li>
+        <li class="menu-item">
+            <a href="leagal-disclaimer.html" class="menu-link">
+                <i class="menu-icon bx bxs-user-voice"></i>
+                <div data-i18n="Analytics">Leagal Disclaimer</div>
+            </a>
+        </li>
+        <li class="menu-item">
+            <a href="contact-us.html" class="menu-link">
+                <i class="menu-icon bx bxs-message-square-dots"></i>
+                <div data-i18n="Analytics">Contact Us</div>
+            </a>
+        </li>
+        <li class="menu-item">
+            <a href="javascript:void(0);" class="menu-link menu-toggle">
+                <i class="menu-icon bx bxs-user-circle"></i>
+                <div data-i18n="Analytics">Profile Pages</div>
+            </a>
+            <ul class="menu-sub">
+                <li class="menu-item">
+                    <a href="profile-section.html" class="menu-link">
+                        <div data-i18n="Basic">Profiles Info</div>
+                    </a>
+                </li>
+                <li class="menu-item">
+                    <a href="change-password.html" class="menu-link">
+                        <div data-i18n="Basic">Change Password</div>
+                    </a>
+                </li>
+            </ul>
+        </li>
+        <li class="menu-item">
+            <a href="request.html" class="menu-link">
+                <i class="menu-icon bx bxs-user-plus"></i>
+                <div data-i18n="Analytics">Request</div>
+            </a>
+        </li>
+
+    </ul>
+</aside>
+
+
+
+
+
+
+
+
+<aside *ngIf="true" class="sidebar" [ngClass]="{sidebarPushRight: isActive}">
+
+    <div class="list-group ">
+
+        <a *ngIf="permissioinStoreService.hasPermission(appPermission.VIEW_DASHBOARD)" routerLink="/dashboard"
+            [routerLinkActive]="['router-link-active']" class="list-group-item">
+            <i class="fa fa-newspaper-o"></i>&nbsp;{{ 'Dashboard' | translate }}
+        </a>
+        <a routerLink="/user-details" [routerLinkActive]="['router-link-active']" class="list-group-item">
+            <i class="fa fa-user"></i>&nbsp;{{ 'User Details' | translate }}
+        </a>
+        <a routerLink="/news-feeds" [routerLinkActive]="['router-link-active']" class="list-group-item">
+            <i class="fa fa-fw fa-dashboard"></i>&nbsp;{{ 'News Feed' | translate }}
+        </a>
+
+
+        <div class="nested-menu" *ngIf="!permissioinStoreService.hasAnyPermission(signatureManagement)">
+            <a class="list-group-item" routerLink="/signature/internal/signature-view"
+                [routerLinkActive]="['router-link-active']">
+                <span>
+                    <i class="fa fa-magic"></i>&nbsp; {{'Signature View' | translate }}</span>
+            </a>
+        </div>
+
+        <div class="nested-menu"
+            *ngIf="loginUser?.userType == 'INTERNAL_USER' && permissioinStoreService.hasAnyPermission(signatureManagement)">
+            <a class="list-group-item" (click)="addExpandClass('signature')">
+                <span>
+                    <i class="fa fa-plus"></i>&nbsp; {{'Signature Management' | translate }}</span>
+                <i class="fa" [ngClass]="showMenu === 'signature' ? 'fa-angle-down' : 'fa-angle-right'"
+                    style="float: right; margin-top: 5px; color: #6c757d; font-size: 18px;"></i>
+            </a>
+            <li class="nested" [@submenuAnimation]="isExpanded && showMenu === 'signature'? 'expanded' : 'collapsed'">
+                <ul class="submenu pl-3">
+                    <li *ngIf="checkParmitionV2([appPermission.SIGNATORY_VIEWER])">
+                        <a [routerLink]="['/hr/signatory']" [routerLinkActive]="['router-link-active']"
+                            class="list-group-item">
+                            <i class="fa fa-stethoscope"></i>&nbsp;{{ 'Generate PA' | translate }}
+                        </a>
+                    </li>
+
+                    <li
+                        *ngIf="checkParmitionV2([appPermission.SAMPLE_DOCUMENT_SAVER, appPermission.SAMPLE_DOCUMENT_DOWNLOADER])">
+                        <a [routerLink]="['/hr/sample-doc']" [routerLinkActive]="['router-link-active']"
+                            class="list-group-item">
+                            <i class="fa fa-file"></i>&nbsp;{{ 'Sample Doc' | translate }}
+                        </a>
+                    </li>
+                    <li *ngIf="permissioinStoreService.hasPermission(appPermission.SIGNATURE_MAKER)">
+                        <a [routerLink]="['/signature/upload']" [routerLinkActive]="['router-link-active']"
+                            class="list-group-item">
+                            <i class="fa fa-fw fa-upload"></i>&nbsp;{{'Upload' | translate }}
+                        </a>
+                    </li>
+                    <li *ngIf="permissioinStoreService.hasPermission(appPermission.INTERNAL_SIGNATURE_VERIFIER)">
+                        <a routerLink="/signature/internal/signature-view" [routerLinkActive]="['router-link-active']"
+                            class="list-group-item">
+                            <i class="fa fa-eye"></i>&nbsp;{{'Signature View' | translate }}
+                        </a>
+                    </li>
+
+                    <li *ngIf="permissioinStoreService.hasPermission(appPermission.EXTERNAL_SIGNATURE_VERIFIER)">
+                        <a routerLink="/signature/external/signature-view" [routerLinkActive]="['router-link-active']"
+                            class="list-group-item">
+                            <i class="fa fa-eye"></i>&nbsp;{{'Others Signature' | translate }}
+                        </a>
+                    </li>
+                    <li *ngIf=" permissioinStoreService.hasPermission(appPermission.SIGNATURE_LOG_VIEWER)">
+                        <a routerLink="/signature/signature-log" [routerLinkActive]="['router-link-active']"
+                            class="list-group-item">
+                            <i class="fa fa-list-alt"></i>&nbsp;{{'Signature Log' | translate }}
+                        </a>
+                    </li>
+                    <li *ngIf="permissioinStoreService.hasPermission(appPermission.SIGNATURE_VIEWER)">
+                        <a routerLink="/signature/signature-list" [routerLinkActive]="['router-link-active']"
+                            class="list-group-item">
+                            <i class="fa fa-list-ol"></i>&nbsp;{{'List' | translate }}
+                        </a>
+                    </li>
+                    <li *ngIf="permissioinStoreService.hasPermission(appPermission.DOWNLOAD_SIGNATURE)">
+                        <a routerLink="/signature/download" [routerLinkActive]="['router-link-active']"
+                            class="list-group-item">
+                            <i class="fa fa-download" aria-hidden="true"></i>&nbsp;{{'Download' | translate }}
+                        </a>
+                    </li>
+                    <li *ngIf="permissioinStoreService.hasPermission(appPermission.SIGNATURE_HISTORY_VIEWER)">
+                        <a routerLink="/signature/signature-history" [routerLinkActive]="['router-link-active']"
+                            class="list-group-item">
+                            <i class="fa fa-list-alt"></i>&nbsp;{{'Signature History' | translate }}
+                        </a>
+                    </li>
+                </ul>
+            </li>
+        </div>
+
+        <div *ngIf="checkParmitionV2([appPermission.REQUEST_ADMIN, appPermission.REQUEST_VIEWER])" class="nested-menu">
+            <a class="list-group-item" (click)="addExpandClass('request')">
+                <span>
+                    <i class="fa fa-plus"></i>&nbsp; {{ 'Request' | translate }}</span>
+                <i class="fa" [ngClass]="showMenu === 'request' ? 'fa-angle-down' : 'fa-angle-right'"
+                    style="float: right; margin-top: 5px; color: #6c757d; font-size: 18px;"></i>
+
+            </a>
+            <li class="nested" [@submenuAnimation]="isExpanded && showMenu === 'request'? 'expanded' : 'collapsed'">
+                <ul class="submenu pl-3">
+                    <li>
+                        <a [routerLink]="['/request/external']" [routerLinkActive]="['router-link-active']"
+                            class="list-group-item">
+                            <i class="fa fa-stethoscope"></i>&nbsp;{{ 'Request' | translate }}
+                        </a>
+                    </li>
+
+                </ul>
+            </li>
+        </div>
+
+
+        <div *ngIf="loginUser?.userType == 'INTERNAL_USER' && permissioinStoreService.hasPermission(appPermission.USER_MANAGMENT)"
+            class="nested-menu">
+            <a class="list-group-item" (click)="addExpandClass('userManagement')">
+                <span>
+                    <i class="fa fa-cog"></i>&nbsp; {{ 'User Management' | translate }}</span>
+                <i class="fa" [ngClass]="showMenu === 'userManagement' ? 'fa-angle-down' : 'fa-angle-right'"
+                    style="float: right; margin-top: 5px; color: #6c757d; font-size: 18px;"></i>
+            </a>
+            <li class="nested"
+                [@submenuAnimation]="isExpanded && showMenu === 'userManagement'? 'expanded' : 'collapsed'">
+                <ul class="submenu pl-3">
+                    <!-- <li *ngIf="permissioinStoreService.hasPermission(appPermission.USER_MAKER)"> -->
+                    <li
+                        *ngIf="permissioinStoreService.hasPermission(appPermission.USER_MAKER) && 
+                        permissioinStoreService.hasAnyPermission([appPermission.EXTERNAL_SAVE_USER, appPermission.INTERNAL_SAVE_USER])">
+                        <a [routerLink]="['/user/profile']" [routerLinkActive]="['router-link-active']"
+                            class="list-group-item" (click)="onClickSidebarProfile(true, false)">
+                            <i class="fa fa-plus"></i>&nbsp;{{ 'Add User' | translate }}
+                        </a>
+                    </li>
+                    <li *ngIf="permissioinStoreService.hasPermission(appPermission.USER_VIEWER)">
+                        <a [routerLink]="['/admin/user-list']" [routerLinkActive]="['router-link-active']"
+                            class="list-group-item">
+                            <i class="fa fa-list"></i>&nbsp;{{ 'User List' | translate }}
+                        </a>
+                    </li>
+                    <li *ngIf="permissioinStoreService.hasPermission(appPermission.USER_APPROVER)">
+                        <a [routerLink]="['/admin/user-pend-list']" [routerLinkActive]="['router-link-active']"
+                            class="list-group-item">
+                            <i class="fa fa-list"></i>&nbsp;{{ 'Pending List' | translate }}
+                        </a>
+                    </li>
+                </ul>
+            </li>
+        </div>
+
+        <a *ngIf="loginUser?.userType == 'INTERNAL_USER' && permissioinStoreService.hasPermission(appPermission.USERS_UNDER_ROLE_VIEWER)"
+            routerLink="/role/users" [routerLinkActive]="['router-link-active']" class="list-group-item">
+            <i class="fa fa-newspaper-o"></i>&nbsp;{{ 'Role Users' | translate }}
+        </a>
+
+
+
+        <div *ngIf="showAdminMenu()" class="nested-menu">
+            <a class="list-group-item" (click)="addExpandClass('admin')">
+                <span>
+                    <i class="fa fa-plus"></i>&nbsp; {{ 'Admin' | translate }}</span>
+                <i class="fa" [ngClass]="showMenu === 'admin' ? 'fa-angle-down' : 'fa-angle-right'"
+                    style="float: right; margin-top: 5px; color: #6c757d; font-size: 18px;"></i>
+            </a>
+            <li class="nested" [@submenuAnimation]="isExpanded && showMenu === 'admin'? 'expanded' : 'collapsed'">
+                <ul class="submenu pl-3">
+                    <li *ngIf="permissioinStoreService.hasPermission(appPermission.USER_VIEWER)">
+                        <a [routerLink]="['/admin/user-list']" [routerLinkActive]="['router-link-active']"
+                            class="list-group-item">
+                            <i class="fa fa-users"></i>&nbsp;{{ 'User List' | translate }}
+                        </a>
+                    </li>
+
+
+                    <li *ngIf="permissioinStoreService.hasPermission(appPermission.VIEW_ROLE)">
+                        <a [routerLink]="['/admin/role']" [routerLinkActive]="['router-link-active']"
+                            class="list-group-item">
+                            <i class="fa fa-lock"></i>&nbsp;{{ 'Role' | translate }}
+                        </a>
+                    </li>
+                    <li
+                        *ngIf="permissioinStoreService.hasAnyPermission([appPermission.VIEW_SECURITY_QUESTION, appPermission.ADD_SECURITY_QUESTION])">
+                        <a [routerLink]="['/admin/security-question']" [routerLinkActive]="['router-link-active']"
+                            class="list-group-item">
+                            <i class="fa fa-shield"></i>&nbsp;{{ 'Security Question' | translate }}
+                        </a>
+                    </li>
+                    <li *ngIf="permissioinStoreService.hasPermission(appPermission.VIEW_SECURITY_QUESTION_ANS)">
+                        <a [routerLink]="['/admin/security-question-answer']"
+                            [routerLinkActive]="['router-link-active']" class="list-group-item">
+                            <i class="fa fa-shield"></i>&nbsp;{{ 'Security Question Ans' | translate }}
+                        </a>
+                    </li>
+                    <!-- <li *ngIf="permissioinStoreService.hasPermission(appPermission.ROLE_GROUP_VIEWER)">
+                        <a [routerLink]="['/admin/role-group']" [routerLinkActive]="['router-link-active']" class="list-group-item">
+                            <i class="fa fa-lock"></i>&nbsp;{{ 'Role Group' | translate }}
+                        </a>
+                    </li> -->
+
+                    <li>
+                        <a *ngIf="permissioinStoreService.hasPermission(permissioinStoreService.appPermission.INSTITUTION_VIEWER)"
+                            [routerLink]="['/admin/institution']" [routerLinkActive]="['router-link-active']"
+                            class="list-group-item">
+                            <i class="fa fa-cog"></i>&nbsp;{{ 'Institution' | translate }}
+                        </a>
+                    </li>
+
+                    <li
+                        *ngIf="permissioinStoreService.hasPermission(permissioinStoreService.appPermission.VIEW_BRANCH)">
+                        <a [routerLink]="['/admin/branch']" [routerLinkActive]="['router-link-active']"
+                            class="list-group-item">
+                            <i class="fa fa-envelope"></i>&nbsp;{{ 'Branch' | translate }}
+                        </a>
+                    </li>
+                    <li *ngIf="permissioinStoreService.hasPermission(appPermission.VIEW_PERMISSION)">
+                        <a [routerLink]="['/admin/permission']" [routerLinkActive]="['router-link-active']"
+                            class="list-group-item">
+                            <i class="fa fa-cog"></i>&nbsp;{{ 'Permission' | translate }}
+                        </a>
+                    </li>
+                    <!--  <li>
+                        <a [routerLink]="['/admin/bic']" [routerLinkActive]="['router-link-active']" class="list-group-item">
+                            <i class="fa fa-gear"></i>&nbsp;{{ 'BIC Code' | translate }}
+                        </a>
+                    </li> -->
+                </ul>
+            </li>
+        </div>
+
+        <a routerLink="/legal-disclaimer" [routerLinkActive]="['router-link-active']" class="list-group-item">
+            <i class="fa fa-fw fa-dashboard"></i>&nbsp;{{ 'Legal Disclaimer' | translate }}
+        </a>
+
+
+        <div *ngIf="client == 'PRIME_BANK' && showSettingMenu()" class="nested-menu">
+            <a class="list-group-item" (click)="addExpandClass('setting')">
+                <span>
+                    <i class="fa fa-cog"></i>&nbsp; {{ 'Setting' | translate }}</span>
+                <i class="fa" [ngClass]="showMenu === 'setting' ? 'fa-angle-down' : 'fa-angle-right'"
+                    style="float: right; margin-top: 5px; color: #6c757d; font-size: 18px;"></i>
+            </a>
+            <li class="nested" [@submenuAnimation]="isExpanded && showMenu === 'setting'? 'expanded' : 'collapsed'">
+                <ul class="submenu pl-3">
+                    <li *ngIf="permissioinStoreService.hasPermission(appPermission.APPLICATION_CONFIG_SETUP)">
+                        <a [routerLink]="['/setting/application/config']" [routerLinkActive]="['router-link-active']"
+                            class="list-group-item">
+                            <i class="fa fa-plug"></i>&nbsp;{{ 'Application Config' | translate }}
+                        </a>
+                    </li>
+                    <!-- <li>
+                        <a [routerLink]="['/setting/free-text']" [routerLinkActive]="['router-link-active']"
+                            class="list-group-item">
+                            <i class="fa fa-th-list"></i>&nbsp;{{ 'Free Text' | translate }}
+                        </a>
+                    </li> -->
+                    <li *ngIf="permissioinStoreService.hasPermission(appPermission.DISCLAIMER_SETUP)">
+                        <a [routerLink]="['/setting/disclaimer/setup']" [routerLinkActive]="['router-link-active']"
+                            class="list-group-item">
+                            <i class="fa fa-th-list"></i>&nbsp;{{ 'Legal Disclaimer' | translate }}
+                        </a>
+                    </li>
+
+
+                    <li *ngIf="permissioinStoreService.hasPermission(appPermission.MAIL_TEMPLATE_VIEWER)">
+                        <a [routerLink]="['/setting/templet/mail']" [routerLinkActive]="['router-link-active']"
+                            class="list-group-item">
+                            <i class="fa fa-envelope-o"></i>&nbsp;{{ 'Mail Template' | translate }}
+                        </a>
+                    </li>
+                    <li *ngIf="permissioinStoreService.hasPermission(appPermission.AGREEMENT_SETUP_VIEWER)">
+                        <a [routerLink]="['/setting/agreement/setup']" [routerLinkActive]="['router-link-active']"
+                            class="list-group-item">
+                            <i class="fa fa-th-list"></i>&nbsp;{{ 'Agreement Setup' | translate }}
+                        </a>
+                    </li>
+                    <li *ngIf="permissioinStoreService.hasPermission(appPermission.SIGNATURE_SETUP_VIEWER)">
+                        <a [routerLink]="['/setting/signature/view/setup']" [routerLinkActive]="['router-link-active']"
+                            class="list-group-item">
+                            <i class="fa fa-th-list"></i>&nbsp;{{ 'Signature View Setup' | translate }}
+                        </a>
+                    </li>
+                    <li *ngIf="permissioinStoreService.hasPermission(appPermission.APPLICATION_CONTACT_SETUP)">
+                        <a [routerLink]="['/setting/contact-info']" [routerLinkActive]="['router-link-active']"
+                            class="list-group-item">
+                            <i class="fa fa-th-list"></i>&nbsp;{{ 'Contact Info Setup' | translate }}
+                        </a>
+                    </li>
+
+                    <li *ngIf="permissioinStoreService.hasPermission(appPermission.ACCESS_APPLICATION_SETUP)">
+                        <a [routerLink]="['/setting/application/setup']" [routerLinkActive]="['router-link-active']"
+                            class="list-group-item">
+                            <i class="fa fa-th-list"></i>&nbsp;{{ 'Login Setup' | translate }}
+                        </a>
+                    </li>
+                </ul>
+            </li>
+        </div>
+
+
+        <div *ngIf="client == 'PRIME_BANK' && permissioinStoreService.hasPermission(appPermission.ACTIVITY_LOG_VIEWER)"
+            class="nested-menu">
+            <a class="list-group-item" (click)="addExpandClass('activityLog')">
+                <span>
+                    <i class="fa fa-cog"></i>&nbsp; {{ 'Activity Log' | translate }}</span>
+                <i class="fa" [ngClass]="showMenu === 'activityLog' ? 'fa-angle-down' : 'fa-angle-right'"
+                    style="float: right; margin-top: 5px; color: #6c757d; font-size: 18px;"></i>
+            </a>
+            <li class="nested" [@submenuAnimation]="isExpanded && showMenu === 'activityLog'? 'expanded' : 'collapsed'">
+                <ul class="submenu pl-3">
+                    <li>
+                        <a [routerLink]="['/activity-log']" [routerLinkActive]="['router-link-active']"
+                            class="list-group-item">
+                            <i class="fa fa-th-list"></i>&nbsp;{{ 'Logs' | translate }}
+                        </a>
+                    </li>
+                </ul>
+            </li>
+        </div>
+        <div *ngIf="client == 'PRIME_BANK' && 
+            permissioinStoreService.hasAnyPermission([
+                appPermission.LOGGED_REPORT_VIEWER,
+                appPermission.USER_REPORT_VIEWER,
+                appPermission.PA_REPORT_VIEWER,
+                appPermission.BANK_REPORT_VIEWER,
+                appPermission.PASSWORD_REPORT_VIEWER,
+                appPermission.SIGNATURE_REPORT_VIEWER,
+                appPermission.NEWS_FEED_REPORT_VIEWER,
+                appPermission.PRINT_DOWNLOAD_REPORT_VIEWER,
+                appPermission.HR_MODULE_REPORT_VIEWER,
+                appPermission.SIGNATURE_SEARCH_VIEWER,
+                appPermission.SIGNATURE_HIS_REPORT_VIEWER,
+                appPermission.EXCEPTION_REPORT_VIEWER,
+                appPermission.DOC_REPORT_VIEWER,
+                appPermission.USER_AUDIT_REPORT_VIEWER,
+                appPermission.REQUEST_REPORT_VIEWER
+            ])" class="nested-menu">
+            <a class="list-group-item" (click)="addExpandClass('report')">
+                <span>
+                    <i class="fa fa-plus"></i>&nbsp; {{ 'Report' | translate }}</span>
+                <i class="fa" [ngClass]="showMenu === 'report' ? 'fa-angle-down' : 'fa-angle-right'"
+                    style="float: right; margin-top: 5px; color: #6c757d; font-size: 18px;"></i>
+            </a>
+            <li class="nested" [@submenuAnimation]="isExpanded && showMenu === 'report'? 'expanded' : 'collapsed'">
+                <ul class="submenu pl-3">
+
+                    <li *ngIf="permissioinStoreService.hasPermission(appPermission.LOGGED_REPORT_VIEWER)">
+                        <a [routerLink]="['report/logged-report']" [routerLinkActive]="['router-link-active']"
+                            class="list-group-item">
+                            <i class="fa fa-th-list"></i>&nbsp;{{ 'Logged Report' | translate }}
+                        </a>
+                    </li>
+
+                    <li *ngIf="permissioinStoreService.hasPermission(appPermission.USER_REPORT_VIEWER)">
+                        <a [routerLink]="['report/user-report']" [routerLinkActive]="['router-link-active']"
+                            class="list-group-item">
+                            <i class="fa fa-th-list"></i>&nbsp;{{ 'User Report' | translate }}
+                        </a>
+                    </li>
+
+                    <li *ngIf="permissioinStoreService.hasPermission(appPermission.PA_REPORT_VIEWER)">
+                        <a [routerLink]="['report/pa-report']" [routerLinkActive]="['router-link-active']"
+                            class="list-group-item">
+                            <i class="fa fa-th-list"></i>&nbsp;{{ 'PA Report' | translate }}
+                        </a>
+                    </li>
+                    <li *ngIf="permissioinStoreService.hasPermission(appPermission.BANK_REPORT_VIEWER)">
+                        <a [routerLink]="['report/bank-report']" [routerLinkActive]="['router-link-active']"
+                            class="list-group-item">
+                            <i class="fa fa-th-list"></i>&nbsp;{{ 'Bank Report' | translate }}
+                        </a>
+                    </li>
+
+                    <li *ngIf="permissioinStoreService.hasPermission(appPermission.PASSWORD_REPORT_VIEWER)">
+                        <a [routerLink]="['report/password-report']" [routerLinkActive]="['router-link-active']"
+                            class="list-group-item">
+                            <i class="fa fa-th-list"></i>&nbsp;{{ 'Password Report' | translate }}
+                        </a>
+                    </li>
+
+                    <li *ngIf="permissioinStoreService.hasPermission(appPermission.SIGNATURE_REPORT_VIEWER)">
+                        <a [routerLink]="['report/signature-report']" [routerLinkActive]="['router-link-active']"
+                            class="list-group-item">
+                            <i class="fa fa-th-list"></i>&nbsp;{{ 'Signature Report' | translate }}
+                        </a>
+                    </li>
+                    <li *ngIf="permissioinStoreService.hasPermission(appPermission.SIGNATURE_SEARCH_VIEWER)">
+                        <a [routerLink]="['report/signature-search']" [routerLinkActive]="['router-link-active']"
+                            class="list-group-item">
+                            <i class="fa fa-th-list"></i>&nbsp;{{ 'Signature Search' | translate }}
+                        </a>
+                    </li>
+                    <li *ngIf="permissioinStoreService.hasPermission(appPermission.SIGNATURE_HIS_REPORT_VIEWER)">
+                        <a [routerLink]="['report/signature-history']" [routerLinkActive]="['router-link-active']"
+                            class="list-group-item">
+                            <i class="fa fa-th-list"></i>&nbsp;{{ 'Signature History' | translate }}
+                        </a>
+                    </li>
+
+                    <li *ngIf="permissioinStoreService.hasPermission(appPermission.DOC_REPORT_VIEWER)">
+                        <a [routerLink]="['report/doc-report']" [routerLinkActive]="['router-link-active']"
+                            class="list-group-item">
+                            <i class="fa fa-th-list"></i>&nbsp;{{ 'Document Report' | translate }}
+                        </a>
+                    </li>
+
+                    <li *ngIf="permissioinStoreService.hasPermission(appPermission.NEWS_FEED_REPORT_VIEWER)">
+                        <a [routerLink]="['report/news-feed-&-others']" [routerLinkActive]="['router-link-active']"
+                            class="list-group-item">
+                            <i class="fa fa-th-list"></i>&nbsp;{{ 'News Feed and Others' | translate }}
+                        </a>
+                    </li>
+
+                    <li *ngIf="permissioinStoreService.hasPermission(appPermission.PRINT_DOWNLOAD_REPORT_VIEWER)">
+                        <a [routerLink]="['report/print-&-download-report']" [routerLinkActive]="['router-link-active']"
+                            class="list-group-item">
+                            <i class="fa fa-th-list"></i>&nbsp;{{ 'Download Report' | translate }}
+                        </a>
+                    </li>
+                    <li *ngIf="permissioinStoreService.hasPermission(appPermission.HR_MODULE_REPORT_VIEWER)">
+                        <a [routerLink]="['report/hr-module-report']" [routerLinkActive]="['router-link-active']"
+                            class="list-group-item">
+                            <i class="fa fa-th-list"></i>&nbsp;{{ 'HR Module Report' | translate }}
+                        </a>
+                    </li>
+                    <li *ngIf="permissioinStoreService.hasPermission(appPermission.EXCEPTION_REPORT_VIEWER)">
+                        <a [routerLink]="['report/exception-report']" [routerLinkActive]="['router-link-active']"
+                            class="list-group-item">
+                            <i class="fa fa-th-list"></i>&nbsp;{{ 'Exception Report' | translate }}
+                        </a>
+                    </li>
+                    <li *ngIf="permissioinStoreService.hasPermission(appPermission.REQUEST_REPORT_VIEWER)">
+                        <a [routerLink]="['report/request-report']" [routerLinkActive]="['router-link-active']"
+                            class="list-group-item">
+                            <i class="fa fa-th-list"></i>&nbsp;{{ 'Request Report' | translate }}
+                        </a>
+                    </li>
+
+                    <li *ngIf="permissioinStoreService.hasPermission(appPermission.USER_AUDIT_REPORT_VIEWER)">
+                        <a [routerLink]="['report/user/audit']" [routerLinkActive]="['router-link-active']"
+                            class="list-group-item">
+                            <i class="fa fa-th-list"></i>&nbsp;{{ 'User Audit Report' | translate }}
+                        </a>
+                    </li>
+
+                </ul>
+            </li>
+
+        </div>
+
+
+        <a routerLink="/contact" [routerLinkActive]="['router-link-active']" class="list-group-item">
+            <i class="fa fa-envelope"></i>&nbsp;{{ 'Contact Us' | translate }}
+        </a>
+
+        <!-- end -->
+        <div class="header-fields">
+            <a *ngIf="false" (click)="rltAndLtr()" class="list-group-item">
+                <span><i class="fa fa-arrows-h"></i>&nbsp; RTL/LTR</span>
+            </a>
+            <div *ngIf="false" class="nested-menu">
+                <a class="list-group-item" (click)="addExpandClass('languages')">
+                    <span><i class="fa fa-language"></i>&nbsp; {{ 'Language' | translate }} <b class="caret"></b></span>
+                </a>
+                <li class="nested" [class.expand]="showMenu === 'languages'">
+                    <ul class="submenu pl-3">
+                        <li>
+                            <a href="javascript:void(0)" (click)="changeLang('en')">
+                                {{ 'English' | translate }}
+                            </a>
+                        </li>
+                        <li>
+                            <a href="javascript:void(0)" (click)="changeLang('fr')">
+                                {{ 'French' | translate }}
+                            </a>
+                        </li>
+                        <li>
+                            <a href="javascript:void(0)" (click)="changeLang('ur')">
+                                {{ 'Urdu' | translate }}
+                            </a>
+                        </li>
+                        <li>
+                            <a href="javascript:void(0)" (click)="changeLang('es')">
+                                {{ 'Spanish' | translate }}
+                            </a>
+                        </li>
+                        <li>
+                            <a href="javascript:void(0)" (click)="changeLang('it')">
+                                {{ 'Italian' | translate }}
+                            </a>
+                        </li>
+                        <li>
+                            <a href="javascript:void(0)" (click)="changeLang('fa')">
+                                {{ 'Farsi' | translate }}
+                            </a>
+                        </li>
+                        <li>
+                            <a href="javascript:void(0)" (click)="changeLang('de')">
+                                {{ 'German' | translate }}
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+            </div>
+            <div class="nested-menu">
+                <a class="list-group-item" (click)="addExpandClass('profile')">
+                    <span><i class="fa fa-user"></i>&nbsp; {{loginUser?.loginName}}</span>
+                </a>
+                <li class="nested" [@submenuAnimation]="isExpanded && showMenu === 'profile'? 'expanded' : 'collapsed'">
+                    <ul class="submenu pl-3">
+                        <li>
+                            <a class="dropdown-item" (click)="onClickSidebarProfile(false, true)">
+                                <i class="fa fa-fw fa-user"></i> {{ 'Profile' | translate }}
+                            </a>
+                        </li>
+                        <a class="dropdown-item" (click)="onClickChangepassword('BY_USER')"
+                            *ngIf="loginUser?.userType === 'EXTERNAL_USER'">
+                            <i class="fa fa-fw fa-user"></i> {{ 'Change Password' | translate }}
+                        </a>
+                        <!-- <li *ngIf="false">
+                            <a class="dropdown-item" [routerLink]="['/user/change-password']">
+                                <i class="fa fa-fw fa-user"></i> {{ 'Change Password' | translate }}
+                            </a>
+                        </li> -->
+
+                        <li *ngIf="false">
+                            <a class="dropdown-item" [routerLink]="['/user/setting']">
+                                <span><i class="fa fa-fw fa-gear"></i> {{ 'Settings' | translate }}</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a (click)="onLoggedout()">
+                                <span><i class="fa fa-fw fa-power-off"></i> {{ 'Log Out' | translate }}</span>
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+            </div>
+        </div>
+    </div>
+</aside>

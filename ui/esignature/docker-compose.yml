@@ -1,0 +1,26 @@
+version: '3'
+services:
+  web:
+    image: node:16.20.2
+    ports:
+      - "4200:4200"
+    volumes:
+      - .:/app
+    working_dir: /app
+    command: npm run serve -- --host 0.0.0.0
+
+
+# version: '3'
+# services:
+#   angular-app:
+#     build:
+#       context: .
+#       dockerfile: Dockerfile
+#     volumes:
+#       - ./src:/app/src  # Sync the src directory for code changes
+#       - ./angular.json:/app/angular.json  # Sync angular.json to reflect changes in configuration
+#       - /app/node_modules  # This avoids syncing node_modules from host to container
+#     ports:
+#       - "4200:4200"  # Expose the port for Angular app
+#     environment:
+#       - CHOKIDAR_USEPOLLING=true  # Enable polling in environments like Docker

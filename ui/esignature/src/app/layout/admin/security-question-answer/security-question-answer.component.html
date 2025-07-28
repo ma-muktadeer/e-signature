@@ -1,0 +1,82 @@
+<button *ngIf="permissionStoreService.hasPermission(appPermission.ADD_SECURITY_QUESTION_ANS)" type="button" class="btn btn-success" (click)="openAddQuestinAnsPopup('Save')">
+    <i class="fa fa-plus" aria-hidden="true"></i>
+    | Add Question Ans
+</button>
+
+
+<div *ngIf="showGrid && permissionStoreService.hasPermission(appPermission.VIEW_SECURITY_QUESTION_ANS)" style="margin-top: 10px; width: 100%;padding-bottom: 45px;">
+    <angular-slickgrid #allAnsList gridId="questionGrid" [columnDefinitions]="columnDefinitions"
+        [gridOptions]="gridOptions" [gridHeight]=500 [dataset]="questionAnsList"
+        (onAngularGridCreated)="angularGridReady($event)"
+        (sgOnSelectedRowsChanged)="onSelectedRowsChanged($event.detail.eventData, $event.detail.args)">
+    </angular-slickgrid>
+</div>
+
+
+<ng-template #template class="modal-content border-0">
+
+    <div class="modal-header">
+        <h4 class="modal-title">Security Answer Information</h4>
+        <button type="button" class="close" data-dismiss="modal" [ngbTooltip]="tooltip" aria-label="Close"
+            (click)="closePopup()">
+            <div class="sclose">
+                <span class="st" aria-hidden="true">&times;</span>
+            </div>
+        </button>
+    </div>
+
+    <div class="modal-body p-1 m-3">
+
+        <div class="m-1">
+            <div class="row">
+
+                <label for="ques" class="col-md-3 p-1">Select Question:</label>
+                <div class="col-md-9 p-1">
+                    <select id="ques" class="form-control" [(ngModel)]="securityQuestionId" [disabled]="btnName === 'Update'"
+                        [ngClass]="{'is-invalid': btnClick && (!securityQuestionId || securityQuestionId=='null')}">
+                        <option value="null" disabled selected>Select Question</option>
+                        <option [value]="q.securityQuestionId" *ngFor="let q of questionList">{{q.securityQuestion}}
+                        </option>
+                    </select>
+                    <div *ngIf="btnClick && (!securityQuestionId || securityQuestionId=='null')" class="invalid-feedback">
+                        <div *ngIf="btnClick && (!securityQuestionId || securityQuestionId=='null')">
+                            Question is required.
+                        </div>
+                    </div>
+                    <!-- <input type="text" class="form-control" id="name"required />
+                   [ngClass]="{'is-invalid': supplierForm.controls.cusIdPran.errors}" 
+                        <div *ngIf="btnClick"
+                            class="invalid-feedback">
+                            <div *ngIf="!securityQuestion">
+                                Question is required.
+                            </div>
+                        </div> -->
+                </div>
+                <label for="name" class="col-md-3 p-1">Answer:</label>
+                <div class="col-md-9 p-1">
+                    <input type="text" class="form-control" id="name" [(ngModel)]="securityQuestionAnswer" [attr.maxlength]="securityQuestionAnswerMaxLength"
+                        [ngClass]="{'is-invalid':btnClick && !securityQuestionAnswer}" required />
+                    <!-- [ngClass]="{'is-invalid': supplierForm.controls.cusIdPran.errors}" -->
+                    <div *ngIf="btnClick" class="invalid-feedback">
+                        <div *ngIf="!securityQuestionAnswer">
+                            Question Answer is required.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="modal-footer">
+        <div class="align-self-center ">
+            <button class="btn btn-block btn-success btn-sm" [disabled]="showProgress" (click)="saveQuestionAns()">
+                {{btnName}}
+                <span class="spinner-border spinner-border-sm" *ngIf="showProgress" [mode]="'indeterminate'"></span>
+            </button>
+        </div>
+
+        <button type="button" class="btn btn-danger btn-sm pull-right" (click)="closePopup()">Close</button>
+        
+    </div>
+</ng-template>

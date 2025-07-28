@@ -1,0 +1,48 @@
+
+<div class="col-12">
+    <div class="row">
+        <div class="col-4 shadow">
+
+            <div class="table-responsive" [ngStyle]="{'height': height+'px', 'overflow-y': 'auto'}">
+                <table class="table table-bordered table-hover">
+                    <thead class="table-bordered" style="background-color: #293c8b; color: white;">
+                        <tr>
+                            <th style="color: white;">Role List</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let role of roleList" 
+                            (click)="loadUsersByName(role)" 
+                            [ngClass]="{'selected-role': role === selectedRole}">
+                            <td>
+                                {{ role?.displayName }}
+                            </td>
+                        </tr>
+                    </tbody>
+                    <!-- <tbody>
+                        <tr *ngFor="let role of roleList">
+                            <td (click)="loadUsersByName(role)" >
+                                {{ role?.displayName }}
+                            </td>
+                        </tr>
+                    </tbody> -->
+                </table>
+            </div>
+
+        </div>
+
+        <div class="col-8" *ngIf="userPaylodList">
+            <app-user-list [userPaylodList]="userPaylodList" [isSameComp]="false" [height]="height"></app-user-list>
+        </div>
+
+    </div>
+
+</div>
+
+<ngx-loading [show]="loading" [config]="{
+    primaryColour: '#dd0031',
+    secondaryColour: '#1976d2',
+    tertiaryColour: '#dd0031',
+    backdropBorderRadius: '3px'
+  }">
+</ngx-loading>

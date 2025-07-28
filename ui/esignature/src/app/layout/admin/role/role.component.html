@@ -1,0 +1,222 @@
+<div class="row col-md-12">
+    <div class="row col-md-5">
+        <div class="col-md-12 mb-2">
+            <button *ngIf="permissioinStoreService.hasPermission(this.permissioinStoreService.appPermission.MAKE_ROLE)"
+                style="width: 100%;" (click)="onAddRole()" class="btn btn-primary">Add Role </button>
+        </div>
+        <div style="margin-top: 2px;" class="col-md-12">
+            <div class="col-md-12 row mb-2">
+                <input [appNoSpecialCharacters]="'name'" maxlength="30" style="border-radius: 20px; border: 1px solid #b9c1c0;"
+                    placeholder="Search" type="text" (keyup)="onRoleSearch($event)" />
+            </div>
+        </div>
+        <div style="margin-top: 10px;" class="ul-scrollable">
+            <div></div>
+            <div class="col-sm-12" *ngFor="let group of filtedRoleList">
+                <div class="row" [ngClass]="{'select': (clickedItem?.displayName == group.displayName)}">
+                    <!-- <div class="col-sm-12"> -->
+                    <a (click)="onClickGroupItem($event, group)"
+                        style="padding: 2px; font-size: 12px;  border-bottom: solid 1px #ccc;"
+                        class="list-group-item hover-color mr-1 text-left">
+                        {{group.displayName}}
+
+                        <button *ngIf="!isHide.includes(group.roleName) && permissioinStoreService.hasPermission(this.permissioinStoreService.appPermission.DELETE_ROLE)
+                            && group?.status != 'PEND_DELETE'" title="Delete" (click)="onDelete($event, group)"
+                            class="btn float-right" style="padding: 2px; font-size: 12px;">
+                            <i class="fa fa-trash"></i>
+                        </button>
+
+                        <button
+                            *ngIf="permissioinStoreService.hasPermission(this.permissioinStoreService.appPermission.MAKE_ROLE)"
+                            title="Edit" (click)="onEdit($event, group)" class="btn float-right"
+                            style="padding: 2px; font-size: 12px;">
+                            <i class="fa fa-edit"></i>
+                        </button>
+                        <button
+                            *ngIf="group.status != 'APPROVED' && permissioinStoreService.hasPermission(this.permissioinStoreService.appPermission.APPROVE_ROLE)"
+                            [title]="group?.status == 'PEND_DELETE' ? 'Delete': 'Approve'"
+                            (click)="onApprove($event, group)" class="btn float-right"
+                            style="padding: 2px; font-size: 12px;">
+                            <i class="fa " [ngClass]="group?.status == 'PEND_DELETE' ? 'fa-times': 'fa-check'"></i>
+                        </button>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div *ngIf="clickedItem" class="col-md-7">
+        <div class="row">
+
+            <div class="col-12" style="width: 100%;">
+                <h2 class="text-center select">{{clickedItem ?
+                    clickedItem.displayName : ''}}
+                </h2>
+            </div>
+            <div class="col-12">
+                <div class="row " cdkDropListGroup>
+                    <div class="col-6 ">
+                        <div class="row">
+                            <div class="col-12 h6 mb-1"><u>Available Permissions</u></div>
+                            <div class="col-md-12 mb-3">
+                                <input class="w-100 px-3" style="border-radius: 20px; border: 1px solid #b9c1c0;"
+                                    placeholder="Search" type="text" (keyup)="onSearchPermission($event, 'UN')" />
+                            </div>
+
+                            <!-- <div class="col-12">
+                                <div cdkDropList [cdkDropListData]="unassignPermissionList" class="example-list"
+                                    (cdkDropListDropped)="drop($event)">
+                                    <div class="example-box" *ngFor="let role of unassignPermissionList" cdkDrag>
+                                        {{role.displayName}}</div>
+                                </div>
+                            </div> -->
+
+                            <div class="col-12">
+                                <div cdkDropList [cdkDropListData]="unassignPermissionList" class="example-list"
+                                    (cdkDropListDropped)="drop($event)">
+                                    <div class="example-box" *ngFor="let role of unassignPermissionList" [cdkDrag]="!selectedRoles.length"
+                                        [ngClass]="{'selected': selectedRoles.includes(role)}"
+                                        (click)="toggleSelection(role, $event)">
+                                        {{role.displayName}}
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <div class="col-6 ">
+                        <h6 class="mb-3"><u>Assign Permissions</u></h6>
+                        <div class="col-md-12 mb-3"> </div>
+                        <div class="col-md-12 mb-3"> </div>
+
+                        <div cdkDropList [cdkDropListData]="assignPermissionList" class="example-list"
+                            (cdkDropListDropped)="drop($event)">
+                            <div class="example-box" *ngFor="let role of assignPermissionList"
+                                [ngClass]="{'selected': selectedRoles.includes(role)}" [cdkDrag]="!selectedRoles.length"
+                                (click)="toggleSelection(role, $event)">
+                                <div class="row mx-0" style="width: 100%;">
+                                    <div class="col-sm-12 position-relative px-0">
+                                        <a style="padding: 2px; font-size: 12px;"
+                                            class="list-group-item mr-1 text-left">{{role.displayName}}</a>
+                                        <div class="position-absolute" style="right: 0; top: 0;">
+                                            <button
+                                                *ngIf="(role.genericMapStatus == 'PEND_DEASSINED' || role.genericMapStatus == 'PEND_ASSIGN') && permissioinStoreService.hasPermission(this.permissioinStoreService.appPermission.SAVE_ROLE)"
+                                                title="Undo" (click)="onUndoAssignDeAssign(role)" class="btn"
+                                                style="padding: 2px; font-size: 12px;">
+                                                <i class="fa fa-undo btnUndo"></i>
+                                            </button>
+                                            <button
+                                                *ngIf="role.genericMapStatus == 'PEND_ASSIGN' && permissioinStoreService.hasPermission(this.permissioinStoreService.appPermission.APPROVE_ROLE)"
+                                                title="Approve" (click)="onApprovePermission(role)" class="btn"
+                                                style="padding: 2px; font-size: 12px;">
+                                                <i class="fa fa-check btnApprove"></i>
+                                            </button>
+                                            <button
+                                                *ngIf="role.genericMapStatus == 'PEND_DEASSINED' && permissioinStoreService.hasPermission(this.permissioinStoreService.appPermission.APPROVE_ROLE)"
+                                                title="Approve De-assign" (click)="onApproveDeassign(role)" class="btn"
+                                                style="padding: 2px; font-size: 12px;">
+                                                <i class="fa fa-times btnDeAssign"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div style="text-align: center;">
+                            <button
+                                *ngIf="permissioinStoreService.hasPermission(this.permissioinStoreService.appPermission.MAKE_ROLE)"
+                                [(disabled)]="roleBtnDisabled" (click)="onSaveRoleManage()" class="btn btn-primary"
+                                style="margin-top: 5px;">Save
+                                <span class="spinner-border spinner-border-sm" *ngIf="spinnerSave"
+                                    [mode]="'indeterminate'"></span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal" tabindex="-1" role="dialog" [ngStyle]="{'display':displayStyle}">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+
+                <div class="card">
+                    <div class="card-body">
+                        <div class="row my-4">
+                            <div class="col">
+
+                                <form [formGroup]="roleForm">
+
+                                    <div class="row">
+
+                                        <div class="col-md-12">
+                                            <div class="form-group d-flex flex-column flex-fill ">
+                                                <label for="distributorCode">
+                                                    <span>Role Name<span style="color: red;">*</span></span>
+                                                </label>
+
+                                                <input type="text" formControlName="displayName" class="form-control"
+                                                    name="displayName" [attr.maxlength]="displayNameMaxLength"
+                                                    [ngClass]="{ 'is-invalid': roleForm.controls.displayName?.touched && roleForm.controls.displayName.errors?.required}">
+                                                <div class="invalid-feedback"
+                                                    *ngIf="roleForm.controls.displayName?.touched && roleForm.controls.displayName.errors?.required">
+                                                    Name Is Required
+                                                </div>
+                                            </div>
+                                            <div class="form-group d-flex flex-column flex-fill ">
+                                                <label for="roleType">
+                                                    <span>Role Type<span style="color: red;">*</span></span>
+                                                </label>
+
+                                                <!-- <input type="text" formControlName="roleType" class="form-control"> -->
+
+                                                <select id="roleType" class="form-select"
+                                                    aria-label="Default select example" formControlName="roleType"
+                                                    [ngClass]="{ 'is-invalid': roleForm.controls.roleType?.touched && roleForm.controls.roleType.errors?.required}">
+                                                    <option value='null' disabled>Select an option...</option>
+                                                    <!-- <option selected value="" disabled>Open this select menu</option> -->
+                                                    <option value="INTERNAL">Internal</option>
+                                                    <option value="EXTERNAL">External</option>
+                                                </select>
+                                                <div class="invalid-feedback"
+                                                    *ngIf="roleForm.controls.roleType?.touched && roleForm.controls.roleType.errors?.required">
+                                                    Role Type Is Required
+                                                </div>
+                                            </div>
+                                            <div class="form-group d-flex flex-column flex-fill ">
+                                                <label for="distributorCode">
+                                                    <span>Description</span>
+                                                </label>
+                                                <textarea class="form-control" formControlName="desc" id="message-text"
+                                                    [attr.maxlength]="descMaxLength"></textarea>
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                    <div style="text-align: center;">
+                                        <button
+                                            *ngIf="permissioinStoreService.hasPermission(this.permissioinStoreService.appPermission.MAKE_ROLE)"
+                                            [disabled]="!roleForm.valid" (click)="onSave()" class="btn btn-primary"
+                                            style="margin-top: 5px;">{{buttonSaveOrUpdate}}
+                                            <span class="spinner-border spinner-border-sm" *ngIf="spinnerAddSave"
+                                                [mode]="'indeterminate'"></span>
+                                        </button>
+
+                                        &nbsp;
+                                        <button (click)="closePopup()" class="btn btn-danger">Cancel</button>
+                                    </div>
+
+                                </form>
+
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>

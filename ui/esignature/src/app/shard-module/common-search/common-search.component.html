@@ -1,0 +1,52 @@
+<div class="accordion" id="accordionExample"></div>
+<div class="accordion-item">
+    <div id="collapseOne" class="accordion-collapse collapse" [ngClass]="!isShow ? 'show': ''"
+        aria-labelledby="headingOne" data-bs-parent="#accordionExample">
+        <div class="row">
+            <div class="col-md-12 col-xl-12">
+                <div class="card-body demo-vertical-spacing demo-only-element" style="padding: 2% 0px 3%;">
+                    <div class="input-group input-group-lg">
+                        <div class="col-md-3 form-floating" *ngIf="allowInstitutionSearch">
+                            <ng-multiselect-dropdown style="z-index: 150; width: 350px;"
+                                [ngModelOptions]="{standalone: true}" [(ngModel)]="selectedInstitutionName"
+                                [placeholder]="'Select institution'" [settings]="dropdownSettingsInstitution"
+                                [data]="institutionList" (onSelect)="getInstitutionIdS($event)" (onDeSelect)="deselect($event)"
+                                [ngClass]="{ 'is-invalid': (clicked || isSearch) && profileForm.controls.institutionId?.errors}">
+                            </ng-multiselect-dropdown>
+
+                        </div>
+
+                        <!-- <div class="col-md-3 form-floating" *ngIf="allowInstitutionSearch">
+                        <select class="form-select" id="floatingSelect" aria-label="Floating label select example"
+                            [(ngModel)]="institutionId" *ngIf="allowInstitutionSearch">
+                            <option [value]="null" disabled>Select Institution</option>
+                            <option *ngFor="let ins of institutionList" [value]="ins.institutionId">
+                                {{ins.institutionName}}</option>
+                        </select>
+                        <label class="ml-3" for="floatingSelect">Institution</label> -->
+
+                        <!-- </div> -->
+                        <input type="name" class="form-control" id="nameInput" placeholder="abc@some.com"
+                        [(ngModel)]="name" name="name" placeholder="Search by Name" maxlength="50" >
+
+                        <input type="email" class="form-control" id="emailInput" placeholder="abc@some.com"
+                            [(ngModel)]="email" name="Email" placeholder="Search by Email" maxlength="50">
+
+
+                        <input type="text" [appNoSpecialCharacters]="'numericNumber'" class="form-control" id="paInput"
+                            placeholder="Search by PA" [(ngModel)]="pa" name="PA" maxlength="15">
+
+
+                        <input type="text" [appNoSpecialCharacters]="'numericNumber'" class="form-control"
+                            id="floatingInputValue" placeholder="Search by Employee ID" [(ngModel)]="employeeId" maxlength="15"
+                            name="employeeId">
+
+                        <button class="btn btn-primary active" type="button" style="z-index: 1;" (click)="search()"
+                            [ngxInputLoader]="showProgress" value="Search"
+                            [ngxInputLoaderConfig]="loaderConfig">Search</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

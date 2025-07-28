@@ -1,0 +1,60 @@
+/* Formatted on 2/24/2025 3:16:37 PM (QP5 v5.336) */
+CREATE OR REPLACE VIEW VW_DOC_REPORT
+AS
+    WITH
+        FileMaxDates
+        AS
+            (  SELECT F.ID_OBJECT_KEY, MAX (F.DTT_CREATE) AS DTT_CREATE
+                 FROM T_FILES F
+             GROUP BY F.ID_OBJECT_KEY)
+    SELECT ROWNUM AS id_key, V.*
+      FROM (  SELECT SG.TX_PA,
+                     TF.DTT_CREATE,
+                     SG.TX_NAME,
+                     SR.DTT_CREATE     AS DTT_SIGNATURE_CREATE,
+                     FAG.DTT_CREATE    AS DTT_AGREEMENT_FILE,
+                     FAP.DTT_CREATE    AS DTT_APPROVAL_FILE,
+                     FCC.DTT_CREATE    AS DTT_CANCELATION_SIRCULAR,
+                     FCA.DTT_CREATE    AS DTT_CANCELATION_APPROVAL,
+                     CASE
+                         WHEN SR.TX_SIGNATURE_STATUS = 'ACTIVE'
+                         THEN
+                             SR.DT_AUTH_DATE
+                     END               AS DTT_ACTIVE,
+                     CASE
+                         WHEN SR.TX_SIGNATURE_STATUS = 'CANCELED'
+                         THEN
+                             SR.DT_CANCEL_TIME
+                     END               AS DTT_CANCELLATION,
+                     CASE
+                         WHEN SR.TX_SIGNATURE_STATUS = 'IN_ACTIVE'
+                         THEN
+                             SR.DT_INACTIVE_TIME
+                     END               AS DTT_INACTIVE
+                --SR.DT_INACTIVE_TIME AS DTT_INACTIVE,
+                --SR.DT_CANCEL_TIME AS DTT_CANCELLATION
+                FROM T_SIGNATORY SG
+                     LEFT JOIN T_SIGNATURE SR
+                         ON     SG.ID_SIGNATORY_KEY = SR.ID_SIGNATORY_KEY
+                            AND SR.IS_ACTIVE = SG.IS_ACTIVE
+                            AND SR.IS_MAIN_SIGNATURE = 1
+                     LEFT JOIN T_FILES FAG
+                         ON     FAG.ID_OBJECT_KEY = SG.ID_SIGNATORY_KEY
+                            AND FAG.TX_OBJECT_TYPE = 'AGREEMENT_FILE'
+                     LEFT JOIN T_FILES FAP
+                         ON     FAP.ID_OBJECT_KEY = SG.ID_SIGNATORY_KEY
+                            AND FAP.TX_OBJECT_TYPE = 'APPROVAL_FILE'
+                     LEFT JOIN T_FILES FCC
+                         ON     FCC.ID_OBJECT_KEY = SG.ID_SIGNATORY_KEY
+                            AND FCC.TX_OBJECT_TYPE = 'CANCELATION'
+                     LEFT JOIN T_FILES FCA
+                         ON     FCA.ID_OBJECT_KEY = SG.ID_SIGNATORY_KEY
+                            AND FCA.TX_OBJECT_TYPE = 'CANCELATION_APPROVAL'
+                     LEFT JOIN FileMaxDates TF
+                         ON TF.ID_OBJECT_KEY = SG.ID_SIGNATORY_KEY
+               WHERE SG.IS_ACTIVE = 1 AND SG.TX_IDENTIFY = 'INTERNAL'
+                AND (FAG.DTT_CREATE IS NOT NULL 
+                      OR FAP.DTT_CREATE IS NOT NULL 
+                      OR FCC.DTT_CREATE IS NOT NULL 
+                      OR FCA.DTT_CREATE IS NOT NULL)
+            ORDER BY SG.ID_SIGNATORY_KEY DESC) V;

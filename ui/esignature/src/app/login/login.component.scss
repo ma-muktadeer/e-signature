@@ -1,0 +1,67 @@
+.hvr:hover{
+    .fa{
+        color: white !important;
+    }
+}
+.invalidCapcha{
+    color: red;
+    text-align: right;
+    font-size: 12px;
+    padding-right: 2%;
+}
+
+.otp-message {
+    color: rgb(255, 0, 0);
+    font-size: 14px;
+    margin-bottom: 10px;
+    text-align: right;
+    margin-top: -15px;
+}
+
+
+a{
+    text-decoration: none !important;
+}
+.text-red{
+    color: red;
+}
+
+// .form-check-input{
+//     background-color: #293c8b;
+// }
+
+.form-check-input {
+    background-color: white; 
+    border: 2px solid #293c8b; 
+}
+
+.form-check-input:checked {
+    background-color: #293c8b;
+    border-color: #293c8b; 
+}
+
+
+.reload-btn:hover i {
+    color: white !important;
+}
+
+
+.forgot-password{
+    margin-left: 190px;
+}
+
+.resend-enabled{
+    display: none;
+}
+
+//
+input::-ms-reveal,
+input::-ms-clear {
+  display: none;
+}
+
+input[type="password"]::-webkit-credentials-auto-fill-button,
+input[type="password"]::-webkit-textfield-decoration-container {
+  display: none;
+}
+

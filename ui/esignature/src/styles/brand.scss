@@ -1,0 +1,419 @@
+/*
+* demo.css
+* File include item demo only specific css only
+******************************************************************************/
+/*
+* demo.css
+* File include item demo only specific css only
+******************************************************************************/
+@font-face {
+    font-family: 'AcuminPro';
+    src: url('fonts/Acumin-BdItPro.otf') format('opentype'),
+         url('fonts/Acumin-BdPro.otf') format('opentype'),
+         url('fonts/Acumin-ItPro.otf') format('opentype'),
+         url('fonts/Acumin-Italic.ttf') format('opentype');
+    font-weight: normal;
+    font-style: normal;
+}
+// @font-face {
+//     font-family: 'AcuminIta';
+//     src: url('fonts/Acumin-Italic.ttf') format('opentype');
+//     font-weight: normal;
+//     font-style: normal;
+// }
+ body, li, a, p, small, ul, div, table, td, tr, tbody {
+    font-family:  "Public Sans", "Segoe UI", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
+	font-weight: 400;
+} 
+h1, h2, h3, h4, h5, h6, th {
+    font-family:  "Public Sans", "Segoe UI", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
+	font-weight: bold;
+}
+a.app-brand-link.animate h3 {
+    display: block;
+}
+.animate {
+  -webkit-animation-duration: 1s;
+  animation-duration: 1s;
+  -webkit-animation-fill-mode: both;
+  animation-fill-mode: both;
+}
+.three {
+  -webkit-animation-delay: 1s;
+  -moz-animation-delay: 1s;
+  animation-delay: 1s;
+}
+@-webkit-keyframes fadeInLeft {
+  from {
+    opacity: 0;
+    -webkit-transform: translate3d(-100%, 0, 0);
+    transform: translate3d(-100%, 0, 0);
+  }
+
+  to {
+    opacity: 1;
+    -webkit-transform: none;
+    transform: none;
+  }
+}
+@keyframes fadeInLeft {
+  from {
+    opacity: 0;
+    -webkit-transform: translate3d(-100%, 0, 0);
+    transform: translate3d(-100%, 0, 0);
+  }
+
+  to {
+    opacity: 1;
+    -webkit-transform: none;
+    transform: none;
+  }
+}
+.fadeInLeft {
+  -webkit-animation-name: fadeInLeft;
+  animation-name: fadeInLeft;
+}
+.four {
+  -webkit-animation-delay: 1s;
+  -moz-animation-delay: 1s;
+  animation-delay: 1s;
+}
+@-webkit-keyframes fadeInRight {
+  from {
+    opacity: 0;
+    -webkit-transform: translate3d(100%, 0, 0);
+    transform: translate3d(100%, 0, 0);
+  }
+
+  to {
+    opacity: 1;
+    -webkit-transform: none;
+    transform: none;
+  }
+}
+@keyframes fadeInRight {
+  from {
+    opacity: 0;
+    -webkit-transform: translate3d(100%, 0, 0);
+    transform: translate3d(100%, 0, 0);
+  }
+
+  to {
+    opacity: 1;
+    -webkit-transform: none;
+    transform: none;
+  }
+}
+
+.fadeInRight {
+  -webkit-animation-name: fadeInRight;
+  animation-name: fadeInRight;
+}
+.loginpanel .loginpg{
+    background: #021225;
+    padding-top: 2%;
+    background-position: top;
+    background-repeat: no-repeat;
+    background-size: cover;
+    overflow: hidden;
+    min-height: 100vh;
+}
+
+@media only screen and (max-width: 767px) {
+    .content-wrapper.loginpg{
+        // background-image: url(assets/img/phonbgnf.jpg)!important;
+        background-position: 0px -1px; 
+        background-size: cover;
+        min-height: auto!important;
+    }
+    .loginpanel{
+        background: #021225;
+        position: relative;
+    }
+    .forgotpass .container.flex-grow-1.container-p-y {
+        padding: 0px;
+    }
+    .loginpg .col-xl-5 .card {
+        width: 92% !important;
+        margin-top: 20%;
+        position: absolute;
+        left: 4%;
+        right: 4%;
+        bottom: -100%;
+    }
+    .loginpg .col-xl-5 .authentication-inner {
+        padding: 0px!important;
+        margin-top: 30px;
+        width: 100%;
+    } 
+    h3.three{
+        font-size: 30px!important;
+        margin-bottom: 42%;
+    }
+    .three img{
+        height: 34px!important;
+    }
+    .loginpg .authentication-inner{
+    padding-left: 0px!important;
+}
+}
+.menu-item.active>.menu-sub {
+    display: flex;
+}
+.loginpg img.img-fluid {
+    width: 90%;
+    text-align: center;
+    margin: 0 auto;
+}
+html:not(.layout-menu-collapsed) .bg-menu-theme .menu-inner .menu-item .menu-link:not(.active):hover, .btn:hover{
+	background: transparent!important;
+}
+
+a.menu-link, .btn {
+	box-shadow: inset 0 0 0 0 #fff!important;
+	-webkit-transition: ease-out 0.25s!important;
+	-moz-transition: ease-out 0.25s!important;
+	transition: ease-out 0.25s!important;
+}
+a.menu-link:hover, .btn:hover {
+	box-shadow: inset 400px 50px 0 0 #293c8b!important;
+	transition: ease-out 0.4s!important;
+}
+
+.btn:hover {
+	border-color: transparent;
+}
+/*.btn::before, .btn::after {
+    width: 100%;
+    height: 50%;
+    position: absolute;
+    left: 0;
+    background-color: #196f36;
+    transition: all 0.4s;
+    content: "";
+    z-index: -1;
+}
+.btn::before {
+    top: 0;
+    transform: translate(-100%, 0);
+}
+.btn::after {
+    bottom: 0;
+    transform: translate(100%, 0);
+}
+.btn:hover::before, .btn:hover::after {
+    transform: translate(0, 0);
+}*/
+
+.signature-inactive .card h5 {
+    background: #293c8b !important;
+}
+.withoutmnu {
+    padding: 8% 0% 3%;
+}
+.contact-us img.img-fluid {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+}
+.mb-6 {
+    margin-bottom: 1.5rem !important;
+}
+.bx-36px, .bx-36px:before {
+    font-size: 36px;
+}
+.alert-solid-dark {
+    background-color: #2b2c40;
+    color: #fff;
+}
+.alert-solid-info {
+    background-color: #03c3ec;
+    color: #fff;
+}
+.alert-solid-warning {
+    background-color: #ffab00;
+    color: #fff;
+}
+.alert-solid-danger {
+    background-color: #ff3e1d;
+    color: #fff;
+}
+.alert-solid-success {
+    background-color: #71dd37;
+    color: #fff;
+}
+.alert-solid-secondary, .news-feed-table tr th {
+    background-color: #293c8b;
+    color: #fff!important;
+	border: 1px solid #a0a7b1;
+}
+.alert-solid-primary, .news-feed .card h4 {
+    background-color: #293c8b;
+    color: #fff!important;
+}
+.alert[class*=alert-solid-] .alert-icon {
+    background-color: #fff;
+}
+.alert-solid-dark .alert-icon {
+    color: #2b2c40 !important;
+    box-shadow: 0 0 0 .125rem #555666;
+}
+.alert-solid-info .alert-icon {
+    color: #03c3ec !important;
+    box-shadow: 0 0 0 .125rem #35cff0;
+}
+.alert-solid-warning .alert-icon {
+    color: #ffab00 !important;
+    box-shadow: 0 0 0 .125rem #ffbc33;
+}
+.alert-solid-danger .alert-icon {
+    color: #ff3e1d !important;
+    box-shadow: 0 0 0 .125rem #ff654a;
+}
+.alert-solid-success .alert-icon {
+    color: #71dd37 !important;
+    box-shadow: 0 0 0 .125rem #8de45f;
+}
+.alert-solid-secondary .alert-icon {
+    color: #8592a3 !important;
+    box-shadow: 0 0 0 .125rem #9da8b5;
+}
+.alert-solid-primary .alert-icon {
+    color: #696cff !important;
+    box-shadow: 0 0 0 .125rem #8789ff;
+}
+.alert .alert-icon {
+    color: #fff;
+    height: 1.75rem;
+    width: 1.75rem;
+    padding: .68rem;
+    margin-right: 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.signaturepg img {
+    width: 100%;
+}
+.forgotpass .shadow-none {
+    margin-right: 10%;
+    background: transparent;
+    color: #fff;
+    font-size: 17px;
+}
+input.submit__input {
+    border: 1px solid #d9dee3;
+    padding: 0px 5px;
+}
+
+
+@media (max-width: 767.98px) {
+	.forgotpass .shadow-none {
+		margin: 6% 6% 2%;
+		font-size: 15px;
+	}
+}
+
+
+.menu .app-brand.demo {
+  height: 64px;
+  margin-top: 12px;
+}
+
+.app-brand-logo.demo svg {
+  width: 22px;
+  height: 38px;
+}
+
+.app-brand-text.demo {
+  font-size: 1.75rem;
+  letter-spacing: -0.5px;
+  text-transform: lowercase;
+}
+
+/* ! For .layout-navbar-fixed added fix padding top tpo .layout-page */
+/* Detached navbar */
+.layout-navbar-fixed .layout-wrapper:not(.layout-horizontal):not(.layout-without-menu) .layout-page {
+  padding-top: 76px !important;
+}
+/* Default navbar */
+.layout-navbar-fixed .layout-wrapper:not(.layout-without-menu) .layout-page {
+  padding-top: 64px !important;
+}
+
+/* Navbar page z-index issue solution */
+.content-wrapper .navbar {
+  z-index: auto;
+}
+
+/*
+* Content
+******************************************************************************/
+
+.demo-blocks > * {
+  display: block !important;
+}
+
+.demo-inline-spacing > * {
+  margin: 1rem 0.375rem 0 0 !important;
+}
+
+/* ? .demo-vertical-spacing class is used to have vertical margins between elements. To remove margin-top from the first-child, use .demo-only-element class with .demo-vertical-spacing class. For example, we have used this class in forms-input-groups.html file. */
+.demo-vertical-spacing > * {
+  margin-top: 1rem !important;
+  margin-bottom: 0 !important;
+}
+.demo-vertical-spacing.demo-only-element > :first-child {
+  margin-top: 0 !important;
+}
+
+.demo-vertical-spacing-lg > * {
+  margin-top: 1.875rem !important;
+  margin-bottom: 0 !important;
+}
+.demo-vertical-spacing-lg.demo-only-element > :first-child {
+  margin-top: 0 !important;
+}
+
+.demo-vertical-spacing-xl > * {
+  margin-top: 5rem !important;
+  margin-bottom: 0 !important;
+}
+.demo-vertical-spacing-xl.demo-only-element > :first-child {
+  margin-top: 0 !important;
+}
+
+.rtl-only {
+  display: none !important;
+  text-align: left !important;
+  direction: ltr !important;
+}
+
+[dir='rtl'] .rtl-only {
+  display: block !important;
+}
+
+/*
+* Layout demo
+******************************************************************************/
+
+.layout-demo-wrapper {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  margin-top: 1rem;
+}
+.layout-demo-placeholder img {
+  width: 900px;
+}
+.layout-demo-info {
+  text-align: center;
+  margin-top: 1rem;
+}

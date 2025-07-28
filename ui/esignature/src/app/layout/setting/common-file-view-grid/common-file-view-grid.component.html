@@ -1,0 +1,10 @@
+<div style="margin-top: 10px; width: 100%;">
+
+    <angular-slickgrid id="agreementtureGrid" #agreementGridList gridId="agreementGrid" style="width: 100%;"
+        [columnDefinitions]="columnDefinitions" [gridOptions]="gridOptions" [gridHeight]="height"
+        [dataset]="dataSet" (onAngularGridCreated)="angularGridReady($event)">
+    </angular-slickgrid>
+
+</div>
+
+<div id="temp" style="width: 100%;"></div>

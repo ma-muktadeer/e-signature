@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.6.0.final using JasperReports Library version 6.6.0  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="down" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="2ba52314-1cc4-4708-81f3-24c8bf7e77aa">
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="esignature"/>
+	<property name="background.image.x" value="40"/>
+	<property name="background.image.y" value="40"/>
+	<parameter name="TX_EMPLOYEE_ID" class="java.lang.String"/>
+	<queryString language="SQL">
+		<![CDATA[SELECT ROWNUM AS SL, V.TX_NAME, V.TX_PA, V.TX_SIGNATURE_STATUS, V.TX_SIGNATURE_PATH, V.TX_DELIGATION
+FROM (
+    SELECT I.TX_NAME, 
+           I.TX_PA, 
+           I.TX_DELIGATION,
+           CASE 
+               WHEN I.TX_SIGNATURE_STATUS = 'IN_ACTIVE' THEN 'Inactive' 
+               WHEN I.TX_SIGNATURE_STATUS = 'ACTIVE' THEN 'Active'
+               WHEN I.TX_SIGNATURE_STATUS = 'CANCELED' THEN 'Cancelled'
+               ELSE I.TX_SIGNATURE_STATUS 
+           END AS TX_SIGNATURE_STATUS,
+           I.TX_SIGNATURE_PATH 
+    FROM VW_SIGNATURE_INFO I 
+    WHERE I.TX_STATUS = 'APPROVED' 
+        AND INSTR(UPPER(I.INSTITUTION_NAME), 'PRIME BANK', 1, 1) = 1
+        AND I.IS_MAIN_SIGNATURE = 1 
+        AND I.IS_ACTIVE = 1
+) V]]>
+	</queryString>
+	<field name="SL" class="java.math.BigDecimal"/>
+	<field name="TX_NAME" class="java.lang.String"/>
+	<field name="TX_PA" class="java.lang.String"/>
+	<field name="TX_SIGNATURE_STATUS" class="java.lang.String"/>
+	<field name="TX_SIGNATURE_PATH" class="java.lang.String"/>
+	<field name="TX_DELIGATION" class="java.lang.String"/>
+	<background>
+		<band height="580" splitType="Stretch">
+			<image>
+				<reportElement mode="Transparent" x="37" y="220" width="470" height="320" uuid="ae4eea51-6e05-496b-8773-ef803375df97">
+					<property name="local_mesure_unitx" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="local_mesure_unity" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					<property name="local_mesure_unitwidth" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="local_mesure_unitheight" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<imageExpression><![CDATA["D:/GIT/Projects/esignature/server/esignature-server/src/main/resources/jasper/img/logo_prime-water.png"]]></imageExpression>
+			</image>
+		</band>
+	</background>
+	<title>
+		<band height="99" splitType="Stretch">
+			<image hAlign="Center">
+				<reportElement x="173" y="-7" width="29" height="31" uuid="a44b3d99-4139-4646-84ec-905962553a8e"/>
+				<imageExpression><![CDATA["D:/GIT/Projects/esignature/server/esignature-server/src/main/resources/jasper/img/logo_prime.png"]]></imageExpression>
+			</image>
+			<staticText>
+				<reportElement x="164" y="-6" width="234" height="25" uuid="3cc7e4a0-c75a-4b8a-b4f4-cffa1e203304"/>
+				<textElement textAlignment="Center">
+					<font size="19" isBold="true" isItalic="true"/>
+				</textElement>
+				<text><![CDATA[Prime Bank PLC.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="164" y="19" width="234" height="80" uuid="805f4558-b9f4-4226-b3bb-a7a4800a97da"/>
+				<textElement textAlignment="Center">
+					<font isItalic="false"/>
+				</textElement>
+				<text><![CDATA[Service Delivery, Operations Division, Head Office, Prime Tower, Level-5, Plot No 35 & 8, Airport Road, Nikunja 2, Dhaka-1229 Bangladesh.
+Phone:+8809610990000 ext. 10504 or 10522 
+Email: e-signature@primebank.com.bd]]></text>
+			</staticText>
+		</band>
+	</title>
+	<columnHeader>
+		<band height="20" splitType="Stretch">
+			<staticText>
+				<reportElement mode="Opaque" x="0" y="0" width="70" height="20" backcolor="#DEDEDE" uuid="a20f4e0e-8595-491c-9fdc-bf4fc1f8d4b2"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Sl no]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="70" y="0" width="134" height="20" backcolor="#DEDEDE" uuid="af643dad-24b7-4034-ad94-1ba6e07f1b7c"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Name]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="204" y="0" width="106" height="20" backcolor="#DEDEDE" uuid="4aad41fe-d46a-4366-aab6-1e1584b81ee9"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[PA Number]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="467" y="0" width="90" height="20" backcolor="#DEDEDE" uuid="eae55e21-a5a2-4a14-a8e7-0c0ddaa5dc71"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Status]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="310" y="0" width="157" height="20" backcolor="#DEDEDE" uuid="7993f59e-55a1-4c7c-a212-2a824c414461"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Specimen Signature]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="41" splitType="Stretch">
+			<textField>
+				<reportElement x="470" y="0" width="88" height="40" uuid="a1b3e626-8615-45c0-9733-3b5378031f51"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{TX_SIGNATURE_STATUS}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="77" y="0" width="122" height="40" uuid="ecf9be76-ef5c-4074-be91-0f73b739e1f7"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{TX_NAME}]]></textFieldExpression>
+			</textField>
+			<image scaleImage="FillFrame">
+				<reportElement x="323" y="2" width="135" height="37" uuid="910080c8-3145-41b8-9cd3-0c825f7b31a1"/>
+				<imageExpression><![CDATA[$F{TX_SIGNATURE_PATH} != null && new java.io.File("D:/E-SIGNATURE/" + $F{TX_SIGNATURE_PATH}).exists() ? "D:/E-SIGNATURE/" + $F{TX_SIGNATURE_PATH} : "D:/GIT/Projects/esignature/server/esignature-server/src/main/resources/jasper/img/logo_prime.png"]]></imageExpression>
+			</image>
+			<textField>
+				<reportElement x="215" y="0" width="86" height="40" uuid="61dd350e-d561-472c-af78-8833dff332e7"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{TX_PA}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="0" y="0" width="70" height="40" uuid="69cf77ce-8911-4335-a199-48a34991d6f3"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{SL}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<summary>
+		<band height="42" splitType="Stretch"/>
+	</summary>
+</jasperReport>

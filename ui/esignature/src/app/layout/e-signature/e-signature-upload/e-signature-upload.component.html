@@ -1,0 +1,456 @@
+<div class="body" style="overflow-x: hidden !important; background: transparent;">
+    <div class="" role="dialog" tabindex="-1">
+        <div class="modal-header bg-bar-color p-2 mb-2">
+            <div class="align-self-center ">
+                <h3 class="mx-auto text-dark">Upload Signature By </h3>
+            </div>
+
+            <div class="pull-right row ml-2">
+                <div type="button" class="btns bg-text-color btn-sm ml-1"
+                    *ngIf="permissionStoreService.hasAnyPermission([appPermission.FILE_UPLOAD])"
+                    [ngClass]="modelBody=='FILE' ? 'select-btn-light' : 'btn-light'" (click)="openBody('FILE')">
+                    <i class="fa fa-file-text-o" aria-hidden="true"></i> |
+                    <span aria-hidden="true">Bulk Upload</span>
+                </div>
+                <div type="button" class="btns bg-text-color btn-sm ml-1 mr-3"
+                    *ngIf="permissionStoreService.hasAnyPermission([appPermission.UPLOAD_SIGNATURE])"
+                    [ngClass]="modelBody=='SINGLE' ? 'select-btn-light' : 'btn-light'" (click)="openBody('SINGLE')">
+                    <i class="fa fa-upload" aria-hidden="true"></i> |
+                    <span aria-hidden="true">Single Upload</span>
+                </div>
+
+            </div>
+
+        </div>
+        <div class="modal-body p-0">
+
+            <div class="d-flex justify-content-center" style="overflow: hidden;">
+
+                <!-- form -->
+                <div *ngIf="modelBody=='FIRST'">
+                    <h1>Welcome to Signature Upload Section. </h1>
+                </div>
+                <!-- file upload section -->
+                <div [@slideInOut]="helpMenu" class="p-0 mt-2" [ngClass]="modelBody === 'FILE'? 'm-body':'hdn'"
+                    [hidden]="modelBody !== 'FILE'" style="height: 100%;">
+
+                    <div class="div-style div-header mb-4">
+                        <h4 class="mt-2">Bulk Signature Upload</h4>
+                    </div>
+
+                    <div class="uploadForm p-3" style="height: auto;min-height: 520px;">
+                        <hr>
+
+                        <div class="p-2">
+
+                            <div class="form-group mx-0 mb-4">
+                                <div class="col-md-12">
+                                    <div class="row">
+                                        <div class="inputContainer col-md-4">
+                                            <!-- <div class="mb-3"> -->
+                                            <select class="input" id="typ" [(ngModel)]="bankType"
+                                                (change)="selectionChange(bankType)"
+                                                [ngModelOptions]="{standalone: true}">
+                                                <option [ngValue]="''" disabled>Select Bank</option>
+                                                <option [ngValue]="'INTERNAL_USER'">Prime Bank</option>
+                                                <option [ngValue]="'EXTERNAL_USER'">Others</option>
+                                                <!-- <option *ngIf="csService.forceAllow() || !permissionStoreService.hasPermission(appPermission.HR_ROLE)" [ngValue]="'EXTERNAL_USER'">Others</option> -->
+                                            </select>
+                                            <!-- <div class="invalid-feedback">Please select an option.</div> -->
+                                            <label for="typ" class="label">Upload For:</label>
+                                        </div>
+                                        <div class="inputContainer col-md-4" *ngIf="bankType === 'EXTERNAL_USER'">
+                                            <!-- <div class="mb-3"> -->
+                                            <select class="input" id="status1" [(ngModel)]="insType"
+                                                (change)="loadInstitution(insType)"
+                                                [ngModelOptions]="{standalone: true}">
+                                                <option [ngValue]="''" disabled>Select Institution Type</option>
+                                                <option [ngValue]="institutionType.value"
+                                                    *ngFor="let institutionType of institutionTypeList">
+                                                    {{institutionType.name}}</option>
+
+                                            </select>
+                                            <label for="status1" class="label">Institution Type:</label>
+
+                                        </div>
+                                        <div class="inputContainer col-md-4"
+                                            *ngIf="bankType === 'EXTERNAL_USER' && institutionList?.length">
+                                            <!-- <div class="mb-3"> -->
+                                            <!-- <input class="input" list="institutionList" id="datalistInput"
+                                                autocomplete="off" [readOnly]="readOnly"
+                                                placeholder="Select Institution" [ngModelOptions]="{standalone: true}"
+                                                [(ngModel)]="selectedInstitutionName" (change)="getInstitutionId()" />
+                                            <label for="status1" class="label">Institution Name:</label>
+
+                                            <datalist id="institutionList">
+                                                <option *ngFor="let institution of institutionList">
+                                                    {{ institution.institutionName }}</option>
+                                            </datalist> -->
+                                            <ng-multiselect-dropdown style="z-index: 150; width: 300px;"
+                                            [ngModelOptions]="{standalone: true}" [(ngModel)]="selectedInstitutionName"
+                                            [placeholder]="'Select institution'" [settings]="dropdownSettingsInstitution"
+                                            [data]="institutionList" (onSelect)="getInstitutionIdS($event)"
+                                            [ngClass]="{ 'is-invalid': (clicked || isSearch) && profileForm.controls.institutionId?.errors}">
+                                        </ng-multiselect-dropdown>
+                                        </div>
+
+
+                                    </div>
+
+                                </div>
+                            </div>
+
+
+                            <div *ngIf="institutionId" class="dropsone" signatureDnd
+                                (files)="filesDropped($event, 'EXCL')">
+                                <div *ngIf="!xclFile">
+                                    <input class="ics" type="file" #signatureDropRef id="signatureDropRef"
+                                        (change)="onFileDropped($event, 'EXCL')" [accept]="xclFileType" />
+                                    <img src="assets/images/upload.png" alt="">
+                                    <h3>Drag and drop file here</h3>
+
+                                    <h3>or</h3>
+                                    <label class="lcs" for="signatureDropRef"> Browse for file</label>
+                                </div>
+                                <div class="col-12 d-flex flex-column justify-content-center align-items-center bd-highlight"
+                                    style="font-size: 1.2rem; height: 100%;">
+                                    <div class="bd-highlight font-weight-bold mr-2 " *ngFor="let name of fileName">
+                                        {{name}}
+                                    </div>
+
+                                    <div *ngIf="xclFile">
+                                        <button [disabled]="isConfirmedUpload" class="btn btn-primary align-middle"
+                                            (click)="uploadFile()">Upload</button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-12" *ngIf="!institutionId">
+                                    Download the sample template:
+                                    <span class="down" *ngIf="!(progress && progress > 0 && progress < 100)"
+                                        (click)="downloadTemp()">download
+                                    </span>
+                                    <span class="down" *ngIf="(progress && progress > 0 && progress < 100)">downloading:
+                                        {{progress}}%
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- file upload section -->
+                <div [@slideInOut]="helpMenu" class="p-0" [ngClass]="modelBody === 'SINGLE'? 'm-body':'hdn'"
+                    [hidden]="modelBody !== 'SINGLE'">
+                    <div class="div-style div-header mb-4">
+                        <h4 class="mt-2">Signature Upload</h4>
+                    </div>
+
+                    <div class="uploadForm p-3" style="height: auto;min-height: 520px;">
+
+                        <form class="form p-0" style="margin-top: 35px;" [formGroup]="signatureForm">
+                            <hr>
+                            <div class="p-2">
+
+                                <div class="form-group mx-0 d-flex ">
+                                    <div class="col-md-12">
+
+                                        <div class="row">
+                                            <div class="inputContainer col-md-4">
+                                                <!-- <div class="mb-3"> -->
+                                                <select class="input" id="status1" [(ngModel)]="userType"
+                                                    (change)="loadSignatory(userType)"
+                                                    [ngModelOptions]="{standalone: true}">
+                                                    <option [ngValue]="''" disabled>Select Bank</option>
+                                                    <option [ngValue]="'INTERNAL_USER'">Prime Bank</option>
+                                                    <option [ngValue]="'EXTERNAL_USER'">Others</option>
+                                                    <!-- <option value="CANCELED"> CANCEL</option> -->
+                                                </select>
+                                                <label for="status1" class="label">Upload For:</label>
+
+                                            </div>
+                                            <div class="inputContainer col-md-4" *ngIf="userType === 'EXTERNAL_USER'">
+                                                <!-- <div class="mb-3"> -->
+                                                <select class="input" id="status1" [(ngModel)]="insType"
+                                                    (change)="loadSignatory(insType)"
+                                                    [ngModelOptions]="{standalone: true}">
+                                                    <option [ngValue]="''" disabled>Select Institution</option>
+                                                    <option [ngValue]="institutionType.value"
+                                                        *ngFor="let institutionType of institutionTypeList">
+                                                        {{institutionType.name}}</option>
+
+                                                </select>
+                                                <label for="status1" class="label">Institution:</label>
+
+                                            </div>
+                                        </div>
+
+                                        <div class="row" *ngIf="signatoryList?.length">
+
+                                            <div class="inputContainer col-md-4 ">
+                                                <input class="input form-control" [type]="'date'" (focus)="onFocus(in)"
+                                                    (focusout)="updateType()" formControlName="effictiveDate"
+                                                    placeholder="Effective Date"
+                                                    [ngClass]="{'is-invalid': btnClick === 'SINGLE' && signatureForm.get('effictiveDate').hasError('required')&& type === 'text'}">
+                                                <label for="employeeId" class="label">Effective Date</label>
+
+                                                <div *ngIf="signatureForm.get('effictiveDate').hasError('required')"
+                                                    class="invalid-feedback col-md-12" style="margin-left: 85px;">
+                                                    Effective Date is required.
+                                                </div>
+                                            </div>
+                                            <!-- <div class="inputContainer col-md-4 ">
+                                                <input #in class="input form-control" [type]="type"
+                                                    (focus)="onFocus(in)" (focusout)="updateType()"
+                                                    formControlName="effictiveDate" placeholder="Effective Date"
+                                                    [ngClass]="{'is-invalid': btnClick === 'SINGLE' && signatureForm.get('effictiveDate').hasError('required')&& type === 'text'}">
+                                                <label for="employeeId" class="label ef">Effective Date</label>
+
+                                                <div *ngIf="signatureForm.get('effictiveDate').hasError('required')"
+                                                    class="invalid-feedback col-md-12 ">
+                                                    Effective Date is required.
+                                                </div>
+                                            </div> -->
+                                            <div class="inputContainer col-md-4">
+                                                <!-- <div class="mb-3"> -->
+                                                <select class="input" id="status" formControlName="signatureStatus"
+                                                    [ngClass]="{'is-invalid': btnClick === 'SINGLE' && signatureForm.get('signatureStatus').hasError('required'),
+                                                    'invalid-drop':btnClick === 'SINGLE' && signatureForm.get('signatureStatus').hasError('required')}">
+                                                    <option value="" selected>{{(btnClick === 'SINGLE' &&
+                                                        signatureForm.get('signatureStatus').hasError('required')) ?
+                                                        'Status is required.' : ' --Select-- '}}
+                                                    </option>
+                                                    <option value="ACTIVE">Active</option>
+                                                    <option value="IN_ACTIVE">Inactive</option>
+                                                    <!-- <option value="CANCELED"> CANCEL</option> -->
+                                                </select>
+                                                <label for="status" class="label">Status:</label>
+
+                                            </div>
+
+                                            <div class="inputContainer col-md-4">
+                                                <ng-multiselect-dropdown class="m-input" style="z-index: 1;padding: 0;"
+                                                    id="signatory" [(ngModel)]="signatoryId"
+                                                    [placeholder]="btnClick === 'SINGLE' && signatureForm.get('signatoryId').hasError('required')?'Signatory is required':'Please select signatory*'"
+                                                    [ngClass]="{'is-invalid':btnClick === 'SINGLE' && signatureForm.get('signatoryId').hasError('required')}"
+                                                    formControlName="signatoryId" [settings]="dropdownSettings"
+                                                    (onSelect)="selectSignatory()" (onDeSelect)="deselectSignatory()"
+                                                    [data]="signatoryList">
+                                                    <!-- [ngClass]="{ 'is-invalid': submitted && setStatus(), 'invald':submitted && setStatus()}" -->
+                                                </ng-multiselect-dropdown>
+
+                                                <label for="signatory" class="label">Signatory:</label>
+                                                <div *ngIf="signatureForm.get('signatoryId').hasError('required')"
+                                                    class="invalid-feedback pos col-md-12 ">
+                                                    Signatory is required.
+                                                </div>
+                                            </div>
+
+                                        </div>
+
+                                    </div>
+                                </div>
+                                <div *ngIf="signatureForm.get('signatoryId')?.value">
+                                    <button
+                                        *ngIf="!previews.length && permissionStoreService.hasAnyPermission([appPermission.UPLOAD_SIGNATURE])"
+                                        type="button" class="btn btn-primary" (click)="openModal(tmplt)">
+                                        Upload Signature
+                                    </button>
+                                </div>
+
+                                <div *ngIf="previews.length > 0" class="col-md-12">
+                                    <div class="row mb-4 justify-content-center align-items-center">
+
+                                        <ng-container *ngFor='let preview of previews; let i = index'>
+                                            <div class="col-md-4"
+                                                [ngClass]="{'selectedMain':fileName[i]==signatureForm.get('mainSignature')?.value}">
+                                                <div class="row">
+                                                    <div class="col-12 p-2">
+                                                        <img style="height: 200px; width: 100%;" [src]="preview"
+                                                            class="preview">
+                                                    </div>
+
+                                                    <div class="col-md-12 p-2" style="display: grid;
+                                                        justify-items: center;">
+                                                        <div class="row border-bottom border-dark">
+                                                            <div class="col-12 d-flex flex-column bd-highlight"
+                                                                style="font-size: 1.2rem;">
+                                                                <div class="bd-highlight font-weight-bold">
+                                                                    <!-- *ngFor="let name of fileName" -->
+                                                                    {{fileName[i]}}
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="row d-flex align-items-center mt-1">
+                                                            <div class="col-6 px-0">
+                                                                <button type="button" (click)="openModal(tmplt, i)"
+                                                                    class="btn btn-secondary btn-sm mx-1"><i
+                                                                        class="fa fa-undo" title="Undo"
+                                                                        aria-hidden="true"></i> | Reload</button>
+                                                            </div>
+                                                            <div class="col-6 px-0">
+                                                                <button type="button" class="btn btn-danger btn-sm mx-1"
+                                                                    (click)="deleteFile(i)"><i class="fa fa-trash-o"
+                                                                        title="Undo" aria-hidden="true"></i> |
+                                                                    Delete</button>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                            </div>
+
+                                            <div *ngIf="i == previews.length - 1 && previews.length < 3"
+                                                class="col-md-4">
+                                                <button
+                                                    *ngIf="permissionStoreService.hasAnyPermission([appPermission.UPLOAD_SIGNATURE])"
+                                                    type="button" class="btn btn-info" (click)="openModal(tmplt)">
+                                                    <i class="fa fa-plus" title="Undo" aria-hidden="true"></i>
+                                                    | Add Another
+                                                </button>
+                                            </div>
+                                        </ng-container>
+                                    </div>
+                                    <div class="row my-3" style="justify-content: flex-end;">
+                                        <div class="inputContainer col-md-4" *ngIf="fileName?.length > 1">
+                                            <!-- <div class="mb-3"> -->
+                                            <select class="input" id="status" formControlName="mainSignature"
+                                                [ngClass]="{'is-invalid': btnClick === 'SINGLE' && signatureForm.get('mainSignature').hasError('required'),
+                                                'invalid-drop':btnClick === 'SINGLE' && signatureForm.get('mainSignature').hasError('required')}">
+                                                <option value="" disabled selected>{{(btnClick === 'SINGLE' &&
+                                                    signatureForm.get('mainSignature').hasError('required')) ?
+                                                    'This is required.' : ' --Select-- '}}
+                                                </option>
+                                                <ng-container *ngFor="let name of fileName">
+                                                    <option [value]="name">{{name}}</option>
+                                                </ng-container>
+                                            </select>
+                                            <label for="status" class="label">Master Signature:</label>
+                                        </div>
+
+                                        <div class="col-auto float-right"
+                                            *ngIf="previews.length > 0 && permissionStoreService.hasAnyPermission([appPermission.SIGNATURE_MAKER])">
+                                            <button class="btn btn-primary"
+                                                (click)="uploadSignature('NEW', 'SINGLE')">Draft</button>
+                                        </div>
+                                        <div class="col-auto float-right"
+                                            *ngIf="previews.length > 0 && permissionStoreService.hasAnyPermission([appPermission.SIGNATURE_MAKER])">
+                                            <button class="btn btn-success"
+                                                (click)="uploadSignature('PEND_APPROVE', 'SINGLE')">Submit</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </form>
+                    </div>
+                    <div class="div-style div-footer">
+                        <h4 style="color: transparent;">Signature Upload</h4>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- upload section -->
+
+<ng-template #tmplt>
+    <div class="modal-header bg-color">
+        <h4 class="modal-title pull-left">Signature Upload</h4>
+        <button type="button" class="close pull-right" aria-label="Close" (click)="closeModale()">
+            <span aria-hidden="true" style="color: aliceblue;">×</span>
+        </button>
+    </div>
+    <div class="modal-body p-1">
+
+        <div class="row pb-1 " *ngIf="isFile">
+            <div class="col-12 d-flex justify-content-center">
+                <button type="button" class="mx-1 btn btn-secondary btn-sm" (click)="rotateLeft()">
+                    <i class="fa fa-undo" title="Rotate Left" aria-hidden="true"></i>
+                </button>
+                <button type="button" class="mx-1 btn btn-secondary btn-sm" (click)="rotateRight()">
+                    <i class="fa fa-repeat" title="Rotate right" aria-hidden="true"></i>
+                </button>
+                <button type="button" class="mx-1 btn btn-danger btn-sm" (click)="deleteFile(10)">
+                    <i class="fa fa-trash-o" title="Undo" aria-hidden="true"></i> | Delete
+                </button>
+            </div>
+        </div>
+
+
+        <div *ngIf="!isFile" class="dropsone" signatureDnd (files)="filesDropped($event, 'IMG')">
+            <div>
+                <input class="ics" type="file" #signatureDropRef id="signatureImage"
+                    (change)="onFileDropped($event, 'IMG')" [accept]="fileType.join(',')" [multiple]="isMultiple" />
+                <img src="assets/images/upload.png" alt="">
+                <h3>Drag and drop Image file here</h3>
+
+                <h3>or</h3>
+                <label class="lcs" *ngIf="!isFile" for="signatureImage"> Browse for Image</label>
+            </div>
+        </div>
+        <div class="">
+
+        </div>
+        <div *ngIf="isFile">
+            <div class="img-cropper">
+                <image-cropper [maintainAspectRatio]="false" [imageFile]="imageFile" [transform]="transform"
+                    format="png" (imageCropped)="imageCropped($event)" (imageLoaded)="imageLoaded()"
+                    (cropperReady)="cropperReady()" (loadImageFailed)="loadImageFailed()">
+                </image-cropper>
+            </div>
+        </div>
+
+    </div>
+    <div class="modal-footer">
+        <div class="form-check" *ngIf="isFile && !(this.updateImageId || this.updateImageId === 0)">
+            <input class="form-control form-check-input pointer" type="checkbox" [(ngModel)]="isChangeBg" id="flexCheckDefault">
+            <label class="form-check-label pointer" for="flexCheckDefault">
+                Change Background
+            </label>
+        </div>
+        <button *ngIf="isFile" class="btn btn-primary btn-sm align-middle" (click)="crop()">Crop</button>
+        <!-- <button *ngIf="isFile" class="btn btn-secondary btn-sm align-middle" (click)="skip()">Skip</button> -->
+        <button type="button" class="btn btn-danger btn-sm" (click)="closeModale()">Close</button>
+    </div>
+</ng-template>
+
+<div class="modal" role="dialog" [ngStyle]="{'display': openErrorPopup}">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content" style="height: 620px;">
+
+            <div class="modal-header bg-color">
+                <h4 class="modal-title pull-left">Error For Uploading File</h4>
+                <button type="button" class="close pull-right" aria-label="Close" (click)="cloaseErrorMsg()">
+                    <span aria-hidden="true" style="color: aliceblue;">×</span>
+                </button>
+            </div>
+
+            <div class="modal-body">
+                <!-- <ng-template dynamic-template [template]="html">
+                </ng-template> -->
+                <span [innerHTML]='html'></span>
+                <!-- </ng-template>
+                {{html | json}} -->
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger btn-sm" (click)="cloaseErrorMsg()">Close</button>
+            </div>
+
+        </div>
+    </div>
+
+</div>
+
+<canvas #canvas hidden>
+    <div style="top: 20px;">test name</div>
+</canvas>
+
+<ngx-loading [show]="loading" [config]="{
+    primaryColour: '#dd0031',
+    secondaryColour: '#1976d2',
+    tertiaryColour: '#dd0031',
+    backdropBorderRadius: '3px'
+  }">
+</ngx-loading>

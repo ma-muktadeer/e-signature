@@ -1,0 +1,51 @@
+<div *ngIf="permissionStoreService.hasPermission(appPermission.LEGAL_DISCLAIMER_MAKER)">
+    <div id="accordion">
+        <div class="card">
+            <div class="card-header" id="headingOne">
+                <button class="btn btn-block" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true"
+                    aria-controls="collapseOne">
+                    <h4 class="mb-0 text-black">
+                        Legal Disclaimer
+                    </h4>
+                </button>
+            </div>
+
+            <div id="collapseOne" class="collapse show" aria-labelledby="headingOne" data-parent="#accordion">
+                <div class="card-body">
+                    <!-- <div class="form-group">
+                        <label for="file">Choose File</label>
+                        <input type="file" class="form-control-file" id="file" name="file" (change)="onFileSelected($event)">
+                    </div> -->
+
+                    <ng-container *ngIf="!isLegalDisclamimer">
+                        <div class="row ">
+                            <div class="col-md-6 form-row my-1 d-flex align-items-center" *ngIf="!isLegalDisclamimer">
+                                <label for="file" class="px-2">Legal Disclaimer File:</label>
+                                <div class="col-auto">
+                                    <input #legalDisclaimer class="form-control" type="file" [accept]="fileType"
+                                        placeholder="File Upload" multiple="false"
+                                        (change)="fileInput($event.target.files, legalDisclaimer)">
+                                </div>
+                            </div>
+                            
+                        </div>
+                        <div class="pt-3 d-flex justify-content-end">
+                            <button type="submit" class="btn btn-primary" (click)="uploadFile($event)">Upload</button>
+                        </div>
+                    </ng-container>
+
+                    <ng-container *ngIf="isLegalDisclamimer">
+                        <div class="h5 text-center">
+                            Legal Disclaimer File are uploaded. For change please delete first.
+                        </div>
+                    </ng-container>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div *ngIf="permissionStoreService.hasPermission(appPermission.LEGAL_DISCLAIMER_VIEWER) && legalDisclamimerList?.length" class="shadow">
+    <app-common-file-view-grid [dataSet]=legalDisclamimerList (valueSelected)="handleValueChanged($event)" [agreement]="false"></app-common-file-view-grid>
+</div>

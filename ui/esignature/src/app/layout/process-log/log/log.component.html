@@ -1,0 +1,20 @@
+<div class="card">
+    <table>
+        <tr>
+            <th>Date</th>
+            <th>Folder</th>
+            <th>File Count</th>
+            <th>Total MT</th>
+            <th>Processed MT</th>
+        </tr>
+        <tbody>
+            <tr *ngFor="let l of fileLog">
+                <td>{{l.entryDate}}</td>
+                <td>{{l.sourceFolder}}</td>
+                <td style="text-align: center;">{{l.fileCount}}</td>
+                <td style="text-align: center;">{{l.totalMt}}</td>
+                <td style="text-align: center;">{{l.processedMt}}</td>
+            </tr>
+        </tbody>
+    </table>F
+</div>

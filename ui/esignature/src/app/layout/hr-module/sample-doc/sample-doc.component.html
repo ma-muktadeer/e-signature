@@ -1,0 +1,144 @@
+<div class="col-12 mt-2">
+    <button *ngIf="permissionStoreService.hasPermission(appPermission.SAMPLE_DOCUMENT_SAVER)" type="button"
+        class="btn btn-success mb-2" data-toggle="modal" data-target="#staticBackdrop" (click)="addSampleDoc()">
+        <i class="fa fa-plus" aria-hidden="true"></i>
+        <span> | Add Doc</span>
+    </button>
+</div>
+
+<div class="modal fade " #pop bsModal #popModal="bs-modal" id="staticBackdrop" data-backdrop="static"
+    data-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="staticBackdropLabel">Add Doc</h5>
+                <button type="button" class="close" data-dismiss="modal" [ngbTooltip]="tooltip" aria-label="Close"
+                    (click)="closeModal()">
+                    <div class="sclose">
+                        <span class="st" aria-hidden="true">&times;</span>
+                    </div>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="form-row d-flex align-content-center mb-1" *ngIf="btnName != 'View'">
+                    <div class="col-auto">
+                        <span class="h5">Add Other Documents</span>
+                    </div>
+                    <div class="col-auto">
+                        <span class="btn btn-primary ml-1 btn-sm" title="Add"
+                            (click)="addOrRemoveOtherDocuments('add')">
+                            <i class="fa fa-plus" aria-hidden="true"></i>
+                        </span>
+                        <span class="btn btn-warning ml-1 btn-sm" title="Remove"
+                            (click)="addOrRemoveOtherDocuments('remove')">
+                            <i class="fa fa-minus" aria-hidden="true"></i>
+                        </span>
+                    </div>
+                </div>
+                <div class="form-row bg-whitet" *ngIf="btnName != 'View'">
+                    <ng-container *ngFor="let other of othersDocs; let i = index">
+                        <div class="col-md-6 form-row my-1">
+                            <label [for]="i" class="col-md-3">File:</label>
+                            <div class="col-md-8">
+                                <input [id]="i" type="file" class="form-control" #fl
+                                    [accept]="allowedFileTypes.join(',')"
+                                    (change)="otherFile($event.target.files, i, fl)" [(ngModel)]="other.file"
+                                    multiple="false" [ngClass]="{'is-invalid': btnClick && (!other.file)}"
+                                    [ngModelOptions]="{standalone: true}">
+                                <div class="invalid-feedback" *ngIf="btnClick && (!other.file)">
+                                    File is required.
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6 form-row my-1">
+                            <label [for]="'fileName' + i" class="col-md-3">File Name:</label>
+                            <div class="col-md-8">
+                                <input [id]="'fileName' + i" type="text" class="form-control" maxlength="20"
+                                    [(ngModel)]="other.fileName" [ngModelOptions]="{standalone: true}"
+                                    [ngClass]="{'is-invalid': btnClick && (other.file && !other.fileName)}">
+                                <div class="invalid-feedback" *ngIf="btnClick && (other.file && !other.fileName)">
+                                    File Name is required.
+                                </div>
+                            </div>
+                        </div>
+                    </ng-container>
+                </div>
+            </div>
+            <div class="modal-footer">
+
+                <button *ngIf="permissionStoreService.hasPermission(appPermission.SAMPLE_DOCUMENT_SAVER)" type="button"
+                    class="btn btn-primary" (click)="saveAndSubmit()">Submit</button>
+                <button type="button" class="btn btn-danger" (click)="closeModal()">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="col-12 shadow mt-2 pb-2">
+    <div class="row h3">
+        <div class="col text-center">
+            List of Sample Documents
+        </div>
+    </div>
+    <div class="table-responsive">
+        <table class="table table-striped">
+            <thead class="card-header">
+                <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Name</th>
+                    <th scope="col">Type</th>
+                    <th scope="col">Time</th>
+                    <th scope="col">Status</th>
+                    <th scope="col">Action</th>
+                </tr>
+            </thead>
+            <tbody >
+                <tr *ngFor="let file of sampleDocumentList; let i = index">
+                    <td scope="row" class="align-content-center">{{i + 1}}</td>
+                    <td class="text-truncate align-content-center">{{file?.fileName}}</td>
+                    <td class="align-content-center text-truncate">{{ file?.objectType}}</td>
+                    <td class="align-content-center">{{file?.createDate}}</td>
+                    <td class="align-content-center">{{blockToCamel(file?.status)}}</td>
+                    <td class="align-content-center">
+                        <button
+                            *ngIf="permissionStoreService.hasPermission(appPermission.SAMPLE_DOCUMENT_SAVER) && file?.status != 'PEND_DELETE' && file?.status != 'PEND_APPROVE'"
+                            (click)="deleteSignatory(file, 'Pend_Delete')" class="btn-sm btn btn-danger mx-2"
+                            title="Request Delete">
+                            <i class="fa fa-trash" aria-hidden="true"></i>
+                        </button>
+                        <button
+                            *ngIf="permissionStoreService.hasPermission(appPermission.SAMPLE_DOCUMENT_APPROVER) && file?.status == 'PEND_DELETE'"
+                            (click)="deleteSignatory(file, 'Delete')" class="btn-sm btn btn-info mx-2 pointer"
+                            title="Approve Delete">
+                            <i class="fa fa-trash" aria-hidden="true"></i>
+                        </button>
+                        <button
+                            *ngIf="permissionStoreService.hasPermission(appPermission.SAMPLE_DOCUMENT_APPROVER) && file?.status == 'PEND_APPROVE'"
+                            (click)="deleteSignatory(file, 'Delete')" class="btn-sm btn btn-info mx-2 pointer"
+                            title="Reject">
+                            <i class="fa fa-trash" aria-hidden="true"></i>
+                        </button>
+                        <button
+                            *ngIf="permissionStoreService.hasPermission(appPermission.SAMPLE_DOCUMENT_APPROVER) && file?.status == 'PEND_APPROVE'"
+                            (click)="approveDocument(file)" class="btn-sm btn btn-primary mx-2 pointer" title="Approve">
+                            <i class="fa fa-check" aria-hidden="true"></i>
+                        </button>
+                        <button *ngIf="permissionStoreService.hasPermission(appPermission.SAMPLE_DOCUMENT_DOWNLOADER)"
+                            (click)="downloadDocument(file, 'download')" class="btn-sm btn btn-warning mx-2"
+                            title="Download">
+                            <i class="fa fa-download" aria-hidden="true"></i>
+                        </button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+
+    </div>
+</div>
+
+<ngx-loading [show]="loading" [config]="{
+    primaryColour: '#dd0031',
+    secondaryColour: '#1976d2',
+    tertiaryColour: '#dd0031',
+    backdropBorderRadius: '3px'
+}"></ngx-loading>

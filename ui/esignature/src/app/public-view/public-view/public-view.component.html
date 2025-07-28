@@ -1,0 +1,187 @@
+
+
+
+<div class="layout-navbar-full layout-horizontal layout-without-menu"></div>
+<div>
+    <!-- Navbar -->
+    <nav class="layout-navbar navbar navbar-expand-xl align-items-center bg-navbar-theme" id="layout-navbar">
+        <div class="content-wrapper" style="display: flex; justify-content: center; width: 100%;">
+            <a href="index.html">
+                <img src="assets/images/prime-bank-logo (1).png" alt="Prime-Bank" style="height: 35px;">
+            </a>
+        </div>
+    </nav>
+</div>
+
+<!-- Content Section -->
+<div class="view-content">
+    <div class="col-md-12">
+        <!-- Your content goes here -->
+        <div class="col-md-12">
+            <div class="row sig_margin">
+                <div class="col-md-8 p-0 mt-3">
+                    <div [ngClass]="{'static-div':!imageSrc}">
+                        <div *ngIf="!imageSrc" class="h3 mt-3 center-text">
+                            Signature IMAGE
+                        </div>
+                    </div>
+                    <div *ngIf="imageSrc">
+                        <app-image-view isPublic="true" [imageSrc]="imageSrc" [signatureInfo]="signatureInfo"></app-image-view>
+
+                    </div>
+                    <div class="image-text-status h1"
+                        *ngIf="signatureInfo && signatureInfo?.signatureStatus != 'ACTIVE'"
+                        [innerHTML]="stFormatting(signatureInfo?.signatureStatus)">
+                    </div>
+
+
+
+                    <div class="info row h6 mt-2 d-flex align-items-center"
+                        *ngIf="signatureInfo && signatureInfo?.signatureStatus != 'ACTIVE'">
+                        <ng-container *ngFor="let contractInfo of contractUserInfo">
+                            <div class="row p-1">
+                                <div class="col-12">Name: {{contractInfo?.name}}</div>
+                            </div>
+                            <div class="row p-1">
+                                <div class="col-12">Email: {{contractInfo?.email}}</div>
+                            </div>
+                            <div class="row p-1">
+                                <div class="col-12">Number: {{contractInfo?.number}}</div>
+                            </div>
+
+                        </ng-container>
+                    </div>
+
+
+
+                </div>
+                <div class="col-md-4" >
+                    <div [ngClass]="{'static-div':!signatureInfo}">
+                        <div *ngIf="!signatureInfo" class="h5 mt-3 center-text">
+                            Signature Information
+                        </div>
+                        <div *ngIf="signatureInfo">
+                            <table class="table-hover table the-table">
+                                <thead class="header">
+                                    <tr>
+                                        <th colspan="2" style="text-align: center; background: #293c8b; color: #fff;" >Signature Information</th>
+                                    </tr>
+
+                                </thead>
+                                <thead class="header">
+                            
+                                    <tr class="title-head">
+                                        <th colspan="1">Title</th>
+                                        <th colspan="1">Details</th>
+                                    </tr>
+                                <tbody>
+                                    <tr scope="row">
+                                        <td>
+                                            Name:
+                                        </td>
+                                        <td>
+                                            {{signatureInfo?.name}}
+                                        </td>
+                                    </tr>
+                                    <tr scope="row">
+                                        <td>
+                                            PA:
+                                        </td>
+                                        <td>
+                                            {{signatureInfo?.pa}}
+                                        </td>
+                                    </tr>
+                                    <tr scope="row">
+                                        <td>
+                                            Designation:
+                                        </td>
+                                        <td>
+                                            {{signatureInfo?.designation}}
+                                        </td>
+                                    </tr>
+                                    <tr scope="row">
+                                        <td class="text-wrap">
+                                            Email:
+                                        </td>
+                                        <td>
+                                            {{signatureInfo?.email}}
+                                        </td>
+                                    </tr>
+                                    <tr scope="row">
+                                        <td>
+                                            Effective Date:
+                                        </td>
+                                        <td>
+                                            {{signatureInfo?.effictiveDate}}
+                                        </td>
+                                    </tr>
+
+                                    <tr scope="row"
+                                        [ngClass]="signatureInfo?.signatureStatus != 'ACTIVE'?'bg-status':'bg-status-active'">
+                                        <td>
+                                            Status:
+                                        </td>
+                                        <td [innerHTML]="stFormatting(signatureInfo?.signatureStatus)">
+                                            <!-- {{signatureInfo?.signatureStatus}} -->
+                                        </td>
+                                    </tr>
+                                    <tr scope="row" *ngIf="signatureInfo?.signatureStatus === 'CANCEL'">
+                                        <td>
+                                            Cancellation Effective Time:
+                                        </td>
+                                        <td>
+                                            {{signatureInfo?.cancelTime}}
+                                        </td>
+                                    </tr>
+
+                                </tbody>
+                            </table>
+                        </div>
+
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Footer Section -->
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-lg-12 footer-img">
+            <div class="app-brand justify-content-center pb-5 pt-3">
+                <a href="index.html" class="app-brand-link">
+                    <img src="assets/images/prime-bank-logo (1).png" alt="Prime-Bank">
+                </a>
+            </div>
+            <p>Prime Bank PLC., is a top-tier second generation local commercial bank in Bangladesh established in
+                1995. Headquartered in the heart of Dhaka's bustling financial hub Motijheel, the Bank's operational
+                footprint is spread all over the country with 146 branches and 153 ATMs at 140 locations of
+                Bangladesh. It was incorporated under the Companies Act of 1994.</p>
+        </div>
+    </div>
+</div>
+
+<!-- <footer class="content-footer footer" style="background-color: #ffffff;">
+    <div class="container">
+        <div class="footer-container d-flex align-items-center justify-content-between py-4 flex-md-row flex-column">
+            <div class="text-body">
+                &copy; 2010- 
+                <script>
+                    document.write(new Date().getFullYear());
+                </script> 
+                2024 Copyrighted by 
+                <a href="#" target="_blank" class="footer-link">Prime Bank</a>
+            </div>
+            <div class="d-none d-lg-inline-block">
+                <a href="#" class="footer-link me-4" target="_blank">License</a>
+                <a href="#" target="_blank" class="footer-link me-4">More Themes</a>
+                <a href="#" target="_blank" class="footer-link me-4">Documentation</a>
+                <a href="#" target="_blank" class="footer-link d-none d-sm-inline-block">Support</a>
+            </div>
+        </div>
+    </div>
+</footer> -->
+

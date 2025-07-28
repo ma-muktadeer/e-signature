@@ -1,0 +1,57 @@
+::ng-deep .angular-editor-button {
+    // background-color: #aaa !important;
+    color: #000 !important;
+    // border: 1px solid #aaa !important;
+}
+
+
+
+::ng-deep .ae-font .ae-picker-label {
+    cursor: pointer;
+    height: 100%;
+    padding-left: 8px;
+    padding-right: 10px;
+    line-height: 26px;
+    font-size: 85%;
+    text-align: left;
+    background-color: #f0f0f0;
+    color: black !important; 
+    min-width: 2rem;
+    border: 1px solid #ddd;
+    text-overflow: clip;
+    overflow: hidden;
+    white-space: nowrap;
+}
+
+::ng-deep .ae-picker-item.ng-star-inserted {
+    color: black !important; 
+    background-color: #f0f0f0 !important; 
+}
+
+
+::ng-deep .ae-picker-item.ng-star-inserted:hover {
+    background-color: #5dade2 !important;
+    color: #fff;
+}
+
+
+.bg-color{
+    background-color: #0c4da2;
+    color: white;
+    .sclose{
+        background-color: red;
+        display: flex;
+        align-items: center;
+    }
+}
+.align-self-center:hover{
+    button{
+        background: red;
+        span{
+            color: #fff !important;
+            font-weight: bold !important;
+        }
+    }
+}
+
+

@@ -1,0 +1,145 @@
+<div class="container" role="dialog" tabindex="-1">
+
+    <!-- <div *ngIf="this.loader.getLoading()" class="cssload-container">
+        <div class="cssload-speeding-wheel"></div>
+    </div> -->
+
+    <div class="modal-header bg-secondary py-2">
+
+
+        <!-- <div class="align-self-center ">
+            <h3 class="mx-auto text-light">Free Text</h3>
+        </div>
+        <div class="align-self-center ">
+            <button id='close' (click)="closeModal('Prassing closing button.')">close</button>
+        </div> -->
+
+        <h5 class="modal-title" id="exampleModalLabel">Free Text</h5>
+        <button type="button"  class="btn btn-outline-danger" data-dismiss="modal" aria-label="Close" 
+        (click)="closeModal('Prassing closing button.')">
+        <i class="fa fa-times" ngbTooltip="Close"></i>
+          <!-- <span aria-hidden="true">&times;</span> -->
+        </button>
+
+    </div>
+    <div class="modal-body overflow-auto">
+
+        <div class="d-flex justify-content-center">
+
+            <!-- put here -->
+
+            <div class="row">
+                <div class="col">
+                    <form>
+                        <!-- <angular-editor [(ngModel)]="emailBody" [config]="config"></angular-editor> -->
+                        <div class="row">
+                            <div class="col-md-8">
+
+                                <div class="form-group mb-3">
+                                    <label for="textSubject" class="form-label label-text">Text Subject <app-red-star>
+                                        </app-red-star>:</label>
+                                    <input type="text" style="border: 1px solid;" class="form-control" id="textSubject" name="textSubject"
+                                        [(ngModel)]="textSubject">
+                                </div>
+
+                                <div class="mb-3 mt-3">
+                                    <label for="textBody" class="form-label label-text">Text Body <app-red-star>
+                                        </app-red-star>:</label>
+                                        <div style="border: 1px solid;">
+
+                                            <angular-editor id="textBody" name="textBody" [(ngModel)]="textBody"
+                                                [config]="config"></angular-editor>
+                                        </div>
+
+                                    <!-- <angular-editor id="textBody" [(ngModel)]="textBody" [config]="config">
+                                        <ng-template #customButtons let-executeCommandFn="executeCommandFn">
+                                            <ae-toolbar-set>
+                                                <ae-button iconClass="fa fa-html5" title="Angular editor logo"
+                                                    (buttonClick)="executeCommandFn('insertHtml', angularEditorLogo)">
+                                                </ae-button>
+                                            </ae-toolbar-set>
+                                        </ng-template>
+                                    </angular-editor> -->
+
+
+                                </div>
+
+
+                            </div>
+                            <div class="col-md-4">
+                                <div class="mb-3 mt-3">
+                                    <label for="textGroup" class="form-label label-text"> Group <app-red-star>
+                                        </app-red-star> : </label> &nbsp;
+                                    <select name="textGroup" class="dropdown-field" [(ngModel)]="textGroup">
+                                        <!-- (change)="onChangeGroup($event)" -->
+                                        <option value="" disabled selected>-- select one --</option>
+                                        <option [disabled]="isViewMode" name="group" *ngFor="let g of groupList"
+                                            [value]="g.value">{{g.name}}</option>
+                                    </select>
+                                </div>
+                                <div class="mb-3 mt-3">
+                                    <label for="type" class="form-label label-text"> Type <app-red-star></app-red-star>
+                                        : </label> &nbsp;
+                                    <select name="textType" class="dropdown-field" [(ngModel)]="textType">
+                                        <!-- (change)="onChangeType()" -->
+                                        <!-- <option value=""  selected>-- select one --</option> -->
+                                        <!-- <option [disabled]="isViewMode" name="type" *ngFor="let t of typeList"
+                                            [value]="t.value">{{t.name}}</option> -->
+                                        <option value="te-1">Te-1</option>
+                                        <option value="te-2">Te-2</option>
+                                        <option value="te-3">Te-3</option>
+                                        <option value="te-4">Te-4</option>
+                                    </select>
+                                </div>
+
+                                <!-- <div *ngIf="tokenList" class="mb-3 mt-3">
+                                    <label for="token" class="form-label label-text"> Token : </label> &nbsp;
+                                    <tr>
+                                        <td><span (click)="onTokenCopy('#MAIL_NOTE#')" class="fa fa-files-o"
+                                                style="cursor: pointer;"></span> &nbsp; &nbsp;</td>
+                                        <td>{{'#MAIL_NOTE#'}} -- {{'MAIL_NOTE'}}</td>
+                                    </tr>
+                                    <tr *ngFor="let d of tokenList">
+                                        <td><span (click)="onTokenCopy(d.value)" class="fa fa-files-o"
+                                                style="cursor: pointer;"></span> &nbsp; &nbsp;</td>
+                                        <td>{{d.value}} -- {{d.name}}</td>
+                                    </tr>
+
+                                </div> -->
+                            </div>
+                        </div>
+
+                        
+                    </form>
+                    
+                    
+                    <div style="text-align: center;">
+                        <button class="btn btn-primary" [disabled]="spinnerSaveBtn"
+                            style="margin-top: 10px;" (click)="saveOrUpdateBtn()">{{saveOrUpdate}}
+                            <span class="spinner-border spinner-border-sm" *ngIf="spinnerSaveBtn"
+                                [mode]="'indeterminate'"></span>
+                        </button> &nbsp;
+                        <!-- <button title="approve" class="btn btn-warning " style="margin-top: 10px;"
+                        (click)="onApprove()"> Approve
+                        <span class="spinner-border spinner-border-sm" *ngIf="spinnerApproveBtn"
+                        [mode]="'indeterminate'"></span>
+                    </button> &nbsp; -->
+                        <!-- (click)="onApprove()" [hidden]="showApproveBtn" -->
+                        <button (click)="closeModal('btn prase')" class="btn btn-danger"
+                            style="margin-top: 10px;">Cancel</button>
+
+
+                    </div>
+                </div>
+            </div>
+
+            <!-- <div class="form-row">
+                <button class="btn btn-block btn-success" [disabled]="showProgress">Update
+                    <span class="spinner-border spinner-border-sm" *ngIf="showProgress" [mode]="'indeterminate'"></span>
+
+                </button>
+            </div> -->
+            <!-- </form> -->
+        </div>
+    </div>
+</div>

@@ -1,0 +1,11 @@
+<div style="margin-top: 10px; width: 100%;" class="container">
+    <button class="btn btn-primary" (click)="onBicAdd()">New BIC</button>
+    <angular-slickgrid #swiftSearchGrid
+        gridId="swiftSearchGrid" 
+        [columnDefinitions]="columnDefinitions"
+        [gridOptions]="gridOptions"
+        [dataset]="bicList" 
+        (onAngularGridCreated)="angularGridReady($event)"
+        >
+    </angular-slickgrid>
+</div>

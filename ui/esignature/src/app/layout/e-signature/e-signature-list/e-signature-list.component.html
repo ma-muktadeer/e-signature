@@ -1,0 +1,83 @@
+
+<app-common-search [showProgress]="isSearch" searchFrom="Signature" (onSearch)="searchBtnClick($event)" [allowInstitutionSearch] = allowInstitutionSearch></app-common-search>
+<div class="row p-2" *ngIf="isRequestMaker('NEW') && !isMultipleStatus">
+
+    <button class="btn btn-sm btn-success col-md-auto mx-2 mb-2 pointer"
+        (click)="onApproveRequestByBtn('REQUEST_FOR_APPROVE')"
+        [disabled]="showProgress && btnRef == 'REQUEST_FOR_APPROVE'">
+        <i title="Submit" class="fa fa-check-square-o" aria-hidden="true"></i>
+        | Request For Approve
+        <span class="spinner-border spinner-border-sm" *ngIf="showProgress && btnRef == 'REQUEST_FOR_APPROVE'"
+            [mode]="'indeterminate'"></span>
+    </button>
+
+    <!-- <button class="btn btn-sm btn-danger col-md-auto mx-2 mb-2 pointer">
+        <i title="Reject" class="fa fa-trash-o" aria-hidden="true"></i>
+        | Request Request -->
+    <!-- <span class="spinner-border spinner-border-sm" *ngIf="(showProgress || repaymentRequestApprove) && btnRef == 'REQUEST_APPROVE'"
+                [mode]="'indeterminate'"></span> -->
+    <!-- </button> -->
+
+</div>
+
+<div class="row p-2" *ngIf="isRequestApprover('PEND_APPROVE') && !isMultipleStatus">
+
+    <button class="btn btn-sm btn-primary col-md-auto mx-2 mb-2" (click)="onRequest4ApproverBtn('REQUEST_TO_APPROVE')"
+        [disabled]="showProgress && btnRef == 'REQUEST_TO_APPROVE'">
+        <i title="Approve" class="fa fa-check" aria-hidden="true"></i>
+        | Approve Request
+        <span class="spinner-border spinner-border-sm" *ngIf="showProgress && btnRef == 'REQUEST_TO_APPROVE'"
+            [mode]="'indeterminate'"></span>
+    </button>
+
+    <button class="btn btn-sm btn-warning col-md-auto mx-2 mb-2" style="color:white"
+        (click)="onRejectedRequestByBtn('REQUEST_TO_REJECT')"
+        [disabled]="showProgress && btnRef == 'REQUEST_TO_REJECT'">
+        <i title="Reject" class="fa fa-ban" aria-hidden="true"></i>
+        | Reject Request
+        <span class="spinner-border spinner-border-sm" *ngIf="showProgress && btnRef == 'REQUEST_TO_REJECT'"
+            [mode]="'indeterminate'"></span>
+    </button>
+
+</div>
+
+<div style="width: 100%;" class="shadow">
+    <angular-slickgrid *ngIf="showGrid" id="signatureGrid" #signaGridList gridId="signaGrid" style="width: 100%;"
+        [columnDefinitions]="columnDefinitions" [gridOptions]="gridOptions" [gridHeight]="height"
+        [dataset]="signatureList" (onAngularGridCreated)="angularGridReady($event)"
+        (sgOnSelectedRowsChanged)="onSelectedRowsChanged($event.detail.eventData, $event.detail.args)">
+    </angular-slickgrid>
+</div>
+
+<div id="temp" style="width: 100%;"></div>
+
+<ng-template #template>
+    <div class="modal-header bg-color">
+        <h4 class="modal-title pull-left">Rejection Cause</h4>
+        <button type="button" class="close pull-right" aria-label="Close" (click)="closeModale()">
+            <span aria-hidden="true" style="color: aliceblue;">×</span>
+        </button>
+    </div>
+    <div class="modal-body p-1">
+        <div class="col-12">
+            <div class="row d-flex justify-content-center  align-items-center">
+                <label class="col-md-auto" for="rej">Rejection cause:</label>
+                <textarea class="col-md-8 form-control" [(ngModel)]="rejectionCause" id="rej" cols="12"
+                    rows="3"></textarea>
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-success btn-sm" (click)="rejectByApprover()">Ok</button>
+        <button type="button" class="btn btn-danger btn-sm" (click)="closeModale()">Close</button>
+    </div>
+</ng-template>
+
+
+<ngx-loading [show]="loading" [config]="{
+    primaryColour: '#dd0031',
+    secondaryColour: '#1976d2',
+    tertiaryColour: '#dd0031',
+    backdropBorderRadius: '3px'
+  }">
+</ngx-loading>

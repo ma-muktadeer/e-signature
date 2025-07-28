@@ -1,0 +1,27 @@
+// $topnav-background-color: #0c4da2;
+$topnav-background-color:#F3F3F7;
+
+
+.footer {
+    // position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    background-color: $topnav-background-color;
+    color: black;
+}
+
+.footer p {
+    color: #faf6f6;
+}
+
+
+.footer p:hover {
+    color: #061544;
+}
+
+a.footer-link{
+    color: #061544;
+    font-weight: 600;
+    cursor: pointer;
+}

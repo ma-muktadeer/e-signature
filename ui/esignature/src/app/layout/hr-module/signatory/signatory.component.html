@@ -1,0 +1,484 @@
+<div class="mx-2">
+    <button *ngIf="permissionStoreService.hasPermission(appPermission.SIGNATORY_MAKER)" type="button"
+        class="btn btn-success mb-2" data-toggle="modal" data-target="#staticBackdrop" (click)="addSignatory()">
+        <i class="fa fa-plus" aria-hidden="true"></i>
+        <span>
+            | Generate PA
+        </span>
+    </button>
+
+    <app-common-search class="mt-2 mb-0" (onSearch)="onSearchBtnClick($event)" [showProgress]="isSearch"
+        [institutionList]="allInstitutionList" [searchFrom]="'PA'"></app-common-search>
+</div>
+
+<div class="modal fade " #pop bsModal #popModal="bs-modal" id="staticBackdrop" data-backdrop="static"
+    data-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="staticBackdropLabel">Add Signatory</h5>
+                <button type="button" class="close" data-dismiss="modal" [ngbTooltip]="tooltip" aria-label="Close"
+                    (click)="closeModal()">
+                    <div class="sclose">
+                        <span class="st" aria-hidden="true">&times;</span>
+                    </div>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="m-1">
+
+                    <div class="form-row mb-2">
+                        <div class="col-md-6 form-row my-1">
+                            <label for="usr" class="col-md-3">Bank<app-red-star></app-red-star>:</label>
+
+                            <div class="col-md-8">
+                                <select id="usr" class="form-control" [(ngModel)]="type"
+                                    (change)="selectionChange(type)" [ngModelOptions]="{standalone: true}"
+                                    [ngClass]="{'is-invalid':!type && btnClick}" [disabled]="btnName != 'Save'">
+                                    <option value="" selected disabled>Select an option...</option>
+                                    <option value="INTERNAL_USER">Prime Bank</option>
+                                    <option value="EXTERNAL_USER">Others</option>
+                                </select>
+                                <div class="invalid-feedback">Please select an option.</div>
+                            </div>
+
+                        </div>
+                        <div class="col-md-6 form-row my-1" *ngIf="type == 'EXTERNAL_USER'">
+                            <label for="usr" class="col-md-3">Institution Type<app-red-star></app-red-star>:</label>
+
+                            <div class="col-md-8">
+                                <select class="form-control" id="status1" [(ngModel)]="insType"
+                                    (change)="loadInstitutionByType(insType)" [ngModelOptions]="{standalone: true}" [disabled]="btnName != 'Save'">
+                                    <option [ngValue]="''" disabled>Select Institution</option>
+                                    <option [ngValue]="institutionType.value"
+                                        *ngFor="let institutionType of institutionTypeList">{{institutionType.name}}
+                                    </option>
+
+                                </select>
+                                <!-- <label for="status1" class="label">Institution Type:</label> -->
+                            </div>
+
+                        </div>
+
+                        <div *ngIf="type == 'EXTERNAL_USER' && insType && institutionList?.length" class="col-md-6 form-row my-1">
+                            <label for="usr" class="col-md-3">Institution<app-red-star></app-red-star>:</label>
+                            <div class="col-md-8">                            
+                                <ng-multiselect-dropdown style="z-index: 100;" [ngModelOptions]="{standalone: true}"
+                                [(ngModel)]="selectInsDrop" [disabled]="btnName != 'Save'"
+                                [placeholder]="'Select institution'" [settings]="dropdownSettingsInstitution"
+                                [data]="institutionList" [textField]="'institutionName'" [idField]="'institutionId'"
+                                (onSelect)="getInstitutionId($event)"
+                                [ngClass]="{ 'is-invalid': (clicked) && signatoryForm.controls.institutionId?.errors}">
+                              </ng-multiselect-dropdown>
+                                <div *ngIf="(clicked) && signatoryForm.controls.institutionId?.errors" class="invalid-feedback">
+                                    Institution can not be empty.
+                                </div>
+                            </div>
+                        </div>
+                        
+                    </div>
+                    <form [formGroup]="signatoryForm" autocomplete="off" class="mb-2"
+                        *ngIf="type == 'INTERNAL_USER' || (type == 'EXTERNAL_USER' && selectedInstitutionName && signatoryForm.get('institutionId')?.value)">
+                        <div>
+                            <hr>
+                        </div>
+                        <div class="form-row mb-2">
+                            <div class="col-md-6 form-row my-1">
+                                <label for="cusIdPran" class="col-md-3">Employee ID<app-red-star></app-red-star>:</label>
+                                <div class="col-md-8">
+                                    <input id="cusIdPran" type="text" class="form-control" formControlName="employeeId" [attr.maxlength]="empIdMaxLength"
+                                        [appNoSpecialCharacters]="'numericNumber'" 
+                                        placeholder="Customized"
+                                        [readOnly]="btnName != 'Save'"
+                                        [ngClass]="{'is-invalid': (btnClick || signatoryForm.controls.employeeId?.touched) && signatoryForm.get('employeeId').errors}">
+                                    <div *ngIf="signatoryForm.get('employeeId').hasError('required')"
+                                        class="invalid-feedback ">
+                                        Employee ID is required.
+                                    </div>
+                                    <div *ngIf="signatoryForm.get('employeeId').hasError('minlength') || signatoryForm.get('employeeId').hasError('maxlength')"
+                                        class="invalid-feedback">
+                                        Required correct employee ID.
+                                    </div>
+
+                                </div>
+                            </div>
+                            <div class="col-md-6 form-row my-1">
+                                <button type="button" class="btn btn-info cursor-pointer" title="Fatch Information"
+                                    *ngIf="type == 'INTERNAL_USER'" disabled="true">Search</button>
+
+                                <ng-container *ngIf="type == 'EXTERNAL_USER'">
+                                    <label for="pa" class="col-md-3">PA:</label>
+                                    <div class="col-md-8">
+                                        <input id="pa" type="text" class="form-control" formControlName="pa" maxlength="15"
+                                            [appNoSpecialCharacters]="'numericNumber'" [readOnly]="btnName != 'Save'">
+                                        <!-- [ngClass]="{'is-invalid': (btnClick || signatoryForm.controls.pa?.touched) && type == 'EXTERNAL_USER' && !signatoryForm.get('pa').value}">
+                                        <div *ngIf="!signatoryForm.get('pa').value" class="invalid-feedback ">
+                                            PA is required.
+                                        </div> -->
+                                    </div>
+                                </ng-container>
+
+                            </div>
+                            <div class="col-md-6 form-row my-1">
+                                <label for="cusIdPran" class="col-md-3">Name:</label>
+                                <div class="col-md-8">
+                                    <input id="cusIdPran" [appNoSpecialCharacters]="'name'" type="text" [attr.maxlength]="displayNameMaxLength"
+                                        class="form-control" formControlName="name" [readOnly]="btnName == 'View'"
+                                        [ngClass]="{'is-invalid': (btnClick || signatoryForm.controls.name?.touched) && signatoryForm.get('name').errors}">
+                                    <div *ngIf="signatoryForm.get('name').hasError('required')"
+                                        class="invalid-feedback ">
+                                        Name is required.
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- <div class="col-md-6 form-row my-1" *ngIf="btnName != 'Save'">
+                                <label for="pa" class="col-md-3">PA:</label>
+                                <div class="col-md-8">
+                                    <input id="pa" type="text" class="form-control" readonly formControlName="pa">
+                                </div>
+                            </div> -->
+
+
+                            <div class="col-md-6 form-row my-1">
+                                <label for="loanAccount" class="col-md-3">Designation:</label>
+                                <div class="col-md-8">
+                                    <input id="loanAccount" type="text" class="form-control"
+                                        [appNoSpecialCharacters]="'text'" formControlName="designation" [attr.maxlength]="designationMaxLength"
+                                        [readOnly]="btnName == 'View'"
+                                        [ngClass]="{'is-invalid': (btnClick || signatoryForm.controls.designation?.touched) && signatoryForm.get('designation').errors}"
+                                        [placeholder]="(btnClick || signatoryForm.controls.designation?.touched) && signatoryForm.get('designation').hasError('required') ? 'Required' : ''">
+                                </div>
+                            </div>
+                            <div class="col-md-6 form-row my-1">
+                                <label for="loanAccount" class="col-md-3">Approval:</label>
+                                <div class="col-md-8">
+                                    <input id="loanAccount" [appNoSpecialCharacters]="'text'" type="text" [attr.maxlength]="approvalMaxLength"
+                                        class="form-control" formControlName="approval" [readOnly]="btnName == 'View'">
+                                </div>
+                            </div>
+                            <div class="col-md-6 form-row my-1">
+                                <label for="invoiceNo" class="col-md-3">Address :</label>
+                                <div class="col-md-8">
+                                    <input id="invoiceNo" [appNoSpecialCharacters]="'text'" type="text"  [attr.maxlength]="addressMaxLength"
+                                        class="form-control" formControlName="address" [readOnly]="btnName == 'View'">
+
+                                </div>
+                            </div>
+                            <div class="col-md-6 form-row my-1" [hidden]="userType == 'INTERNAL_USER' && !ldapUser">
+
+                                <label for="email" class="col-md-3">
+                                    <span>Email</span>
+                                </label>
+                                <!-- <div class="input-group col-md-8">
+
+                                    <input [readOnly]="readOnly" type="email" class="form-control" id="email"
+                                        name="email" [(ngModel)]="email" [readOnly]="!selectedInstitution"
+                                        (input)="buildEmail($event)" [ngModelOptions]="{standalone: true}"
+                                        [ngClass]="{ 'is-invalid':btnClick && signatoryForm.get('email').errors}">
+                                    <div class="input-group-prepend">
+                                        <div class="input-group-text">{{'@'}}{{selectedInstitution?.domain}}</div>
+                                    </div>
+
+                                    <div *ngIf="!signatoryForm.get('email').valid" class="invalid-feedback">
+                                        <div *ngIf="signatoryForm.controls.email.errors?.required">
+                                            Email Is Required!
+                                        </div>
+                                        <div *ngIf="signatoryForm.get('email').hasError('pattern')">
+                                            Email Is Invalid!
+                                        </div>
+                                        
+                                    </div>
+                                </div> -->
+
+                                <div class="input-group col-md-8">
+                                    <input [readOnly]="readOnly || !selectedInstitution" type="email"
+                                        [readOnly]="btnName == 'View'" class="form-control" id="email" name="email"
+                                        [(ngModel)]="email" (input)="buildEmail($event)"
+                                        [ngModelOptions]="{standalone: true}" [ngClass]="{ 
+                                        'is-invalid': (btnClick || signatoryForm.controls.email?.touched) && signatoryForm.get('email').errors 
+                                        }"
+                                        [placeholder]="(btnClick || signatoryForm.controls.email?.touched) && signatoryForm.get('email').hasError('required') ? 'Required' : ''">
+
+                                    <div class="input-group-prepend">
+                                        <div class="input-group-text">{{'@'}}{{selectedInstitution?.domain}}</div>
+                                    </div>
+
+                                    <div *ngIf="!signatoryForm.get('email').valid" class="invalid-feedback">
+                                       
+                                        <div *ngIf="signatoryForm.get('email').hasError('pattern')">
+                                            Email Is Invalid!
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- </div> -->
+
+                            </div>
+                            <div class="col-md-6 form-row my-1">
+                                <label for="dep" class="col-md-3">Branch/Division:</label>
+                                <div class="col-md-8">
+                                    <input id="dep" [appNoSpecialCharacters]="'text'" type="text" class="form-control"
+                                        formControlName="department" [readOnly]="btnName == 'View'" [attr.maxlength]="departmentMaxLength">
+                                </div>
+                            </div>
+                            <div class="col-md-6 form-row my-1">
+                                <label for="dob" class="col-md-3">Date of Birth:
+                                </label>
+                                <div class="col-md-8">
+                                    <input id="dob" type="date" class="form-control" formControlName="birthday"
+                                        [readOnly]="btnName == 'View'"
+                                        [ngClass]="{ 'is-invalid':signatoryForm.get('birthday').errors && (clicked || signatoryForm.get('birthday').touched) }">
+                                    <div *ngIf="signatoryForm.get('birthday').errors" class="invalid-feedback">
+                                        <div *ngIf="signatoryForm.controls.birthday.errors?.required">
+                                            Date of Birth Is Required!
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6 form-row my-1">
+                                <label for="cnt" class="col-md-3">Tel no:</label>
+                                <div class="col-md-8">
+                                    <input id="cnt" [appNoSpecialCharacters]="'numericNumber'" type="text"
+                                        class="form-control" formControlName="contactNumber" [attr.maxlength]="contactNumberMaxLength"
+                                        [readOnly]="btnName == 'View'"
+                                        [ngClass]="{'is-invalid': (btnClick || signatoryForm.controls.contactNumber?.touched) && signatoryForm.get('contactNumber').errors}"
+                                        [placeholder]="(btnClick || signatoryForm.controls.contactNumber?.touched) && signatoryForm.get('contactNumber').hasError('required') ? 'Required' : ''">
+                                </div>
+                            </div>
+                            <div class="col-md-6 form-row my-1">
+                                <label for="nid" class="col-md-3">NID:</label>
+                                <div class="col-md-8">
+                                    <input id="nid" type="text" [appNoSpecialCharacters]="'numericNumber'" [attr.maxlength]="nidMaxLength" (input)="limitInput($event, 17)" 
+                                        class="form-control" formControlName="nid" [readOnly]="btnName != 'Save'"
+                                        [ngClass]="{'is-invalid': (btnClick || signatoryForm.controls.nid?.touched) && signatoryForm.get('nid').errors}"
+                                        [placeholder]="(btnClick || signatoryForm.controls.nid?.touched) && signatoryForm.get('nid').hasError('required') ? 'Required' : ''">
+
+                                </div>
+
+                            </div>
+                            <div class="col-md-6 form-row my-1">
+                                <label for="grp" class="col-md-3">Group:</label>
+                                <div class="col-md-8">
+                                    <select id="grp" class="form-control" formControlName="group"  [attr.disabled]="btnName == 'View' ? '' : null">
+                                        <option value="null" disabled selected>Select Group</option>
+                                        <ng-container *ngFor="let g of groupList">
+                                            <option [value]="g.value">
+                                                {{g.name}}
+                                            </option>
+                                        </ng-container>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-6 form-row my-1">
+                                <label for="dlg" class="col-md-3">Deligation:</label>
+                                <div class="col-md-8">
+                                    <select id="dlg" class="form-control" formControlName="deligation"  [attr.disabled]="btnName == 'View' ? '' : null">
+                                        <option value="null" disabled selected>Select Deligation</option>
+                                        <ng-container *ngFor="let g of deligationList">
+                                            <option [value]="g.value">
+                                                {{g.name}}
+                                            </option>
+                                        </ng-container>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-6 form-row my-1" *ngIf="permissionStoreService.hasPermission(appPermission.SIGNATORY_MAKER) && signatoryForm.get('rejectCause').value">
+                                <label for="rc" class="col-md-3">Rejection Cause:</label>
+                                <div class="col-md-8">
+                                    <input id="rc" class="form-control" type="text" formControlName="rejectCause" readonly>
+                                </div>
+                            </div>
+                            <ng-container *ngIf="!['Update', 'View'].includes(btnName)">
+                                <div class="col-md-6 form-row my-1">
+                                    <label for="approv" class="col-md-3">Approval:</label>
+                                    <div class="col-md-8">
+                                        <input id="approv" type="file" class="form-control" #approvalFile
+                                            (change)="fileInput($event.target.files, 'approval', approvalFile)">
+                                        <!-- [ngClass]="{'is-invalid':btnClick && !this.approvalFile}"
+                                        <div class="invalid-feedback">Approval file is required.</div> -->
+                                    </div>
+                                </div>
+                                <div class="col-md-6 form-row my-1">
+                                    <label for="agree" class="col-md-3">Agreement:</label>
+                                    <div class="col-md-8">
+                                        <input id="agree" type="file" class="form-control" #agreementFile
+                                            (change)="fileInput($event.target.files, 'agreement',agreementFile)">
+                                        <!-- [ngClass]="{'is-invalid':btnClick && !this.agreementFile}" -->
+                                        <!-- <div class="invalid-feedback">Agreement file is required.</div> -->
+                                    </div>
+                                </div>
+                            </ng-container>
+
+                        </div>
+                        <div class="form-row d-flex align-content-center mb-1" *ngIf="btnName != 'View'">
+                            <div class="col-auto">
+                                <span class="h5">Add Other Documents</span>
+                            </div>
+                            <div class="col-auto">
+                                <span class="btn btn-primary ml-1 btn-sm" titel="Add"
+                                    (click)="addOrRemoveOtherDocuments('add')">
+                                    <i class="fa fa-plus" aria-hidden="true"></i>
+                                </span>
+                                <span class="btn btn-warning ml-1 btn-sm" titel="Remove"
+                                    (click)="addOrRemoveOtherDocuments('remove')">
+                                    <i class="fa fa-minus" aria-hidden="true"></i>
+                                </span>
+                            </div>
+                        </div>
+                        <div class="form-row bg-whitet" *ngIf="btnName != 'View'">
+                            <ng-container *ngFor="let other of othersDocs; let i = index">
+                                <div class="col-md-6 form-row my-1">
+                                    <label [for]="i" class="col-md-3">File:</label>
+                                    <div class="col-md-8">
+                                        <input [id]="i" type="file" class="form-control"
+                                        #fileInput
+                                            (change)="otherFile($event.target.files, i,fileInput)" [(ngModel)]="other.file"
+                                            [ngModelOptions]="{standalone: true}">
+                                    </div>
+                                </div>
+                                <div class="col-md-6 form-row my-1">
+                                    <label [for]="'fileName' + i" class="col-md-3">File Name:</label>
+                                    <div class="col-md-8">
+                                        <input [id]="'fileName' + i" type="text" class="form-control"
+                                            [(ngModel)]="other.fileName" [ngModelOptions]="{standalone: true}"
+                                            [ngClass]="{'is-invalid': btnClick && (other.file && !other.fileName)}">
+                                        <div class="invalid-feedback"
+                                            *ngIf="btnClick && (other.file && !other.fileName)">File Name is required.
+                                        </div>
+                                    </div>
+                                </div>
+                            </ng-container>
+                        </div>
+
+                        <div class="form-row md-2">
+                            <div class="col-md-3 form-row">
+
+                            </div>
+                            <div class="col-md-3 form-row">
+
+                            </div>
+
+                        </div>
+
+                    </form>
+
+                    <!-- Document section -->
+                    <div class="row mb-2" *ngIf="permissionStoreService.hasAnyPermission([appPermission.SIGNATORY_VIEWER, appPermission.SIGNATORY_CHECKER, appPermission.SIGNATORY_MAKER])
+                        && (documentFiles || btnName != 'Save')">
+                        <div class="col-12">
+                            <tabset>
+                                <tab customClass="heading-style customClass tableFixHead" heading="Documents">
+
+                                    <table class="table table-striped table-border ">
+                                        <!-- <colgroup>
+                                            <col span="2">
+                                            <col span="3" style="visibility: collapse">
+                                          </colgroup> -->
+                                        <thead>
+                                            <tr>
+                                                <th scope="col">#</th>
+                                                <th scope="col">Name</th>
+                                                <th scope="col">Type</th>
+                                                <th scope="col">Time</th>
+                                                <th scope="col">Action</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr *ngFor="let file of documentFiles; let i = index">
+                                                <td>{{i + 1}}</td>
+                                                <td>{{file?.fileName}}</td>
+                                                <td>{{file?.objectType == file?.fileName ? "" : file?.objectType}}</td>
+                                                <td>{{file?.createDate}}</td>
+                                                <td>
+                                                    <button (click)="downloadDocument(file, 'download')"
+                                                        class="btn-sm btn btn-warning mx-2" title="Download"><i
+                                                            class="fa fa-download" aria-hidden="true"></i>
+                                                    </button>
+                                                    <button (click)="downloadDocument(file, 'view')"
+                                                        *ngIf="viewDocEx.includes(file?.fileName.slice(file?.fileName.lastIndexOf('.')).toLowerCase())"
+                                                        class="btn-sm btn btn-info" title="View">
+                                                        <i class="fa fa-eye" aria-hidden="true"></i>
+                                                    </button>
+                                                </td>
+
+                                            </tr>
+
+                                        </tbody>
+                                    </table>
+
+                                </tab>
+                            </tabset>
+                        </div>
+                    </div>
+
+
+                </div>
+
+            </div>
+            <div class="modal-footer">
+                <button type="button"
+                    *ngIf="permissionStoreService.hasPermission(appPermission.SIGNATORY_MAKER) && btnName != 'View'"
+                    class="btn btn-primary" (click)="saveSignatory()">{{btnName === 'Save'?'Draft':btnName}}</button>
+                <button *ngIf="permissionStoreService.hasPermission(appPermission.SIGNATORY_MAKER) && btnName != 'View'"
+                    type="button" class="btn btn-primary" (click)="saveAndSubmitSignatory()">Submit</button>
+                <button type="button" class="btn btn-danger" (click)="closeModal()">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div style="width: 100%;" class="shadow">
+    <angular-slickgrid id="sigGridId" #signatoryGridList gridId="signatoryGrid" [columnDefinitions]="columnDefinitions"
+        [gridOptions]="gridOptions" [gridHeight]=500 [dataset]="signatoryList"
+        (onAngularGridCreated)="angularGridReady($event)"
+        (sgOnSelectedRowsChanged)="onSelectedRowsChanged($event.detail.eventData, $event.detail.args)">
+    </angular-slickgrid>
+</div>
+
+<div id="id"></div>
+
+
+<div class="modal fade" #popview bsModal #popModal="bs-modal" id="staticBackdrop" data-backdrop="static"
+    data-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog  modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="staticBackdropLabel">{{fileName}}</h5>
+                <button type="button" class="close" data-dismiss="modal" [ngbTooltip]="tooltip" aria-label="Close"
+                    (click)="closeFileModal()">
+                    <div class="sclose">
+                        <span class="st" aria-hidden="true">&times;</span>
+                    </div>
+                </button>
+            </div>
+            <div class="modal-body">
+                <!-- <pdf-viewer [src]="pdfSrc" [rotation]="0" [original-size]="false" [show-all]="true" [fit-to-page]="false"
+                    [zoom]="0.9" [zoom-scale]="'page-width'" [stick-to-page]="false" [render-text]="true"
+                    [external-link-target]="'blank'" [autoresize]="true" [show-borders]="false"
+                    style="width: 100%; height: 100vh;"></pdf-viewer> -->
+
+                    <ng-container *ngIf="fileType === 'application/pdf'; else otherTypes">
+                        <iframe [src]="pdfSrc" width="100%" height="600px" frameborder="0"></iframe>
+                    </ng-container>
+                    <ng-template #otherTypes>
+                        <ng-container *ngIf="fileType?.startsWith('image/'); else downloadLink">
+                            <img [src]="pdfSrc" alt="Image Preview" width="100%" />
+                        </ng-container>
+                        <ng-template #downloadLink>
+                            <a [href]="pdfSrc" download>Download File</a>
+                        </ng-template>
+                    </ng-template>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<ngx-loading [show]="loading" [config]="{
+    primaryColour: '#dd0031',
+    secondaryColour: '#1976d2',
+    tertiaryColour: '#dd0031',
+    backdropBorderRadius: '3px'
+  }">
+</ngx-loading>

@@ -1,0 +1,58 @@
+.col-md-8 {
+  padding-right: 16px;
+}
+
+.btn-selected {
+  background-color: #0182b1;
+  color: aliceblue;
+}
+
+.pointer {
+  cursor: pointer;
+}
+
+.header {
+  background-color: #536885;
+  color: white;
+}
+
+.modal-header {
+  background-color: #0c4da2;
+  color: white;
+}
+
+.sclose {
+  background-color: red;
+  display: flex;
+  align-items: center;
+}
+
+.st {
+  width: 30px;
+  height: 30px;
+  color: white;
+}
+
+.dis {
+  opacity: 0.6;
+  pointer-events: none;
+  background-color: #ced6dd;
+}
+
+.image {
+  width: 200px;
+  height: 150px;
+  border: 1px solid rgba(0, 0, 255, 0.534);
+  border-radius: 10%;
+}
+
+::ng-deep .slick-row {
+  display: flex;
+  align-items: center;
+}
+
+::ng-deep .slick-cell {
+  display: flex;
+  align-items: center;
+  height: 100%;
+}

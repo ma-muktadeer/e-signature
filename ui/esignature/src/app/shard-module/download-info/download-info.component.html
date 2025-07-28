@@ -1,0 +1,50 @@
+<div class="modal-content">
+    <div class="modal-header p-2 bg-color">
+        <h4 class="modal-title">Download Information</h4>
+        <button type="button" class="close" data-dismiss="modal" [ngbTooltip]="tooltip" aria-label="Close"
+            (click)="closeModel('close by corse')">
+            <div class="sclose">
+                <span class="st" aria-hidden="true">&times;</span>
+            </div>
+        </button>
+    </div>
+    <div class="modal-body p-1 m-3">
+        <div class="row">
+            <div class="col-md-6 mt-2 form-floating">
+                <input type="text" class="form-control" id="emailInput1" placeholder="Institution Name"
+                    [(ngModel)]="institutionName" name="InstitutionName">
+                <label class="ml-3" for="emailInput1">Institution Name</label>
+            </div>
+            <div class="col-md-6 mt-2 form-floating">
+                <input type="text" class="form-control" id="paInput1" placeholder="Document Referral Number"
+                    [(ngModel)]="referralNumber" name="referralNumber">
+                <label class="ml-3" for="paInput1">Referral Number</label>
+            </div>
+            <div class="col-md-6 mt-2 form-floating">
+                <input type="date" class="form-control" id="date1" placeholder="Document Recive Date"
+                    [(ngModel)]="documentDate" name="date">
+                <label class="ml-3" for="date1">Date</label>
+            </div>
+            <div class="col-md-6 mt-2 form-floating">
+                <input type="file" class="form-control" id="file1" placeholder="Document" #fl
+                    [accept]="allowedFileTypes.join(',')" (change)="otherFile($event.target.files, fl)" multiple="false"
+                    name="file">
+                <label class="ml-3" for="file1">Document</label>
+            </div>
+            <div class="col-md-6 mt-2 form-floating">
+                <textarea class="form-control" id="remarks1" placeholder="Remarks" [(ngModel)]="remark" name="remark"
+                    rows="3"></textarea>
+                <label class="ml-3" for="remarks1">Remarks</label>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal-footer">
+        <div class="d-flex justify-content-end">
+            <button type="button" class="btn btn-primary btn-sm mr-2" (click)="submit()">Submit</button>
+
+            <button type="button" class="btn btn-danger btn-sm" (click)="closeModel('close by btn')">Close</button>
+        </div>
+    </div>
+
+</div>

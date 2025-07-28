@@ -1,0 +1,84 @@
+.main-content {
+    padding: 20px;
+}
+
+.total-msg-count {
+    // background-color: #0C4DA2;
+
+        background-color: rgba(41, 60, 139, 1.0);
+   
+    padding: 20px;
+
+}
+
+
+.state-msg-content {
+    background-color: #3E5F8E;
+    padding: 20px;
+    margin-top: 10px;
+}
+
+.branch-msg-content {
+    background-color: #ADC9EA;
+    padding: 20px;
+    margin-top: 10px;
+}
+
+.border-bottom-item {
+    border-bottom: 1px solid rgb(56, 114, 240);
+}
+
+.font-color-item {
+    color: white;
+}
+
+.main-card-style {
+    border-radius: 5px;
+}
+
+.vr {
+    border-left: 1px solid wheat;
+    height: auto;
+}
+
+.table-dark {
+    opacity: .8;
+    background-color: #033a83;
+}
+
+.title {
+    font-size: large;
+}
+
+table {
+    width: 100%;
+    // margin-right: 15px;
+   
+}
+
+.thead-color {
+    background: rgb(18, 0, 85, .6);
+    color: rgb(255, 255, 255, 1);
+}
+
+tr{
+    margin: 0;
+    width: 100%;
+    
+    td:first-child{
+        width: 102px;
+    }
+    
+    td:last-child{
+        width: 80px;
+    }
+}
+
+.table-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 0 auto; 
+}
+
+

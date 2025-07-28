@@ -1,0 +1,51 @@
+
+<div class="container-fluid background">
+    <br>
+<div class="wrapper mt-4 ">
+    <!-- <div class="d-flex align-items-center">
+        <div class="image-container"  style="background-image: url('assets/images/logo_prime.png');">
+        </div>
+        &nbsp; &nbsp; &nbsp;
+        <span>
+            <h1 class="font_n" style="font-size: 65px;" ><i>Prime Bank PLC.</i></h1>
+            <h4 class="font_m" style="margin-top: -15px; margin-left: 30px; font-size: 25px;"><i>e-{{app.name}} Booklet</i></h4>
+        </span>
+
+    </div> -->
+</div>
+<div class="  bg-color" [@routerTransition]>
+    
+    <!-- <h2><i>{{infoTitle}} </i></h2> -->
+    <div class="main" [hidden]="nextPage" style="background-color: whitesmoke;" >
+        <div >
+            <img [src]="agreementList[0]?.base64File" >
+        </div>
+        <div class="d-flex flex-row-reverse px-4">
+            <div class="p-2">
+                <input type="button" class="btn-primary" value="Next" (click)="firstAccept()" >
+            </div>
+        </div>
+
+    </div>
+    <div class="main" [hidden]="!nextPage" style="background-color: whitesmoke;">
+        <div>
+            <img [src]="agreementList[1]?.base64File" >
+        </div>
+        <div class="d-flex flex-row-reverse px-4">
+            <div class="p-2">
+                <input class="btn-primary" type="button" value="Continue" (click)="clickContinueBtn()">
+            </div>
+            <div class="p-2">
+                <div class="form-check" style="cursor: pointer;">
+                    <input class="form-check-input" type="checkbox" style=" border: 2px solid black;" data-toggle="toggle"
+                    [checked]="agreement" (change)="agreement = !agreement"/>
+                    <label class="form-check-label" (click)="agreement = !agreement" style="color: black; cursor: pointer;" >
+                       I Agree
+                    </label>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+</div>

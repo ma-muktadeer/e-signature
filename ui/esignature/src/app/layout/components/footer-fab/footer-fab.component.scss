@@ -1,0 +1,41 @@
+.fab-container {
+    position: fixed;
+    bottom: 15px;
+    border: 0px;
+    right: 15px;
+    z-index: 100;
+    display: flex;
+    flex-direction: column-reverse;
+    align-items: center;
+  
+    > div {
+      display: flex;
+      flex-direction: column-reverse;
+      align-items: center;
+      margin-bottom: 5px;
+  
+      button {
+        margin-bottom: 10px;
+      }
+    }
+  }
+  
+  .fab-toggler {
+    float: right;
+    border: 0ch;
+    opacity: 1;
+    z-index: 100;
+  }
+  .material-icons{
+      border: 0px;
+  }
+
+
+  #fab-dismiss {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0px;
+    z-index: 99;
+  }

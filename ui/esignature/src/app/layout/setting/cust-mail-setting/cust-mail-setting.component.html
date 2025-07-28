@@ -1,0 +1,298 @@
+<!-- only bootstrap  daylog start -->
+<i (click)="openPopup()" title="Add Customer" class="fa fa-plus"
+  style="font-size:20px;margin-left: 26px; cursor: pointer; color: rgb(48, 14, 201);"></i>
+
+<div class="modal" tabindex="-1" role="dialog" [ngStyle]="{'display':displayStyle}">
+  <div class="modal-dialog modal-xl" role="document">
+    <div class="modal-content">
+
+      <div class="card">
+        <div class="card-body">
+          <h2 style="text-align: center;"> Customer Setup</h2>
+          <div class="row">
+            <div class="col-md-9">
+              <div class="row my-4">
+                <div class="col">
+
+                  <form [formGroup]="customerEmailConfigForm">
+
+                    <div class="row">
+
+                      <div class="col-md-3">
+                        <div class="form-group ">
+                          <label for="branchId">
+                            <span>Branch List<span style="color: red;">*</span></span>
+                          </label>
+
+                          <select formControlName="branchId" class="form-control" (click)="onSelect()">
+                            <option [value]="null">---</option>
+                            <option *ngFor="let branch of branchService.branchList" [value]="branch.branchId">
+                              {{branch.brunchName}}
+                            </option>
+                          </select>
+                        </div>
+
+                      </div>
+
+                      <div class="col-md-3">
+                        <div class="form-group">
+                          <label for="custIdentifier">
+                            <span>Identifier</span>
+                          </label>
+                          <select formControlName="custIdentifier" class="form-control" (click)="onSelect()">
+                            <option [value]="null">---</option>
+                            <option *ngFor="let idn of custIdentifier" [value]="idn.value">
+                              {{idn.name}}
+                            </option>
+                          </select>
+                        </div>
+                      </div>
+
+                      <div class="col-md-3">
+                        <div class="form-group d-flex flex-column flex-fill ">
+                          <label for="custName">
+                            <span>Name <span style="color: red;">*</span></span>
+                          </label>
+                          <input type="text" formControlName="custName" class="form-control" id="custName"
+                            placeholder="Name" name="custName" (click)="onSelect()">
+                        </div>
+
+                      </div>
+
+                      <div class="col-md-3">
+                        <div class="form-group">
+                          <label for="active">
+                            <span>Status</span>
+                          </label>
+                          <br>
+                          <input type="radio" name="status" formControl="active" value=1> Active &nbsp;
+                          <input type="radio" name="status" formControl="active" value=2> Inactive &nbsp;
+                          <!--  <select formControlName="active" class="form-control" (click)="onSelect()">
+                            <option [value]="null">---</option>
+                            <option *ngFor="let idn of statusList" [value]="idn.value">
+                              {{idn.name}}
+                            </option>
+                          </select> -->
+                        </div>
+                      </div>
+
+                      <div class="col-md-12">
+                        <div class="form-group d-flex flex-column flex-fill ">
+                          <label for="email">
+                            <span>Email <span style="color: red;">*</span></span>
+                          </label>
+
+                          <input type="text" formControlName="email" placeholder="Email will be comma(,) separted value"
+                            class="form-control" id="email" name="email" (click)="onSelect()">
+                        </div>
+
+                      </div>
+
+
+                      <div class="col-md-12">
+                        <div class="form-group d-flex flex-column flex-fill ">
+                          <label for="branchMail">
+                            <span>Branch Email <span style="color: red;">*</span></span>
+                          </label>
+
+                          <input type="text" formControlName="branchMail"
+                            placeholder="Email will be comma(,) separted value" class="form-control" id="branchMail"
+                            name="branchMail" (click)="onSelect()">
+                        </div>
+
+                      </div>
+                    </div>
+
+                    <div style="text-align: center;">
+                      <button (click)="onUpdateOrAddCustomerSetup()" [disabled]="clicked" class="btn btn-primary"
+                        style="margin-top: 15px;">{{saveOrUpdate}}
+                        <span class="spinner-border spinner-border-sm" *ngIf="showProgress"
+                          [mode]="'indeterminate'"></span>
+                      </button> &nbsp;
+                      <button (click)="closePopup()" class="btn btn-danger" style="margin-top: 15px;">Cancel</button>
+
+                    </div>
+
+
+                  </form>
+
+
+                </div>
+              </div>
+            </div>
+            <div class="col-md-3">
+              <i (click)="openPopupMultiBankName()" title="Add Bank Name" class="fa fa-plus"
+                style="font-size:20px;margin-left: 26px; cursor: pointer; color: rgb(48, 14, 201);"></i>
+              <p *ngFor="let l of multiBankNameList; let i = index" style="border: 1px solid black;">{{i+1}}.
+                {{l.custName}} &nbsp;
+                <i style="cursor: pointer;" class="fa fa-edit" (click)="onMultiBankNameEdit(l)"></i> &nbsp;
+                <i style="color: red; cursor: pointer;" class="fa fa-trash" (click)="onMultiBankNameDelete(l)"></i>
+              </p>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- dialog end  -->
+
+<!-- Dialog for Multi bank name -->
+
+<div class="modal modal_display" tabindex="-1" role="dialog" [ngStyle]="{'display':displayMultiBankName}">
+  <div class="modal-dialog modal-sm" role="document">
+    <div class="modal-content">
+
+      <div class="card">
+        <div class="card-body">
+          <div>
+            <label for="multiBankName"> Bank Name :</label>
+            <input type="text" [(ngModel)]="multiBankName">
+          </div>
+          <div style="text-align: center;">
+            <button (click)="onSaveMultiBankName()" class="btn btn-primary"
+              style="margin-top: 15px;">{{saveOrUpdate}}</button> &nbsp;
+            <button (click)="closePopupMultiBankName()" class="btn btn-danger" style="margin-top: 15px;">Cancel</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- End Dialog for Multi bank name -->
+<!-- for cust details list  -->
+<!-- daylog box -->
+<div class="modal" tabindex="-1" role="dialog" [ngStyle]="{'display':displayStyle4CustDetails}">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+
+      <div class="card">
+
+        <div class="container">
+
+          <div class="row mt-12">
+            <div class="col-md-12">
+
+              <div class="table-responsive">
+
+                <table class="table table-striped">
+                  <thead>
+                    <tr style="text-align: center;">
+
+
+                      <th class="page-title-decoration"> <i (click)="openPopup4DetailsEntryFrom(null)"
+                          title="Add Name Variante" class="fa fa-plus" style="font-size:20px;margin-left: 3px;"></i>
+                      </th>
+                      <th colspan="1" class="page-title-decoration">Customer Details List</th>
+                      <th> <button (click)="closePopup4CustDetailsList()" class="btn btn-danger">Cancel</button>
+                      </th>
+                    </tr>
+                    <tr>
+                      <th>Serial No.</th>
+
+                      <th>Customer Name</th>
+
+                      <th>Action</th>
+
+                    </tr>
+                  </thead>
+                  <tbody>
+
+                    <tr *ngFor="let i of custDetailsList; let in = index">
+                      <td>{{in+1}}</td>
+
+                      <td>{{i.custName}}</td>
+                      <td>
+                        <i (click)="openPopup4DetailsEntryFrom(i)" title="Update Name Variant" class="fa fa-edit"
+                          style="font-size:20px;margin-left: 65px;"></i>
+                      </td>
+
+
+
+                    </tr>
+                  </tbody>
+
+                </table>
+
+
+
+              </div>
+
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+
+
+    </div>
+  </div>
+</div>
+
+<!-- customer details entry form -->
+
+<div class="modal" tabindex="-1" role="dialog" [ngStyle]="{'display':displayStyle4CustomerDetailsEntry}">
+
+  <div class="modal-dialog" role="document">
+
+    <div class="modal-content">
+
+
+      <div class="card">
+        <div class="card-body">
+          <h2 style="text-align: center;"> {{addOrUpdateNameVariante}}</h2>
+          <div class="row my-4">
+            <div class="col">
+
+              <form [formGroup]="customerEmailConfigDetailsForm">
+
+                <div class="row">
+
+                  <div class="col-md-12">
+                    <div class="form-group d-flex flex-column flex-fill ">
+                      <label for="custName">
+                        <span>Name <span style="color: red;">*</span></span>
+                      </label>
+                      <input type="text" formControlName="custName" class="form-control" id="custName"
+                        placeholder="Name" name="custName">
+                    </div>
+
+                  </div>
+
+
+                </div>
+
+                <div style="text-align: center;">
+                  <button (click)="onUpdateOrAddCustomerDetailsSetup()" class="btn btn-primary"
+                    style="margin-top: 15px;">{{saveOrUpdateFlag}}</button> &nbsp;
+                  <button (click)="closePopup4DetailsEntryFrom()" class="btn btn-danger"
+                    style="margin-top: 15px;">Cancel</button>
+
+                </div>
+
+
+              </form>
+
+
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- end cust details list -->
+
+
+<div *ngIf="showGrid" class="container">
+  <angular-slickgrid #userGrid gridId="userGrid" [columnDefinitions]="columnDefinitions" [gridOptions]="gridOptions"
+    [dataset]="dataset" (onAngularGridCreated)="angularGridReady($event)">
+  </angular-slickgrid>
+</div>

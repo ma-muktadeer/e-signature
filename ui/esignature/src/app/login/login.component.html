@@ -1,0 +1,230 @@
+<div class="layout-navbar-full layout-horizontal layout-without-menu">
+    <div class="loginpanel" style="background-color: #02142a;">
+        <div class="content-wrapper min-vh-100" style="background-image: url(assets/images/e-signews.jpg);">
+            <div class="container-xl flex-grow-1 container-p-y">
+                <div class="row pt-4">
+                    <div class="col-xl-12">
+                        <div class="app-brand pb-3">
+                            <div class="animate fadeInLeft three">
+                                <a href="#" class="app-brand-link animate fadeInLeft three">
+                                    <img src="assets/images/pb-white.png" alt="Prime-Bank" style="height: 61px;">
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xl-7">
+                        <div class="app-brand pb-3">
+                            <h3 class="animate fadeInLeft three"
+                                style="color:#fff;font-size: 50px;font-weight: 500;font-family: 'AcuminIta', sans-serif;">
+                                e-Signature Booklet</h3>
+                        </div>
+                    </div>
+                    <div class="col-xl-5 d-flex align-items-center justify-content-center">
+                        <div class="authentication-inner p-4 pt-1 pb-1 pl-5 pb-4">
+                            <div class="card animate fadeInRight four"
+                                style="width: 370px;padding: 15px 0px;margin-top: 40px;">
+                                <div class="card-body">
+
+                                    <form *ngIf="!show2FaFrm" class="mb-3" role="form" [formGroup]="loginForm"
+                                        autocomplete="off">
+                                        <input type="text" name="email_fake" style="display:none;"
+                                            autocomplete="username">
+                                        <input type="password" name="password_fake" style="display:none;"
+                                            autocomplete="current-password">
+                                        <div class="row">
+                                            <ng-cntainer *ngIf="!(otp && validUser)">
+
+                                                <div class="col-md-12  ">
+                                                    <div class="form-group">
+                                                        <label for="username" class="form-label"
+                                                            style="font-weight: bold;">User Id</label>
+                                                        <input [readOnly]="isUser" autocomplete="nickname"
+                                                            (keypress)="onSubmitByEnterKey($event)" type="text"
+                                                            [formControl]="loginName" class="form-control input"
+                                                            id="username" placeholder="User Id"
+                                                            [appNoSpecialCharacters]="'text'"
+                                                            [ngClass]="{ 'is-invalid': (clickLoginBtn || (loginForm.get('loginName').touched && loginForm.get('loginName').invalid)) && !loginForm.get('loginName').value}">
+
+                                                    </div>
+                                                    <div style="margin-top: -12px;"
+                                                        *ngIf="(clickLoginBtn && !loginForm.get('loginName').value) || (loginForm.get('loginName').touched && loginForm.get('loginName').invalid)"
+                                                        class="error-message invalidCapcha">
+                                                        Required User ID
+                                                    </div>
+
+                                                </div>
+
+                                                <div class="col-md-12  ">
+                                                    <div class="form-group">
+                                                        <input type="password" name="password" hidden>
+
+                                                        <label for="password" class="form-label"
+                                                            style="font-weight: bold;">Password</label>
+                                                        <div class="input-group">
+                                                            <input (keypress)="onSubmitByEnterKey($event)"
+                                                                [type]="passwordType" [formControl]="password"
+                                                                class="form-control" id="password"
+                                                                placeholder="Password" autocomplete="new-password"
+                                                                [ngClass]="{ 'is-invalid': (clickLoginBtn || (loginForm.get('password').touched && loginForm.get('password').invalid)) && !loginForm.get('password').value}"
+                                                                aria-describedby="basic-default-password2">
+                                                            <span id="basic-default-password2" (click)="viewPass()"
+                                                                class="input-group-text cursor-pointer">
+                                                                <i class="fa"
+                                                                    [ngClass]="passwordType == 'password'?'fa-eye':'fa-eye-slash'"></i></span>
+                                                        </div>
+                                                    </div>
+                                                    <div style="margin-top: -12px;"
+                                                        *ngIf="(clickLoginBtn && !loginForm.get('password').value) || (loginForm.get('password').touched && loginForm.get('password').invalid)"
+                                                        class="error-message invalidCapcha">
+                                                        Required Password
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-12  ">
+                                                    <label for="cpcha" class="form-label col-12 capcha"
+                                                        style="font-weight: bold;margin-left: -13px;">Captcha</label>
+                                                    <div class="row">
+                                                        <div class="col-md-6">
+                                                            <div class="form-group">
+                                                                <div class="d-flex flex-row-reverse py-2"
+                                                                    style=" margin-left: -15px;">
+                                                                    <div class="col-2 px-0">
+                                                                        <button
+                                                                            style="height:36px; width: 36px; color: #293c8b !important;"
+                                                                            type="button"
+                                                                            class="btn btn-outline-secondary btn-sm border- rounded-3 hvr reload-btn"
+                                                                            (click)="generateCapture()" title="Reload">
+                                                                            <i class="fa fa-refresh"
+                                                                                aria-hidden="true"></i>
+                                                                        </button>
+                                                                    </div>
+                                                                    <div class="col-10 pr-1">
+                                                                        <div style="height: 36px; border-radius: 8px; position: relative;"
+                                                                            class="overlay">
+                                                                            <div style="position: absolute; top: 0; left: 15px; width: 80%; height: 100%; opacity: 0.5;"
+                                                                                [ngStyle]="{'background-image': 'url(assets/images/pattern/2.jpg)'}">
+                                                                            </div>
+                                                                            <label
+                                                                                style="height: 36px; position: relative; z-index: 1; color: rgb(25, 25, 31); font-size: 20px;"
+                                                                                for="aa"
+                                                                                class="d-flex justify-content-center font-weight-bold align-self-center">{{loadCapture()}}</label>
+                                                                        </div>
+
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="col-md-6">
+                                                            <div class="form-group mb-0">
+                                                                <input style="margin-top: 7px;" id="cpcha" type="text"
+                                                                    class="form-control" placeholder="Enter Ans. *"
+                                                                    formControlName="capture"
+                                                                    [ngClass]="{ 'is-invalid': clickLoginBtn && checkCapture()}" />
+                                                                <div *ngIf="clickLoginBtn && checkCapture()"
+                                                                    style="font-size: 12px;"
+                                                                    class="invalid-feedback invalid-feedback-p col-md-12 px-0">
+                                                                    <div class="float-right"
+                                                                        *ngIf="loginForm.get('capture')?.hasError('required')">
+                                                                        Required CAPTCHA
+                                                                    </div>
+                                                                    <div
+                                                                        *ngIf="loginForm.get('capture').value?.length>0 && loginForm.get('capture').value != captureSum">
+                                                                        Required correct Capcha.
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="mb-3">
+                                                    <div class="d-flex justify-content-between align forgot-password">
+                                                        <!-- <div class="form-check mb-0 ms-2">
+                                                            <input class="form-check-input" type="checkbox"
+                                                                id="remember-me" [ngModelOptions]="{standalone: true}"
+                                                                [(ngModel)]="iAgree"
+                                                                [ngClass]="{ 'is-invalid': clickLoginBtn && !iAgree}">
+                                                            <label class="form-check-label" for="remember-me"
+                                                                [ngClass]="{'text-red':!iAgree && clickLoginBtn}">
+                                                                I agree
+                                                            </label>
+                                                        </div> -->
+                                                        <a [routerLink]="['/forgot-password']">
+                                                            <p class="mb-0">Forgot Password?</p>
+                                                        </a>
+                                                    </div>
+                                                </div>
+
+                                            </ng-cntainer>
+                                            <div class="col-12" *ngIf="validUser && otp">
+
+                                                <div class="form-group inputContainer">
+                                                    <label for="otp" class="form-label"
+                                                        style="font-weight: bold;">OTP</label>
+                                                    <input type="text" [(ngModel)]="otpCode"
+                                                        [ngModelOptions]="{standalone: true}"
+                                                        class="form-control input input-underline input-lg" id="otp"
+                                                        placeholder="OTP" (input)="onOtpInput($event)" [readonly]="link"
+                                                        id="otp" [maxLength]="6"
+                                                        [ngClass]="{'is-invalid': otpMessage?.length}">
+                                                </div>
+                                                <div *ngIf="otpMessage" class="otp-message">
+                                                    {{ otpMessage }}
+                                                </div>
+
+                                            </div>
+                                            <div class="col-12" *ngIf="!otp || !validUser">
+                                                <button
+                                                    class="btn btn-primary d-flex align-items-center justify-content-center w-100 border border-white rounded-3"
+                                                    [disabled]="clicked" (click)="onChangePassClick()">
+                                                    <span>Sign In</span>
+                                                    <span class="spinner-border spinner-border-sm ms-2"
+                                                        *ngIf="showProgress" role="status" aria-hidden="true"></span>
+                                                </button>
+                                            </div>
+                                            <div class="col-12" *ngIf="otp && validUser">
+                                                <button
+                                                    class="btn btn-primary d-flex align-items-center justify-content-center w-100 border border-white rounded-3"
+                                                    [disabled]="otpMessage?.length || !otpCode || showProgress"
+                                                    (click)="onLoggedin()">
+                                                    <span>Submit</span>
+                                                    <span class="spinner-border spinner-border-sm ms-2"
+                                                        *ngIf="showProgress && clickLoginBtn" role="status"
+                                                        aria-hidden="true"></span>
+                                                </button>
+                                            </div>
+                                            <div class="col-12">
+
+                                                <button *ngIf="otp" class="btn btn-primary d-grid w-100"
+                                                    style="color: white;" (click)="onChangePassClick(true)"
+                                                    [disabled]="!showButton">Resend OTP
+                                                    <span class="spinner-border spinner-border-sm ms-2"
+                                                        *ngIf="showProgress && isResend" role="status"
+                                                        aria-hidden="true"></span>
+                                                </button>
+
+                                                <div class="countdown-container" *ngIf="otp">
+                                                    <p class="countdown-message mt-1">
+                                                        <span *ngIf="!showButton">
+                                                            Resend OTP will be enabled after {{ countdown }}
+                                                            seconds.</span>
+                                                        <!-- {{validUser?.msg}} -->
+                                                        <!-- </p>
+                                                </div>
+                                                <div *ngIf="otp" class="countdown-container">
+                                                    <p class="countdown-message mt-1"> -->
+                                                        {{validUser?.msg}}
+                                                    </p>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

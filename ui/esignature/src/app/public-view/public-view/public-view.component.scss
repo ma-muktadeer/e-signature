@@ -1,0 +1,332 @@
+
+// @import url('../layout/e-signature/e-signature-view/e-signature-view.component.scss');
+
+// .view-wrap {
+//   overflow: hidden;
+//   position: relative;
+//   width: 100%;
+//   height: 100%;
+// }
+
+.view-bg {
+    opacity: 0.15;
+    // position: absolute;
+    // left: 0;
+    // top: 0;
+    // width: 100%;
+    // height: auto;
+    width: 99%;
+    height: 100%;
+    position: absolute;
+    // background-repeat: repeat-y;
+    background: transparent url("../../../assets/images/prime_bank_background.JPG") repeat scroll 0% 0%;
+  }
+  
+  .view-content {
+    position: relative;
+  }
+  
+  
+  
+  /* Position text in the middle of the page/image */
+  
+  .image-text-status {
+    // background-color: rgb(0,0,0); /* Fallback color */
+    background-color: rgba(245, 6, 6, 0.5); /* Black w/opacity/see-through */
+    color: wheat;
+    // color: rgba(245, 6, 18, 0.65);
+    font-weight: bold;
+    border: 1px solid #f1f1f1;
+    position: absolute;
+    top: 5%;
+    left: 2%;
+    // top: 50%;
+    // right: 50%;
+    // transform: translate(50%, 50%);
+    z-index: 2;
+    // width: auto;
+    padding: 5px;
+    text-align: center;
+    // rotate: -35deg;
+    font-size: 45px;
+  }
+  
+  .info{
+    background: #08266670;
+    position: absolute;
+    top: 50%;
+    right: 50%;
+    transform: translate(50%, -50%);
+    text-align: center;
+    font-size: 36px;
+  }
+  
+ .bg-status {
+  background-color: rgba(255, 0, 0, 0.815) !important;
+  color: white !important;
+}
+
+.bg-status-active {
+  // background-color: rgba(0, 128, 0, 0.815);
+  background-color: #293c8b !important;
+  color: white !important;
+}
+
+::ng-deep .bg-status td, 
+::ng-deep .bg-status-active td {
+  color: white !important;
+}
+
+  
+  .header {
+    background-color: #0c4da2;
+    color: white;
+  }
+  
+  // .static-div {
+  //   border: 1px dashed black;
+  //   background: rgba(233, 229, 229, 0.74);
+  //   // height: 320px;
+  //   width: auto;
+  //   line-height: 320px;
+  //   text-align: center;
+  // }
+  .static-div {
+    border: 1px dashed black;
+    // background: rgba(233, 229, 229, 0.74);
+    background: #293c8b;
+    // height: 320px;
+    width: auto;
+    line-height: 320px;
+    text-align: center;
+  }
+  
+  .center-text {
+    line-height: 1.5;
+    display: inline-block;
+    vertical-align: middle;
+  }
+  
+  .the-table {
+    table-layout: fixed;
+    word-wrap: break-word;
+  }
+  .image-container {
+    position: relative;
+    display: inline-block;
+  }
+  
+  .image-container::before {
+    content: "";
+    // background-color: rgba(255, 255, 255, 0.5); /* White color with some transparency */
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+  }
+  
+  .image-container img {
+    display: block;
+    max-width: 100%;
+    height: auto;
+    position: relative;
+    z-index: 1;
+  }
+  
+  
+.btn-primar {
+  background-color:  #0056b3;
+  color: #fff; 
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  margin-right: 0px;
+  font-size: large;
+}
+
+
+.btn-primar:hover {
+  background-color: #007bff; 
+}
+
+.footer {
+  background-color: #003970;
+  height: 400px;
+}
+.header1 {
+  background-color: #003970;
+  color: white;
+}
+.footer-margin{
+  margin-top: 20px;
+}
+
+.footer-img{
+  color: white;
+  font-size: 20px;
+}
+.header-backround{
+  background-color: white;
+  margin-left: 5px;
+}
+.header-color{
+  background-color: white;
+}
+.sig_margin{
+  margin-left: 2px;
+}
+
+
+
+
+//
+.navbar {
+  position: fixed;
+  top: 0;
+  width: 100%;
+  z-index: 1000;
+  height: 60px; /* Adjust the height as necessary */
+  background-color: #f8f9fa; /* Background color for navbar */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 20px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Optional shadow for better visibility */
+}
+
+/* Styling for the content wrapper inside the navbar */
+.navbar .content-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+}
+
+/* Adjust content below the navbar */
+.view-content {
+  margin-top: 60px; /* Same value as the height of the navbar */
+  padding: 20px; /* Optional: Add some padding to the content */
+}
+
+/* Additional styling for footer and other sections */
+.footer {
+  padding-top: 20px; /* Adjust as necessary */
+  background-color: #343a40; /* Background color for footer */
+  color: #fff; /* Text color for footer */
+  padding: 40px 20px;
+}
+
+/* Optional styling for the table */
+.table-hover.table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+}
+
+.table-hover.table th,
+.table-hover.table td {
+  padding: 12px;
+  border: 1px solid #dee2e6;
+}
+
+.table-hover.table .header th {
+  background-color: #f1f1f1;
+  text-align: center;
+}
+
+/* Optional styling for image container */
+.image-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 20px 0;
+}
+
+.image-container img {
+  max-width: 100%;
+  height: auto;
+}
+
+
+.sig_margin {
+  margin-bottom: 20px;
+}
+
+
+.title-head{
+  background-color: #FFFFFF;
+  text-align: left;
+}
+
+
+.container-fluid {
+  background: linear-gradient(135deg, #ffffff 50%, #f8f9fa 50%); /* Split background color */
+  padding: 50px 20px; /* Top/bottom padding for spacing */
+}
+
+/* Row styling */
+.row {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+
+.footer-img {
+  display: flex;
+  align-items: center;
+  background: #e9ecef; 
+  padding: 30px;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  max-width: 1200px;
+}
+
+
+.app-brand {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-right: 30px; 
+  padding: 20px;
+  background: #ffffff;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); 
+}
+
+.app-brand img {
+  max-width: 150px; 
+  height: auto;
+  display: block;
+}
+
+.footer-img p {
+  color: #343a40; 
+  line-height: 1.6;
+  max-width: 800px;
+}
+
+
+@media (max-width: 768px) {
+  .footer-img {
+      flex-direction: column;
+      text-align: center;
+  }
+
+  .app-brand {
+      margin-right: 0;
+      // margin-bottom: 20px; /* Add space between image and text */
+  }
+
+  .footer-img p {
+      font-size: 14px;
+  }
+}
+
+:host {
+  display: block;
+  height: 100vh;
+  overflow-y: auto !important;
+}

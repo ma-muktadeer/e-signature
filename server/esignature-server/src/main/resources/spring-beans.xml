@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:si="http://www.springframework.org/schema/integration"
+	xmlns:file="http://www.springframework.org/schema/integration/file"
+	xmlns:util="http://www.springframework.org/schema/util" xmlns:task="http://www.springframework.org/schema/task"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+			http://www.springframework.org/schema/beans/spring-beans.xsd
+			http://www.springframework.org/schema/integration
+			http://www.springframework.org/schema/integration/spring-integration.xsd
+			http://www.springframework.org/schema/integration/file
+			http://www.springframework.org/schema/integration/file/spring-integration-file.xsd
+			http://www.springframework.org/schema/util
+			http://www.springframework.org/schema/util/spring-util.xsd
+			http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task.xsd">
+
+	
+	<bean id="PropertyLocation"
+		class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+		<property name="locations">
+			<list>
+				<value>classpath:common-config.properties</value>
+				<value>classpath:core/core-config.properties</value>
+			</list>
+		</property>
+	</bean>
+	
+	<bean id="MailConfig"
+		class="com.softcafe.esignature.service.MailConfig">
+		<property name="hostName" value="smtp.gmail.com"/>
+		<property name="port" value="587"/>
+		<property name="username" value="storeripon@gmail.com"/>
+		<property name="password" value="Rip46$30"/>
+		<property name="ssl" value="true"/>
+		<property name="tsl" value="false"/>
+		<property name="from" value="storeripon@gmail.com"/>
+		<property name="authenticate" value="true"/>
+	</bean>
+	
+	<!-- All service Class should be included in this map -->
+	<!-- <bean id="ServiceMap" class="com.delfian.core.message.service.ServiceMap">
+		<property name="serviceMap">
+			<map>
+				<entry key="UserService" value-ref="userService" />
+				<entry key="LocationService" value-ref="locationService" />
+			</map>
+		</property>
+	</bean> -->
+	
+	
+</beans>

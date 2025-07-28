@@ -1,0 +1,49 @@
+
+
+<div class="card-body">
+    <div class="form-row justify-content-center">
+        <div class="form-group col-md-3 d-flex flex-column align-items-start mb-3">
+            <label for="email" class="col-form-label">Email</label>
+            <input [(ngModel)]="email" maxlength="50" type="email" class="form-control" id="email" placeholder="Search by Email">
+        </div>
+        <div class="form-group col-md-3 d-flex flex-column align-items-start mb-3">
+            <label for="name" class="col-form-label">User Name</label>
+            <input [(ngModel)]="name" maxlength="50" type="text" class="form-control" id="name" placeholder="Search by User Name">
+        </div>
+        <div class="form-group col-md-2 d-flex flex-column align-items-start mb-3">
+            <label for="fromDate" class="col-form-label">From Date</label>
+            <input [(ngModel)]="filterFromDate" type="date" class="form-control" id="fromDate">
+        </div>
+        <div class="form-group col-md-2 d-flex flex-column align-items-start mb-3">
+            <label for="toDate" class="col-form-label">To Date</label>
+            <input [(ngModel)]="filterToDate" type="date" class="form-control" id="toDate">
+        </div>
+
+        <div class="form-group col-md-2 mt-4 d-flex align-items-center justify-content-center">
+            <button (click)="filterSearch()" class="btn btn-primary text-white btn-change" [ngxInputLoader]="showProgress" [ngxInputLoaderConfig]="loaderConfig">
+                Search
+            </button>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+<div style="margin-top: 10px; width: 100%;" *ngIf="showGrid" class="shadow">
+    <angular-slickgrid id="activityLogGridId" #signaActivtyGridList gridId="activityLogGrid"
+        style="width: 100%;" [columnDefinitions]="columnDefinitions" [gridOptions]="gridOptions" [gridHeight]="height"
+        [dataset]="logList" (onAngularGridCreated)="angularGridReady($event)">
+    </angular-slickgrid>
+    <div id="gw" style="width: 100%;"></div>
+</div>
+
+
+<ngx-loading [show]="loading" [config]="{
+    primaryColour: '#dd0031',
+    secondaryColour: '#1976d2',
+    tertiaryColour: '#dd0031',
+    backdropBorderRadius: '3px'
+  }">
+</ngx-loading>

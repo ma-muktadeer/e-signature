@@ -1,0 +1,14 @@
+<div class="bg-prime" *ngIf="!isView" style="border-radius: 10px;">
+
+    <div *ngIf="imageSrc" [ngClass]="{'image-container': isView }" class=" p-4">
+
+        <div [ngClass]="{'blur': (signatureInfo && signatureInfo?.signatureStatus != 'ACTIVE') && !isPublic}" >
+            <div class="pointer image" [ngClass]="signatureInfo?.signatureStatus == 'IN_ACTIVE' && !isPublic ? 'blur-image' : ''">
+                <img ngbTooltip="View Signature" placement="auto" container="body" [src]="imageSrc"
+                    [style.height.px]="height" (click)="openSignatureView()"/>
+            </div>
+
+        </div>
+    </div>
+
+</div>

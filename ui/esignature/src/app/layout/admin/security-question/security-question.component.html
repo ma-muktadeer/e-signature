@@ -1,0 +1,61 @@
+<button *ngIf="permissionStoreService.hasPermission(appPermission.ADD_SECURITY_QUESTION)" type="button"
+    class="btn btn-success" (click)="openAddQuestinPopup('Save')">
+    <i class="fa fa-plus" aria-hidden="true"></i>
+    | Add Question
+</button>
+
+
+<div *ngIf="showGrid && permissionStoreService.hasPermission(appPermission.VIEW_SECURITY_QUESTION)"
+    style="margin-top: 10px; width: 100%; padding-bottom: 45px;">
+    <angular-slickgrid #allQuestionList gridId="questionGrid" [columnDefinitions]="columnDefinitions"
+        [gridOptions]="gridOptions" [gridHeight]=500 [dataset]="questionList"
+        (onAngularGridCreated)="angularGridReady($event)"
+        (sgOnSelectedRowsChanged)="onSelectedRowsChanged($event.detail.eventData, $event.detail.args)">
+    </angular-slickgrid>
+</div>
+
+
+<!-- popup -->
+<ng-template #template class="modal-content border-0">
+
+    <div class="modal-header">
+        <h4 class="modal-title">Security Question Information</h4>
+        <button type="button" class="close" data-dismiss="modal" [ngbTooltip]="tooltip" aria-label="Close"
+            (click)="closePopup()">
+            <div class="sclose">
+                <span class="st" aria-hidden="true">&times;</span>
+            </div>
+        </button>
+    </div>
+
+    <div class="modal-body p-1 m-3">
+
+        <div class="m-1">
+            <div class="row">
+
+                <label for="name" class="col-md-3">Question:</label>
+                <div class="col-md-9">
+                    <input type="text" [attr.maxlength]="securityQuestionMaxLength" class="form-control" id="name" [(ngModel)]="securityQuestion"
+                        [ngClass]="{'is-invalid':btnClick && !securityQuestion}" required />
+                    <!-- [ngClass]="{'is-invalid': supplierForm.controls.cusIdPran.errors}" -->
+                    <div *ngIf="btnClick" class="invalid-feedback">
+                        <div *ngIf="!securityQuestion">
+                            Question is required.
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="modal-footer">
+        <button class="btn btn-success btn-sm" [disabled]="showProgress" (click)="saveQuestion()">
+            {{btnName}}
+            <span class="spinner-border spinner-border-sm" *ngIf="showProgress" [mode]="'indeterminate'"></span>
+        </button>
+        <button type="button" class="btn btn-danger btn-sm pull-right" (click)="closePopup()">Close</button>
+
+    </div>
+</ng-template>

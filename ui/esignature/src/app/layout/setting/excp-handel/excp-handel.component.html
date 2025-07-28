@@ -1,0 +1,10 @@
+<div *ngIf="showGrid" class="container">
+    <angular-slickgrid #userGrid gridId="userGrid" 
+        [columnDefinitions]="columnDefinitions" 
+        [gridOptions]="gridOptions"
+        [dataset]="dataset" 
+        (onAngularGridCreated)="angularGridReady($event)"
+        >
+    </angular-slickgrid>
+  </div>
+  

@@ -1,0 +1,119 @@
+<div class="modal-content">
+    <div class="modal-header p-2 bg-color">
+        <h4 class="modal-title pull-left">Mail Template Setup</h4>
+        <div class="align-self-center">
+            <button type="button" class="" data-dismiss="modal" aria-label="Close" (click)="closePopup()">
+                <span class="p-2 text-danger" aria-hidden="true">&times;</span>
+            </button>
+        </div>
+    </div>
+    <div class="modal-body p-1 m-3">
+        <div class="row my-4">
+            <div class="col">
+                <form>
+                    <div class="row">
+                        <div class="col-md-8">
+
+                            <div class="form-group mb-3">
+                                <label for="emailSubject" class="form-label label-text">Email Subject
+                                    <app-red-star></app-red-star>:</label>
+                                <input [readonly]="isViewMode" maxlength="100" appNoSpecialCharacters="name" type="name"
+                                    class="form-control" [ngModelOptions]="{standalone: true}" id="emailSubject"
+                                    name="emailSubject" [(ngModel)]="emailSubject" (input)="emailSubjectValidate()">
+                                <div *ngIf="!isemailSubjectValid" class="text text-danger">Invalid Or Characters Not
+                                    Allow.</div>
+                            </div>
+
+                            <div class="mb-3 mt-3">
+                                <label for="emailBody" class="form-label label-text">Email Body
+                                    <app-red-star></app-red-star>:</label>
+                                <angular-editor id="editor1" [ngModelOptions]="{standalone: true}"
+                                    [(ngModel)]="emailEditBody" [config]="config" (input)="emailBodyValidate($event)">
+                                    <!-- <ng-template #customButtons let-executeCommandFn="executeCommandFn">
+                                        <ae-toolbar-set>
+                                            <ae-button iconClass="fa fa-html5" title="Angular editor logo"
+                                                (buttonClick)="executeCommandFn('insertHtml', angularEditorLogo)">
+                                            </ae-button>
+                                        </ae-toolbar-set>
+                                    </ng-template> -->
+                                </angular-editor>
+                                <div *ngIf="!isemailBodyValid" class="text text-danger">Invalid Or Characters Not Allow.
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="mb-3 mt-3">
+                                <label for="emailGroup" class="form-label label-text"> Group
+                                    <app-red-star></app-red-star> : </label> &nbsp;
+                                <!-- (change)="onChangeGroup($event)" -->
+                                <select name="emailGroup" [ngModelOptions]="{standalone: true}"
+                                    [disabled]="saveOrUpdate != 'Save' && !enableUpdate"
+                                    (change)="onChangeGroup(emailGroup)" class="dropdown-field form-control"
+                                    [(ngModel)]="emailGroup">
+                                    <option value="" disabled selected>-- select one --</option>
+                                    <option [disabled]="isViewMode" name="group" *ngFor="let g of groupList"
+                                        [value]="g.value">{{g.name}}</option>
+                                </select>
+                            </div>
+                            <div class="mb-3 mt-3" *ngIf="emailGroup">
+                                <label for="type" class="form-label label-text"> Type
+                                    <app-red-star></app-red-star> : </label> &nbsp;
+                                <!-- (change)="onChangeType()" -->
+                                <select name="emailType" class="dropdown-field form-control" (change)="onChangeType()"
+                                    [ngModelOptions]="{standalone: true}" [(ngModel)]="emailType"
+                                    [disabled]="saveOrUpdate != 'Save' && !enableUpdate">
+                                    <option [disabled]="isViewMode || t.disable" name="type" [title]="t.desc"
+                                        *ngFor="let t of typeList.get(emailGroup)" [ngValue]="t.value">{{t.name}}
+                                    </option>
+                                </select>
+                            </div>
+                            <div *ngIf="tokenList.get(emailGroup)" class="mb-3 mt-3">
+                                <label for="token" class="form-label label-text"> Token : </label> &nbsp;
+                                <!-- <tr>
+                                    <td><span (click)="onTokenCopy('#MAIL_NOTE#')" class="fa fa-files-o"
+                                            style="cursor: pointer;"></span> &nbsp; &nbsp;</td>
+                                    <td>{{'#MAIL_NOTE#'}} -- {{'MAIL_NOTE'}}</td>
+                                </tr> -->
+                                <!-- <tr *ngFor="let d of tokenList">
+                                    <td><span (click)="onTokenCopy(d.value)" class="fa fa-files-o"
+                                            style="cursor: pointer;"></span> &nbsp; &nbsp;</td>
+                                    <td>{{d.value}} -- {{d.name}}</td>
+                                </tr> -->
+                                <div class="row" *ngFor="let d of tokenList.get(emailGroup)">
+                                    <div class="col-auto"><span (click)="onTokenCopy(d.value)" class="fa fa-files-o"
+                                            title="Copy Token" style="cursor: pointer;"></span>
+                                    </div>
+                                    <div class="col">{{d.name}}</div>
+                                    <div class="col">{{d.value}}</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </form>
+
+
+            </div>
+        </div>
+    </div>
+
+    <div class="modal-footer d-flex justify-content-center">
+        <div style="text-align: center;">
+            <button [disabled]="spinnerSaveBtn || isViewMode" [hidden]="!isemailSubjectValid || !isemailBodyValid"
+                *ngIf="permissioinStoreService.hasPermission(appPermission.MAIL_TEMPLATE_MAKER)"
+                (click)="onUpdateOrAddCustomerSetup()" class="btn btn-primary"
+                style="margin-top: 10px;">{{saveOrUpdate}}
+                <span class="spinner-border spinner-border-sm" *ngIf="spinnerSaveBtn" [mode]="'indeterminate'"></span>
+            </button> &nbsp;
+            <!-- <button
+                *ngIf="permissioinStoreService.hasPermission(permissioinStoreService.appPermission.APPROVE_MAIL_TEMPLATE)"
+                title="approve" (click)="onApprove()" [hidden]="showApproveBtn" class="btn btn-warning "
+                style="margin-top: 10px;"> Approve
+                <span class="spinner-border spinner-border-sm" *ngIf="spinnerApproveBtn"
+                    [mode]="'indeterminate'"></span>
+            </button> &nbsp; -->
+            <button (click)="closePopup()" class="btn btn-danger" style="margin-top: 10px;">Cancel</button>
+        </div>
+    </div>
+
+</div>

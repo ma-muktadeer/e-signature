@@ -1,0 +1,7 @@
+http://192.168.180.128:8090/SwiftCafe-server/jsonRequest
+
+http://192.168.180.128:8090/swiftcafe
+
+http://192.168.180.128:8090/SwiftCafe/print/mt?reportlocation=webreturn&reportformat=pdf&reportname=ssiBulkReport&includeScreening=false&reportReqTime=1610263381126&username=SUPER1&idList=497576
+
+

@@ -1,0 +1,119 @@
+
+<div class="mt-3 shadow">
+
+  <div class="accordion accordion-flush" id="accordionFlushExample">
+    <div class="accordion-item">
+      <h2 class="accordion-header">
+        <button class="accordion-button" type="button" data-bs-toggle="collapse"
+          data-bs-target="#flush-collapseOne" aria-expanded="true" aria-controls="flush-collapseOne">
+          For Internal User Setup
+        </button>
+      </h2>
+      <div id="flush-collapseOne" class="accordion-collapse collapse show" data-bs-parent="#accordionFlushExample">
+        <div class="accordion-body">
+          <div cdkDropListGroup class="text-center row">
+            <div class="col-md-6">
+              <h6><u>Available</u></h6>
+              <div style="margin-top: 2px;" class="col-md-12">
+                <div class="col-md-12 row mb-2">
+                  <input class="col-md-12"[appNoSpecialCharacters]="'name'" style="border-radius: 20px; border: 1px solid #b9c1c0;" placeholder="Search"
+                    type="text" (keyup)="onSearch($event, 'INTERNAL_USER')" />
+                </div>
+              </div>
+
+              <div cdkDropList [cdkDropListData]="filteredIntUnassignList" class="example-list"
+                (cdkDropListDropped)="drop($event)">
+                <div class="example-box" *ngFor="let role of filteredIntUnassignList" cdkDrag>{{role.displayName}}</div>
+              </div>
+            </div>
+
+            <div class="col-md-6">
+              <h6><u>Assign</u></h6>
+              <div style="margin-top: 43px;" class="col-md-12">
+              </div>
+
+              <div cdkDropList [cdkDropListData]="assignIntList" class="example-list"
+                (cdkDropListDropped)="drop($event)">
+                <div class="" *ngFor="let role of assignIntList">
+                  <div class="row">
+                    <div class="col-sm-12">
+                      <a class=" mr-1 text-left example-box border-bottom" style="padding: 2px; font-size: 1rem;"
+                        cdkDrag>{{role.displayName}}
+
+                      </a>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div style="margin-top: 10px;">
+                <button style="margin: auto;" [(disabled)]="spinnerManage" (click)="manageBtnClick('INTERNAL_USER')"
+                  type="button" class="btn btn-primary" pButton>Submit
+                  <span class="spinner-border spinner-border-sm" *ngIf="spinnerManage" [mode]="'indeterminate'"></span>
+
+                </button>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="accordion-item">
+      <h2 class="accordion-header">
+        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+          data-bs-target="#flush-collapseTwo" aria-expanded="false" aria-controls="flush-collapseTwo">
+          For External User Setup
+        </button>
+      </h2>
+      <div id="flush-collapseTwo" class="accordion-collapse collapse" data-bs-parent="#accordionFlushExample">
+        <div class="accordion-body">
+          <div cdkDropListGroup class="text-center row">
+            <div class="col-md-6">
+              <h6><u>Available</u></h6>
+              <div style="margin-top: 2px;" class="col-md-12">
+                <div class="col-md-12 row mb-2">
+                  <input class="col-md-12"[appNoSpecialCharacters]="'name'" style="border-radius: 20px; border: 1px solid #b9c1c0;" placeholder="Search"
+                    type="text" (keyup)="onSearch($event, 'EXTERNAL_USER')" />
+                </div>
+              </div>
+
+              <div cdkDropList [cdkDropListData]="filteredExtUnassignList" class="example-list"
+                (cdkDropListDropped)="drop($event)">
+                <div class="example-box" *ngFor="let role of filteredExtUnassignList" cdkDrag>{{role.displayName}}</div>
+              </div>
+            </div>
+
+            <div class="col-md-6">
+              <h6><u>Assign</u></h6>
+              <div style="margin-top: 43px;" class="col-md-12">
+              </div>
+
+              <div cdkDropList [cdkDropListData]="assignExtList" class="example-list"
+                (cdkDropListDropped)="drop($event)">
+                <div class="" *ngFor="let role of assignExtList">
+                  <div class="row">
+                    <div class="col-sm-12">
+                      <a class="lmr-1 text-left example-box border-bottom" style="padding: 2px; font-size: 1erm;"
+                        cdkDrag>{{role.displayName}}
+                        
+                      </a>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div style="margin-top: 10px;">
+                <button style="margin: auto;" [(disabled)]="spinnerManage" (click)="manageBtnClick('EXTERNAL_USER')"
+                  type="button" class="btn btn-primary" pButton>Submit
+                  <span class="spinner-border spinner-border-sm" *ngIf="spinnerManage" [mode]="'indeterminate'"></span>
+
+                </button>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>

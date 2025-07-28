@@ -1,0 +1,84 @@
+@import url('../service/base.scss');
+
+.invald{
+    color: rgb(253, 61, 61);
+    font-size: small;
+}
+.bg{
+    min-height: 30px;
+}
+.is-invalid{
+    border: 1px solid red !important;
+}
+.inputContainer{
+    position: relative;
+    height: 45px;
+}
+.input{
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    height: 100%;
+    border: 1px solid #dadcda;
+    border-radius: 8px;
+    font-size:16px;
+    padding: 0 20px;
+    outline: none;
+    background: none;
+    z-index: 1;
+}
+
+::placeholder{
+    color: transparent;
+}
+
+.label{
+    position: absolute;
+    top: 9px;
+    left: 15px;
+    padding: 0 4px;
+    background-color: #f8f9fa;
+    color: #8e94a0d2;
+    font-size: 16px;
+    transition: 0.5s;
+    z-index: 0;
+}
+
+.input:focus+.label{
+    top: -10px;
+    left: 10px;
+    z-index: 29;
+    font-size: 14px;
+    font-weight: 600;
+    color: #042653;
+    background-color: #f8f9fa;
+
+}
+
+.input:focus{
+    border: 1px solid #042653;
+}
+.input:not(:placeholder-shown) +.label{
+    top: -10px;
+    left: 10px;
+    z-index: 20;
+    font-size: 14px;
+    font-weight: 600;
+    color: #042653;
+    background-color: #f8f9fa;
+
+}
+.input:not(:placeholder-shown){
+    border: 1px solid #042653;
+}
+
+.invalid-feedback.col-md-12.ng-tns-c114-1.ng-star-inserted  {
+    position: absolute;
+    top: 38px;
+    right: -10px;
+    margin-bottom: 30px;
+}
+
+.form-group.inputContainer.mb-4.mlt{
+    height: auto;
+}

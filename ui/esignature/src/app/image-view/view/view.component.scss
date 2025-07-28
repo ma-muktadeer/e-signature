@@ -1,0 +1,86 @@
+img {
+    width: 100%;
+    height: 100%;
+    transition: transform 0.3s ease;
+
+}
+
+/* Define the style changes when the image is hovered */
+// .image-container:hover img {
+//     transform: scale(1.1);
+// }
+
+//blur image
+.blur-image {
+    /* The image used */
+    // background-image: url("photographer.jpg");
+
+    /* Add the blur effect */
+    filter: blur(10px);
+    -webkit-filter: blur(8px);
+
+    /* Full height */
+    height: 100%;
+
+    /* Center and scale the image nicely */
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+
+// .modal-header {
+//     background-color: #0c4da2;
+//     color: white;
+//     display: flex;
+//     align-items: center;
+//     flex-wrap: nowrap;
+//     flex-direction: row;
+// }
+
+// .sclose {
+//     background-color: red;
+//     display: flex;
+//     align-items: center;
+// }
+
+// .st {
+//     width: 30px;
+//     height: 30px;
+//     color: white;
+// }
+
+
+.image-text {
+    position: fixed;
+    left: 50%;
+    // position: absolute;
+    // top: 50%;
+    // left: 50%;
+    transform: translate(-50%, -50%);
+    
+    bottom: 20%;
+
+    /* Add any additional styles you need for the text */
+    .d-flex {
+
+        .col-6 {
+            background-color: rgba(255, 255, 255, 0.8);
+            /* Adjust the background color and opacity as needed */
+            // padding: 10px;
+            text-align: center;
+            border-radius: 5px;
+            font-size: 30px;
+            // font-weight: bold;
+        }
+    }
+}
+
+
+// .image {
+//     border: 5px solid #c5bcbc;
+//     border-radius: 8px;
+//     overflow: hidden; 
+//     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); 
+//     transition: border-color 0.3s ease; 
+// }
+

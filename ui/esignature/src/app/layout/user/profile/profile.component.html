@@ -1,0 +1,962 @@
+<div class="card shadow" *ngIf="requestFrom === 'profile'">
+  <div class="card-body">
+    <h2 style="text-align: center;"> User Information</h2>
+    <div class="my-4">
+      <div class="col">
+
+        <form [formGroup]="profileForm" autocomplete="off">
+          <div class="row">
+
+            <div class="col-md-6 mb-2 p-0">
+
+              <div class="form-group d-flex flex-column m-0 row" *ngIf="(addUser || isSupperAdmin) && !isView"
+                data-toggle="buttons">
+                <div class=" flex-fill">
+                  <label for="yt">
+                    <span>User Type <app-red-star></app-red-star><span *ngIf="!userType">(Please select any
+                        one)</span></span>
+                  </label>
+                </div>
+                <div class="btn-group btn-group-toggle">
+
+                  <label class="btn btn-secondary btn-sm" (click)="checkUserType('INTERNAL_USER')"
+                    *ngIf="permissioinStoreService.hasPermission(appPermission.INTERNAL_SAVE_USER)"
+                    [ngClass]="profileForm.get('userType').value == 'INTERNAL_USER' ? 'btn-success': (profileForm.get('userType').errors && clicked )? 'text-white btn-danger' : 'btn-secondary'">
+                    <input type="radio" value="INTERNAL_USER" id="option2" formControlName="userType"> Internal User
+                  </label>
+                  <div class="">
+                    <label class="bg-secondary m-0" style="height: 100%; color: white;">
+                      |
+                    </label>
+                  </div>
+                  <label class="btn btn-secondary btn-sm" (click)="checkUserType('EXTERNAL_USER')"
+                    *ngIf="permissioinStoreService.hasPermission(appPermission.EXTERNAL_SAVE_USER)"
+                    [ngClass]="profileForm.get('userType').value == 'EXTERNAL_USER' ? 'btn-success': (profileForm.get('userType').errors && clicked )? 'text-white btn-btn-danger' : 'btn-secondary'">
+                    <input type="radio" value="EXTERNAL_USER" id="option3" formControlName="userType"> External User
+                  </label>
+                </div>
+              </div>
+
+              <div class="form-group d-flex flex-column m-0 row" *ngIf="isView || !addUser">
+                <div class=" flex-fill">
+                  <label for="yt">
+                    <span>User Type</span>
+                  </label>
+                </div>
+                <div class="btn-group btn-group-toggle">
+                  <label class="btn btn-success btn-sm"
+                    *ngIf="profileForm.get('userType').value === 'INTERNAL_USER' && !isSupperAdmin">
+                    <input type="radio" value="INTERNAL_USER" id="option2" formControlName="userType"> Internal User
+                  </label>
+                  <label class="btn btn-success btn-sm"
+                    *ngIf="(profileForm.get('userType').value === 'EXTERNAL_USER' || addUser) && !isSupperAdmin">
+                    <input type="radio" value="EXTERNAL_USER" id="option3" formControlName="userType"> External User
+                  </label>
+                  <label class="btn btn-success btn-sm" *ngIf="isSupperAdmin">
+                    <input type="radio" id="option3"> Super Admin
+                  </label>
+                </div>
+              </div>
+
+
+              <div *ngIf="profileForm.get('userType').errors && clicked" class="text text-danger mt-1">
+                Please Select User Type
+              </div>
+
+            </div>
+          </div>
+
+
+          <div class="row" *ngIf="(userType && profileForm.get('userType')?.value) || isSupperAdmin">
+
+
+            <div class="col-md-12 row" *ngIf="profileForm.get('userType').value === 'INTERNAL_USER'">
+              <div class="form-group d-flex flex-column flex-fill ">
+                <div class="col-md-12 row">
+                  <label for="loginName" class="px-0">
+                    <span>User Id <app-red-star></app-red-star></span>
+                  </label>
+                </div>
+                <div class="col-md-6 row p-0">
+                  <div class="col-8">
+                    <input type="text" (keyup.enter)="ldapLoginNameCheck()" formControlName="loginName"
+                      class="form-control" [readOnly]="isViewUser ||btnUpade" id="loginName" name="loginName"
+                      [ngClass]="{ 'is-invalid': profileForm.controls.loginName?.touched && !profileForm.get('loginName').value}">
+
+                    <div *ngIf="profileForm.controls.loginName?.touched && !profileForm.get('loginName').value"
+                      class="text text-danger mt-1">
+                      User Id Is Required!
+                    </div>
+
+                  </div>
+                  <div class="col-4 p-0">
+                    <button type="button" class="btn btn-primary btn-block" (click)="ldapLoginNameCheck()"
+                      [disabled]="!profileForm.get('loginName').value || isViewUser || btnUpade"
+                      [ngxInputLoader]="searchLdapUser" [ngxInputLoaderConfig]="loaderConfig">Verify
+                    </button>
+
+                  </div>
+                </div>
+              </div>
+
+            </div>
+
+            <!-- <ng-tamplate *ngIf="ldapUser && profileForm.get('userType').value === 'INTERNAL_USER'">
+
+            </ng-tamplate> -->
+            <div class="col-md-6" [hidden]="userType == 'INTERNAL_USER' && !ldapUser">
+              <div class="form-group d-flex flex-column flex-fill ">
+                <label for="empId">
+                  <span>Employee ID     <app-red-star *ngIf="profileForm.get('userType').value === 'INTERNAL_USER'"></app-red-star></span>
+                </label>
+
+                <input [readOnly]="isViewUser ||btnUpade" [appNoSpecialCharacters]="'name'" type="text"
+                  formControlName="empId" class="form-control" id="empId" name="empId"
+                  [ngClass]="{ 'is-invalid': (clicked || profileForm.controls.empId?.touched) && profileForm.controls.empId.errors?.required && profileForm.get('userType').value === 'INTERNAL_USER'}"
+
+                  [attr.maxlength]="empIdMaxLength">
+                 
+                  <div *ngIf="profileForm.controls.empId?.touched && profileForm.controls.empId.errors && profileForm.get('userType').value === 'INTERNAL_USER'"
+                  class="text text-danger mt-1">
+                  Employee ID Is Required!
+                </div>
+                <!-- <div *ngIf="profileForm.controls.firstName?.touched && profileForm.controls.firstName.errors"
+                  class="text text-danger mt-1">
+                  Invalid Or Characters Not Allow.
+                </div> -->
+
+              </div>
+
+            </div>
+            <div class="col-md-6" [hidden]="userType == 'INTERNAL_USER' && !ldapUser">
+              <div class="form-group d-flex flex-column flex-fill ">
+                <label for="firstName">
+                  <span>First Name <app-red-star></app-red-star></span>
+                </label>
+
+                <input [readOnly]="isViewUser" [appNoSpecialCharacters]="'name'" type="text" formControlName="firstName"
+                  class="form-control"
+                  [ngClass]="{ 'is-invalid': (clicked || profileForm.controls.firstName?.touched) && profileForm.controls.firstName.errors?.required}"
+                  id="firstName" name="firstName" [attr.maxlength]="firstNameMaxLength">
+
+                <!-- <div *ngIf="profileForm.controls.firstName.errors?.required" class="invalid-feedback">
+                  User Name Is Required!
+                </div> -->
+                <div *ngIf="profileForm.controls.firstName?.touched && profileForm.controls.firstName.errors"
+                  class="text text-danger mt-1">
+                  Invalid Or Characters Not Allow.
+                </div>
+
+              </div>
+
+            </div>
+            <div class="col-md-6" [hidden]="userType == 'INTERNAL_USER' && !ldapUser">
+              <div class="form-group d-flex flex-column flex-fill ">
+                <label for="lastName">
+                  <span>Last Name </span>
+                </label>
+
+                <input [readOnly]="isViewUser" [appNoSpecialCharacters]="'name'" type="text" formControlName="lastName"
+                  class="form-control"
+                  [ngClass]="{ 'is-invalid': (clicked || profileForm.controls.lastName?.touched) && profileForm.controls.lastName.errors?.required}"
+                  id="lastName" name="lastName" [attr.maxlength]="lastNameMaxLength">
+
+                <!-- <div *ngIf="profileForm.controls.lastName.errors?.required" class="invalid-feedback">
+                  User Name Is Required!
+                </div> -->
+                <div *ngIf="profileForm.controls.lastName?.touched && profileForm.controls.lastName.errors"
+                  class="text text-danger mt-1">
+                  Invalid Or Characters Not Allow.
+                </div>
+              </div>
+
+            </div>
+
+            <div class="col-md-6" [hidden]="userType == 'INTERNAL_USER' && !ldapUser">
+              <div class="form-group d-flex flex-column flex-fill ">
+                <label for="phoneNumber">
+                  <span>Phone Number <app-red-star></app-red-star></span>
+                </label>
+                <input [readOnly]="isViewUser" [appNoSpecialCharacters]="'allPhoneNumber'" type="text"
+                  formControlName="phoneNumber" class="form-control" id="phoneNumber"
+                  [attr.maxlength]="phoneNumberMaxLength"
+                  [ngClass]="{ 'is-invalid': (clicked || profileForm.controls.phoneNumber?.touched) && profileForm.get('phoneNumber').errors}"
+                  name="phoneNumber">
+
+                <div *ngIf="profileForm.controls.phoneNumber?.touched && profileForm.controls.phoneNumber.errors"
+                  class="text text-danger mt-1">
+                  Invalid Or Characters Not Allow.
+                </div>
+              </div>
+            </div>
+            <div class="col-md-6" [hidden]="userType == 'INTERNAL_USER' && !ldapUser"
+              *ngIf="profileForm.get('userType').value == 'EXTERNAL_USER'">
+              <div class="form-group  ">
+                <!-- <div class="row">
+                  <div class="col-12">
+                    <label for="institutionId">
+                      <span>Institution <app-red-star></app-red-star></span>
+                    </label>
+                  </div>
+
+                  <div class="col-11 d-flex flex-column flex-fill pr-1">
+                    <input class="form-control " list="institutionList" id="datalistInput"
+                      [readOnly]="isViewUser ||btnUpade"
+                      [ngClass]="{ 'is-invalid': (clicked || isSearch) && profileForm.controls.institutionId?.errors}"
+                      [ngModelOptions]="{standalone: true}" [(ngModel)]="selectedInstitutionName"
+                      (change)="getInstitutionId()" />
+                    <div *ngIf="(clicked || isSearch) && profileForm.controls.institutionId?.errors"
+                      class="invalid-feedback ">
+                      Institution can not be empty.
+                    </div>
+                  </div>
+                  <div class="col-1 pl-1" *ngIf="!readOnly">
+                    <button type="button" [hidden]="readOnly" type="button" class="btn btn-primary btn-sm"
+                      (click)="addInstitution()" data-toggle="tooltip" data-placement="bottom" title="Add Institution"
+                      style="padding: 7px;">
+                      <i class="fa fa-plus" aria-hidden="true"></i>
+                    </button>
+                  </div>
+                  <datalist id="institutionList">
+                    <option *ngFor="let institution of institutionList">
+                      {{ institution.institutionName }}</option>
+                  </datalist>
+                </div> -->
+                <div class="row">
+                  <div class="col-12">
+                    <label for="institutionId">
+                      <span>Institution <app-red-star></app-red-star></span>
+                    </label>
+                  </div>
+
+                  <div class="col-11 d-flex flex-column flex-fill pr-1">
+                    <ng-multiselect-dropdown style="z-index: 100;" [ngModelOptions]="{standalone: true}"
+                      [(ngModel)]="selectInsDrop" [disabled]="isViewUser || btnUpade"
+                      [placeholder]="'Select institution'" [settings]="dropdownSettingsInstitution"
+                      [data]="institutionList" (onSelect)="getInstitutionId($event)"
+                      [ngClass]="{ 'is-invalid': (clicked || isSearch) && profileForm.controls.institutionId?.errors}">
+                    </ng-multiselect-dropdown>
+
+
+                    <div *ngIf="(clicked || isSearch) && profileForm.controls.institutionId?.errors"
+                      class="invalid-feedback">
+                      Institution can not be empty.
+                    </div>
+                  </div>
+
+                  <div class="col-1 pl-1" *ngIf="!readOnly">
+                    <button type="button" [hidden]="readOnly" type="button" class="btn btn-primary btn-sm"
+                      (click)="addInstitution()" data-toggle="tooltip" data-placement="bottom" title="Add Institution"
+                      style="padding: 7px;">
+                      <i class="fa fa-plus" aria-hidden="true"></i>
+                    </button>
+                  </div>
+                </div>
+
+              </div>
+            </div>
+
+
+            <!-- start -->
+            <div class="col-md-6" [hidden]="userType == 'INTERNAL_USER' && !ldapUser">
+              <div class="form-group  ">
+                <div class="row">
+                  <div class="col-12">
+                    <label for="roleId">
+                      <span>Role <app-red-star></app-red-star></span>
+                    </label>
+                  </div>
+
+                  <!-- <div class="col-11 d-flex flex-column flex-fill pr-1">
+                    <input class="form-control " list="roleList" id="roleId" [readOnly]="readOnly"
+                      [ngClass]="{ 'is-invalid': (clicked || isSearch) && profileForm.controls.roleId?.errors}"
+                      [ngModelOptions]="{standalone: true}" [(ngModel)]="selectedRoleName" (change)="getRoleId()" />
+                    <div *ngIf="(clicked || isSearch) && profileForm.controls.roleIderrors" class="invalid-feedback ">
+                      Role can not be empty.
+                    </div>
+                  </div> -->
+                  <ng-multiselect-dropdown style="z-index: 100;" [ngModelOptions]="{standalone: true}"
+                    [(ngModel)]="selectedRoleList" [disabled]="readOnly || isViewUser" [placeholder]="'Select Role'"
+                    [settings]="dropdownSettingsRole" [data]="roleList" (onSelect)="onRoleSelect($event)"
+                    (onSelectAll)="onSelectAll($event)" (onDeSelectAll)="onDeselectAll($event)">
+                  </ng-multiselect-dropdown>
+
+                  <datalist id="roleList">
+                    <option *ngFor="let role of roleList">
+                      {{ role.roleName }}</option>
+                  </datalist>
+                </div>
+
+              </div>
+            </div>
+            <!-- end -->
+
+            <div class="col-md-6" [hidden]="userType == 'INTERNAL_USER' && !ldapUser">
+              <div class="form-group d-flex flex-column flex-fill ">
+
+                <label for="email">
+                  <span>Email <app-red-star></app-red-star></span>
+                </label>
+                <div class="input-group">
+
+                  <input [readOnly]="isViewUser || btnUpade || !selectedInstitution" type="email" class="form-control"
+                    id="email" name="email" email (input)="buildEmail($event)" [(ngModel)]="email"
+                    [ngModelOptions]="{standalone: true}"
+                    [ngClass]="{ 'is-invalid':profileForm.get('email').errors && (clicked || profileForm.get('email').touched) }">
+                  <div class="input-group-prepend">
+                    <div class="input-group-text">{{'@'}}{{selectedInstitution?.domain ? selectedInstitution.domain :
+                      ldapDomain}}</div>
+                  </div>
+
+                  <div *ngIf="(clicked || profileForm.controls.email?.touched) && profileForm.get('email').errors"
+                    class="invalid-feedback">
+                    <div *ngIf="profileForm.controls.email.errors?.required">
+                      Email Is Required!
+                    </div>
+                    <div *ngIf="profileForm.get('email').hasError('pattern')">
+                      Email Is Invalid!
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+            <div class="col-md-6" [hidden]="userType == 'INTERNAL_USER' && !ldapUser">
+              <div class="form-group d-flex flex-column flex-fill ">
+
+                <div class="">
+                  <label for="bn">
+                    <span *ngIf="userType == 'EXTERNAL_USER'">Branch / Division <app-red-star></app-red-star></span>
+                    <span *ngIf="userType != 'EXTERNAL_USER'">Branch <app-red-star></app-red-star></span>
+                  </label>
+
+                </div>
+
+                <div class=" d-flex flex-column flex-fill pr-1">
+                  <!-- <input class="form-control " list="branchListid" id="bn" [readOnly]="isViewUser"
+                    [ngClass]="{ 'is-invalid': (clicked || isSearch) && profileForm.controls.branchId?.errors}"
+                    [ngModelOptions]="{standalone: true}" [(ngModel)]="selectedBranchName"
+                    (change)="getbranchId($event)" /> -->
+
+                  <ng-multiselect-dropdown id="bn" [(ngModel)]="selectedBranch" *ngIf="userType == 'INTERNAL_USER'"
+                    [ngModelOptions]="{standalone: true}" [disabled]="readOnly || isViewUser"
+                    [placeholder]="'Select Branch'" [settings]="dropdownSettingsBranch" [data]="branchList"
+                    (onSelect)="getbranchId($event)" (onDeSelect)="onBranchDeselect()">
+                  </ng-multiselect-dropdown>
+
+                  <input class="form-control" id="bn" *ngIf="userType == 'EXTERNAL_USER'" [readOnly]="isViewUser"
+                    formControlName="extBranchName" />
+
+                  <!-- <div *ngIf="(clicked || isSearch) && profileForm.controls.branchId?.errors" class="invalid-feedback ">
+                    Branch can not be empty.
+                  </div> -->
+                </div>
+                <!-- <datalist id="branchListid" *ngIf="userType !='EXTERNAL_USER'">
+                  <option *ngFor="let branch of branchList">
+                    {{ branch.branchName }}</option>
+                </datalist> -->
+              </div>
+
+            </div>
+            <div class="col-md-6" [hidden]="userType == 'INTERNAL_USER' && !ldapUser">
+              <div class="form-group d-flex flex-column flex-fill ">
+                <label for="designation">
+                  <span>Designation </span>
+                </label>
+
+                <input [readOnly]="isViewUser" [appNoSpecialCharacters]="'name'" type="text"
+                  formControlName="designation" class="form-control" id="designation"
+                  [attr.maxlength]="designationUMaxLength">
+
+                <div *ngIf="profileForm.controls.designation?.touched && profileForm.controls.designation.errors"
+                  class="text text-danger mt-1">
+                  Invalid Or Characters Not Allow.
+                </div>
+
+              </div>
+
+            </div>
+
+            <div class="col-md-6" [hidden]="userType == 'INTERNAL_USER' && !ldapUser">
+              <div class="form-group d-flex flex-column flex-fill ">
+                <label for="nid">
+                  <span>NID </span>
+                </label>
+                <input [readOnly]="isViewUser" [appNoSpecialCharacters]="'numericNumber'" type="text"
+                  formControlName="nid" class="form-control" id="nid" name="nid" [attr.maxlength]="nidMaxLength"
+                  [ngClass]="{ 'is-invalid': (clicked || profileForm.controls.nid?.touched) && profileForm.controls.nid.errors?.required }">
+                <div *ngIf="profileForm.controls.nid?.touched && profileForm.controls.nid.errors"
+                  class="text text-danger mt-1">
+                  NID Is Required!
+                </div>
+              </div>
+            </div>
+
+            <div class="col-md-6" [hidden]="userType == 'INTERNAL_USER' && !ldapUser">
+              <div class="form-group d-flex flex-column flex-fill ">
+                <label for="dob">
+                  <span>Date of Birth </span>
+                </label>
+                <input [readOnly]="isViewUser" type="date" formControlName="dob" class="form-control" id="dob"
+                  name="dob"
+                  [ngClass]="{ 'is-invalid': (clicked || profileForm.controls.dob?.touched) && profileForm.controls.dob.errors?.required }">
+                <div *ngIf="profileForm.controls.dob?.touched && profileForm.controls.dob.errors"
+                  class="text text-danger mt-1">
+                  Date of Birth Is Required!
+                </div>
+              </div>
+            </div>
+            <div class="col-md-6" [hidden]="userType == 'INTERNAL_USER' && !ldapUser">
+              <div class="form-group d-flex flex-column flex-fill ">
+                <label for="remarks">
+                  <span>Remarks </span>
+                </label>
+
+                <!-- <input [readOnly]="isViewUser" [appNoSpecialCharacters]="'name'" type="text" formControlName="remarks"
+                  class="form-control" id="remarks" [attr.maxlength]="remarksMaxLength"> -->
+                <textarea [readOnly]="isViewUser" [appNoSpecialCharacters]="'name'" formControlName="remarks"
+                  class="form-control" id="remarks" [attr.maxlength]="remarksMaxLength" rows="3">
+  </textarea>
+
+              </div>
+
+            </div>
+
+            <!-- Add this new dropdown field for Active/Inactive status -->
+            <div class="col-md-6" *ngIf="notShowStatus && btnUpade">
+              <div class="form-group d-flex flex-column flex-fill">
+                <label for="statusDropdown">
+                  <span>Select Status</span>
+                </label>
+                <select class="form-control" id="userStatus" formControlName="userStatus"
+                  [attr.disabled]="isViewUser ? '' : null">
+                  <option value="PEND_ACTIVE">Pend Active</option>
+                  <option value="ACTIVE">Active</option>
+                  <option value="PEND_INACTIVE">Pend Inactive</option>
+                  <option value="INACTIVE">Inactive</option>
+                  <option value="PEND_CLOSE" disabled>Pend Close</option>
+                  <option value="CLOSED" disabled>Closed</option>
+                  <option value="REJECTED" disabled>Rejected</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="col-md-6" *ngIf="profileForm.get('rejectCause').value">
+              <div class="form-group d-flex flex-column flex-fill ">
+                <label for="rejectCause">
+                  <span>Reject Cause </span>
+                </label>
+                <textarea readonly type="text" formControlName="rejectCause" class="form-control" id="rejectCause">
+                  </textarea>
+              </div>
+
+            </div>
+
+
+            <div class="col-md-6" [hidden]="userType == 'INTERNAL_USER' && !ldapUser"
+              *ngIf="userType == 'INTERNAL_USER'">
+              <div class="form-group d-flex flex-column flex-fill ">
+                <label for="department">
+                  <span>Department <span style="color: rgb(0, 200, 255);">*</span></span> &nbsp;
+                  <span *ngIf="departmentValidation" class="text text-danger">Department is not selected!</span>
+                </label>
+
+                <ng-multiselect-dropdown style="z-index: 100;" [(ngModel)]="selectedDepartmentList"
+                  [disabled]="readOnly" [ngModelOptions]="{standalone: true}" name="department"
+                  [placeholder]="'Select Department'" [disabled]="isViewUser" [settings]="dropdownSettingsDepartment"
+                  [data]="departmentList" (onSelectAll)="onDepartment($event)" (onDeSelect)="onDeselect($event)"
+                  (onDeSelectAll)="deselectAllDep()">
+                </ng-multiselect-dropdown>
+
+
+                <!--  <select class="form-control" id="department" formControlName="departmentId" >
+                  <option [value]="null">---</option>
+                  <option *ngFor="let i of departmentList"  [value]="i.configId">
+                   {{i.value1}}
+                  </option>
+                 
+                </select> -->
+
+              </div>
+            </div>
+          </div>
+
+          <div class="row" [hidden]="userType == 'INTERNAL_USER' && !ldapUser"
+            *ngIf="((this.selectIntsMasteruser > 0 
+            && this.selectIntsMasteruser >= this.numberOfMasterUser) || !hasMasterUser) && userType === 'EXTERNAL_USER'">
+            <div class="col-4">
+              <div class="row">
+                <div class="col-auto">
+                  <div class="checkbox-wrapper-19">
+                    <input type="checkbox" id="cbtest-19" (change)="markAsMasterUser($event)" />
+                    <label for="cbtest-19" class="check-box text-danger"></label>
+                  </div>
+                </div>
+                <span class="col-auto px-0"
+                  [ngClass]="{'text-danger':clicked && profileForm.get('isMasterUser').value != 1}">Mark as Master
+                  User</span>
+
+              </div>
+            </div>
+          </div>
+
+          <div class="m-0">
+            <button type="button"
+              *ngIf="(!btnUpade || !addUser) && permissioinStoreService.hasAnyPermission([appPermission.INTERNAL_SAVE_USER, appPermission.EXTERNAL_SAVE_USER])"
+              [disabled]="!profileForm.get('userType').value || (clicked && showProgress)"
+              (click)="onProfileSaveBtnClick()" class="btn mr-2 btn-primary">Save
+              <span class="spinner-border spinner-border-sm" *ngIf="showProgress" [mode]="'indeterminate'"></span>
+            </button>
+
+            <button type="button"
+              *ngIf="!isViewUser && !readOnly && btnUpade && showSameUserBtn && permissioinStoreService.hasAnyPermission([appPermission.INTERNAL_SAVE_USER, appPermission.EXTERNAL_SAVE_USER])"
+              [disabled]="!profileForm.get('userType').value || clicked" (click)="onProfileUpdateBtnClick()"
+              class="btn mr-2 btn-primary">Update
+              <span class="spinner-border spinner-border-sm" *ngIf="showProgress" [mode]="'indeterminate'"></span>
+            </button>
+
+            <button type="button" *ngIf="showApproveBtn()" [disabled]="clicked" (click)="isPresentRole('No')"
+              class="btn mr-2 btn-primary">Approved
+              <span class="spinner-border spinner-border-sm" *ngIf="showProgress" [mode]="'indeterminate'"></span>
+            </button>
+
+            <button type="button" *ngIf="readOnly && btnUpade && !allowLoginFlag && showSameUserBtn 
+              && permissioinStoreService.hasPermission(permissioinStoreService.appPermission.USER_APPROVER)"
+              [disabled]="clicked" (click)="isPresentRole('Yes')" class="btn mr-2 btn-primary">Inactive
+              <span class="spinner-border spinner-border-sm" *ngIf="showProgress" [mode]="'indeterminate'"></span>
+            </button>
+
+            <button type="button" (click)="onProfileBackBtnClick()" class="btn mr-2 btn-warning">Back</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+  <div *ngIf="extraInfo" class="row px-4">
+    <div class="d-flex justify-content-end">
+      <div class="" style="font-size: 20px;">
+        <div>User Limit: {{extraInfo?.userLimit ? extraInfo.userLimit : 0}}</div>
+        <div>Approved User: {{extraInfo?.approveUser}}</div>
+        <div>Approval Pending: {{extraInfo?.pendUser}}</div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+
+<!-- new code for ui -->
+<ng-container *ngIf="requestFrom === 'profile2'">
+  <div class="container-xxl flex-grow-1 container-p-y">
+    <h4 class="fw-bold py-3 mb-4">User Information</h4>
+    <div class="row">
+
+      <div class="col-sm-12 col-xl-12">
+        <div class="card mb-4">
+          <div class="card-body">
+            <div class="d-flex align-items-start justify-content-between">
+              <div class="content-left">
+                <span class="text-heading w-400">User Type</span>
+                <div class="d-flex align-items-center my-1">
+                  <h4 class="mb-0 me-2">{{blockToCamel(userType)}}</h4>
+                </div>
+              </div>
+              <div class="avatar">
+                <span class="avatar-initial rounded bg-label-primary">
+                  <i class="bx bx-group"></i>
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-md-12">
+        <div class="card mb-4">
+          <h5 class="card-header">Profile Details</h5>
+          <!-- Account -->
+          <div class="card-body">
+            <div class="d-flex align-items-start align-items-sm-center gap-4">
+              <img [src]="profileImage" alt="user-avatar" class="d-block rounded" height="100" width="100"
+                id="uploadedAvatar">
+              <div class="button-wrapper">
+                <label for="upload" class="btn btn-primary d-flex align-items-center w-auto me-2 mb-4" tabindex="0">
+                  <i class="fa fa-cloud-upload me-2" aria-hidden="true"></i>
+                  <span class="d-none d-sm-block">Upload new photo</span>
+                  <input type="file" id="upload" class="account-file-input" hidden [accept]="accept"
+                    (change)="uploadProfileImg($event)" multiple="false">
+                </label>
+
+                <p class="text-muted mb-0">Allowed JPG, GIF or PNG. Max size of {{fileSize}}KB</p>
+              </div>
+            </div>
+          </div>
+          <hr class="my-0">
+          <div class="card-body">
+            <form [formGroup]="profileForm" autocomplete="off">
+
+              <div class="row" *ngIf="(userType && profileForm.get('userType')?.value) || isSupperAdmin">
+
+
+                <!-- <div class="col-md-12" hidden="true">
+                  <div class="form-group d-flex flex-column flex-fill ">
+                    <label for="userId">
+                      <span>User Id </span>
+                    </label>
+    
+                    <input type="text" formControlName="userId" class="form-control" id="userId" name="userId">
+                  </div>
+    
+                </div> -->
+
+                <div class="col-md-12 row" *ngIf="profileForm.get('userType').value === 'INTERNAL_USER'">
+                  <div class="form-group d-flex flex-column flex-fill ">
+                    <div class="col-md-12 row">
+                      <label for="loginName" class="px-0">
+                        <span>User Id <app-red-star></app-red-star></span>
+                      </label>
+                    </div>
+                    <div class="col-md-6 row p-0">
+                      <div class="col-8">
+                        <input type="text" readonly formControlName="loginName" class="form-control" id="loginName"
+                          name="loginName"
+                          [ngClass]="{ 'is-invalid': profileForm.controls.loginName?.touched && !profileForm.get('loginName').value}">
+
+                        <div *ngIf="profileForm.controls.loginName?.touched && !profileForm.get('loginName').value"
+                          class="text text-danger mt-1">
+                          User Id Is Required!
+                        </div>
+
+                      </div>
+                      <!-- <div class="col-4 p-0">
+                        <button type="button" class="btn btn-primary btn-block" disabled
+                          [disabled]="!profileForm.get('loginName').value" [ngxInputLoader]="searchLdapUser"
+                          [ngxInputLoaderConfig]="loaderConfig">Verify
+                        </button>
+
+                      </div> -->
+                    </div>
+                  </div>
+
+                </div>
+
+                <div class="col-md-6">
+                  <div class="form-group d-flex flex-column flex-fill ">
+                    <label for="firstName">
+                      <span>First Name <app-red-star></app-red-star></span>
+                    </label>
+
+                    <input [readOnly]="readOnly" [appNoSpecialCharacters]="'name'" type="text"
+                      formControlName="firstName" class="form-control"
+                      [ngClass]="{ 'is-invalid': (clicked || profileForm.controls.firstName?.touched) && profileForm.controls.firstName.errors?.required}"
+                      id="firstName" name="firstName">
+
+                    <!-- <div *ngIf="profileForm.controls.firstName.errors?.required" class="invalid-feedback">
+                      User Name Is Required!
+                    </div> -->
+                    <div *ngIf="profileForm.controls.firstName?.touched && profileForm.controls.firstName.errors"
+                      class="text text-danger mt-1">
+                      Invalid Or Characters Not Allow.
+                    </div>
+
+                  </div>
+
+                </div>
+                <div class="col-md-6">
+                  <div class="form-group d-flex flex-column flex-fill ">
+                    <label for="lastName">
+                      <span>Last Name <app-red-star></app-red-star></span>
+                    </label>
+
+                    <input [readOnly]="readOnly" [appNoSpecialCharacters]="'name'" type="text"
+                      formControlName="lastName" class="form-control"
+                      [ngClass]="{ 'is-invalid': (clicked || profileForm.controls.lastName?.touched) && profileForm.controls.lastName.errors?.required}"
+                      id="lastName" name="lastName">
+
+                    <!-- <div *ngIf="profileForm.controls.lastName.errors?.required" class="invalid-feedback">
+                      User Name Is Required!
+                    </div> -->
+                    <div *ngIf="profileForm.controls.lastName?.touched && profileForm.controls.lastName.errors"
+                      class="text text-danger mt-1">
+                      Invalid Or Characters Not Allow.
+                    </div>
+                  </div>
+
+                </div>
+
+                <div class="col-md-6">
+                  <div class="form-group d-flex flex-column flex-fill ">
+                    <label for="phoneNumber">
+                      <span>Phone Number <app-red-star></app-red-star></span>
+                    </label>
+                    <input [readOnly]="readOnly" [appNoSpecialCharacters]="'numericNumber'" type="text"
+                      formControlName="phoneNumber" class="form-control" id="phoneNumber"
+                      [ngClass]="{ 'is-invalid': (clicked || profileForm.controls.phoneNumber?.touched) && profileForm.get('phoneNumber').errors}"
+                      name="phoneNumber" [attr.maxlength]="contactNumberMaxLength">
+
+                    <div *ngIf="profileForm.controls.phoneNumber?.touched && profileForm.controls.phoneNumber.errors"
+                      class="text text-danger mt-1">
+                      Invalid Or Characters Not Allow.
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-6" *ngIf="profileForm.get('userType').value == 'EXTERNAL_USER'">
+                  <div class="form-group  ">
+                    <div class="row">
+                      <div class="col-12">
+                        <label for="institutionId">
+                          <span>Institution <app-red-star></app-red-star></span>
+                        </label>
+                      </div>
+
+                      <div class="col-11 d-flex flex-column flex-fill pr-1">
+                        <input class="form-control " list="institutionList" id="datalistInput" [readOnly]="readOnly"
+                          [ngClass]="{ 'is-invalid': (clicked || isSearch) && profileForm.controls.institutionId?.errors}"
+                          [ngModelOptions]="{standalone: true}" [(ngModel)]="selectedInstitutionName"
+                          (change)="getInstitutionId()" />
+                        <div *ngIf="(clicked || isSearch) && profileForm.controls.institutionId?.errors"
+                          class="invalid-feedback ">
+                          Institution can not be empty.
+                        </div>
+                      </div>
+                      <div class="col-1 pl-1" *ngIf="!readOnly">
+                        <button type="button" [hidden]="readOnly" type="button" class="btn btn-primary btn-sm"
+                          (click)="addInstitution()" data-toggle="tooltip" data-placement="bottom"
+                          title="Add Institution" style="padding: 7px;">
+                          <i class="fa fa-plus" aria-hidden="true"></i>
+                        </button>
+                      </div>
+                      <datalist id="institutionList">
+                        <option *ngFor="let institution of institutionList">
+                          {{ institution.institutionName }}</option>
+                      </datalist>
+                    </div>
+
+                  </div>
+                </div>
+
+                <!-- <div class="col-md-6">
+                  <div class="form-group d-flex flex-column flex-fill ">
+
+                    <label for="email">
+                      <span>Email <app-red-star></app-red-star></span>
+                    </label>
+                    <div class="input-group">
+
+                      <input [readOnly]="readOnly || !selectedInstitution" type="email" class="form-control" id="email"
+                        name="email" email (input)="buildEmail($event)" [(ngModel)]="email"
+                        [ngModelOptions]="{standalone: true}"
+                        [ngClass]="{ 'is-invalid':profileForm.get('email').errors && (clicked || profileForm.get('email').touched) }">
+                      <div class="input-group-prepend">
+                        <div class="input-group-text">{{'@'}}{{selectedInstitution?.domain}}</div>
+                      </div>
+
+                      <div *ngIf="(clicked || profileForm.controls.email?.touched) && profileForm.get('email').errors"
+                        class="invalid-feedback">
+                        <div *ngIf="profileForm.controls.email.errors?.required">
+                          Email Is Required!
+                        </div>
+                        <div *ngIf="profileForm.get('email').hasError('pattern')">
+                          Email Is Invalid!
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                </div> -->
+                <div class="col-md-6" [hidden]="userType == 'INTERNAL_USER' && !ldapUser">
+                  <div class="form-group d-flex flex-column flex-fill ">
+    
+                    <label for="email">
+                      <span>Email <app-red-star></app-red-star></span>
+                    </label>
+                    <div class="input-group">
+    
+                      <input [readOnly]="isViewUser || btnUpade || !selectedInstitution" type="email" class="form-control"
+                        id="email" name="email" email (input)="buildEmail($event)" [(ngModel)]="email"
+                        [ngModelOptions]="{standalone: true}"
+                        [ngClass]="{ 'is-invalid':profileForm.get('email').errors && (clicked || profileForm.get('email').touched) }">
+                      <div class="input-group-prepend">
+                        <div class="input-group-text">{{'@'}}{{selectedInstitution?.domain ? selectedInstitution.domain :
+                          ldapDomain}}</div>
+                      </div>
+    
+                      <div *ngIf="(clicked || profileForm.controls.email?.touched) && profileForm.get('email').errors"
+                        class="invalid-feedback">
+                        <div *ngIf="profileForm.controls.email.errors?.required">
+                          Email Is Required!
+                        </div>
+                        <div *ngIf="profileForm.get('email').hasError('pattern')">
+                          Email Is Invalid!
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+    
+                </div>
+                <div class="col-md-6" [hidden]="userType == 'INTERNAL_USER' && !ldapUser">
+                  <div class="form-group d-flex flex-column flex-fill ">
+
+                    <div class="">
+                      <label for="bn">
+                        <span *ngIf="userType == 'EXTERNAL_USER'">Branch / Division <app-red-star></app-red-star></span>
+                        <span *ngIf="userType != 'EXTERNAL_USER'">Branch <app-red-star></app-red-star></span>
+                      </label>
+    
+                    </div>
+    
+                    <div class=" d-flex flex-column flex-fill pr-1">
+                      <!-- <input class="form-control " list="branchListid" id="bn" [readOnly]="isViewUser"
+                        [ngClass]="{ 'is-invalid': (clicked || isSearch) && profileForm.controls.branchId?.errors}"
+                        [ngModelOptions]="{standalone: true}" [(ngModel)]="selectedBranchName"
+                        (change)="getbranchId($event)" /> -->
+    
+                      <ng-multiselect-dropdown id="bn" [(ngModel)]="selectedBranch" *ngIf="userType == 'INTERNAL_USER'"
+                        [ngModelOptions]="{standalone: true}" [disabled]="readOnly || isViewUser"
+                        [placeholder]="'Select Branch'" [settings]="dropdownSettingsBranch" [data]="branchList"
+                        (onSelect)="getbranchId($event)" (onDeSelect)="onBranchDeselect()">
+                      </ng-multiselect-dropdown>
+    
+                      <input class="form-control" id="bn" *ngIf="userType == 'EXTERNAL_USER'" [readOnly]="isViewUser"
+                        formControlName="extBranchName" />
+    
+                      <!-- <div *ngIf="(clicked || isSearch) && profileForm.controls.branchId?.errors" class="invalid-feedback ">
+                        Branch can not be empty.
+                      </div> -->
+                    </div>
+                    <!-- <datalist id="branchListid" *ngIf="userType !='EXTERNAL_USER'">
+                      <option *ngFor="let branch of branchList">
+                        {{ branch.branchName }}</option>
+                    </datalist> -->
+                  </div>
+    
+
+                </div>
+                <div class="col-md-6">
+                  <div class="form-group d-flex flex-column flex-fill ">
+                    <label for="designation">
+                      <span>Designation </span>
+                    </label>
+
+                    <input [readOnly]="readOnly" [appNoSpecialCharacters]="'text'" type="text"
+                      formControlName="designation" class="form-control" id="designation">
+
+                    <div *ngIf="profileForm.controls.designation?.touched && profileForm.controls.designation.errors"
+                      class="text text-danger mt-1">
+                      Invalid Or Characters Not Allow.
+                    </div>
+                  </div>
+
+                </div>
+
+                <div class="col-md-6">
+                  <div class="form-group d-flex flex-column flex-fill ">
+                    <label for="nid">
+                      <span>NID </span>
+                    </label>
+                    <input [readOnly]="readOnly" [appNoSpecialCharacters]="'numericNumber'" type="text"
+                      formControlName="nid" class="form-control" id="nid" name="nid"
+                      [ngClass]="{ 'is-invalid': (clicked || profileForm.controls.nid?.touched) && profileForm.controls.nid.errors?.required }">
+                    <div *ngIf="profileForm.controls.nid?.touched && profileForm.controls.nid.errors"
+                      class="text text-danger mt-1">
+                      NID Is Required!
+                    </div>
+                  </div>
+                </div>
+
+                <div class="col-md-6">
+                  <div class="form-group d-flex flex-column flex-fill ">
+                    <label for="dob">
+                      <span>Date of Birth </span>
+                    </label>
+                    <input [readOnly]="readOnly" type="date" formControlName="dob" class="form-control" id="dob"
+                      name="dob"
+                      [ngClass]="{ 'is-invalid': (clicked || profileForm.controls.dob?.touched) && profileForm.controls.dob.errors?.required }">
+                    <div *ngIf="profileForm.controls.dob?.touched && profileForm.controls.dob.errors"
+                      class="text text-danger mt-1">
+                      Date of Birth Is Required!
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-6" [hidden]="userType == 'INTERNAL_USER' && !ldapUser">
+                  <div class="form-group d-flex flex-column flex-fill ">
+                    <label for="remarks">
+                      <span>Remarks </span>
+                    </label>
+
+                    <input [readOnly]="readOnly" [appNoSpecialCharacters]="'name'" type="text" formControlName="remarks"
+                      class="form-control" id="remarks" [attr.maxlength]="remarksMaxLength">
+
+                  </div>
+
+                </div>
+                <div class="col-md-6" *ngIf="userType == 'INTERNAL_USER'">
+                  <div class="form-group d-flex flex-column flex-fill ">
+                    <label for="department">
+                      <span>Department <span style="color: rgb(0, 200, 255);">*</span></span> &nbsp;
+                      <span *ngIf="departmentValidation" class="text text-danger">Department is not selected!</span>
+                    </label>
+
+                    <ng-multiselect-dropdown style="z-index: 100;" [(ngModel)]="selectedDepartmentList"
+                      [disabled]="readOnly" [ngModelOptions]="{standalone: true}" name="department"
+                      [placeholder]="'Select Department'" [ngModelOptions]="{standalone: true}"
+                      [settings]="dropdownSettingsDepartment" [data]="departmentList"
+                      (onSelectAll)="onDepartment($event)">
+                    </ng-multiselect-dropdown>
+
+                  </div>
+                </div>
+              </div>
+
+              <div class="row"
+                *ngIf="((this.selectIntsMasteruser > 0 
+                && this.selectIntsMasteruser >= this.numberOfMasterUser) || !hasMasterUser) && userType === 'EXTERNAL_USER'">
+                <div class="col-4">
+                  <div class="row">
+                    <div class="col-auto">
+                      <div class="checkbox-wrapper-19">
+                        <input type="checkbox" id="cbtest-19" (change)="markAsMasterUser($event)" />
+                        <label for="cbtest-19" class="check-box text-danger"></label>
+                      </div>
+                    </div>
+                    <span class="col-auto px-0"
+                      [ngClass]="{'text-danger':clicked && profileForm.get('isMasterUser').value != 1}">Mark as Master
+                      User</span>
+
+                  </div>
+                </div>
+              </div>
+
+              <div class="m-0">
+                <div class="mt-2">
+
+                </div>
+                <button type="button" (click)="onProfileBackBtnClick()" class="btn mr-2 btn-warning">Back</button>
+              </div>
+            </form>
+          </div>
+        </div>
+        <!-- <div class="card">
+          <h5 class="card-header">Delete Account</h5>
+          <div class="card-body">
+            <div class="mb-3 col-12 mb-0">
+              <div class="alert alert-warning">
+                <h6 class="alert-heading fw-bold mb-1">Are you sure you want to delete this account?</h6>
+                <p class="mb-0">Once you delete account, there is no going back. Please be certain.</p>
+              </div>
+            </div>
+            <form id="formAccountDeactivation" onsubmit="return false">
+              <div class="form-check mb-3">
+                <input class="form-check-input" type="checkbox" name="accountActivation" id="accountActivation">
+                <label class="form-check-label" for="accountActivation">I confirm this account deletion</label>
+              </div>
+              <button type="submit" class="btn btn-danger deactivate-account">Delete Account</button>
+            </form>
+          </div>
+        </div> -->
+      </div>
+    </div>
+  </div>
+</ng-container>

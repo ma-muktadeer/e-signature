@@ -1,0 +1,62 @@
+<!-- <div class="row d-flex align-items-center">
+    <div class="col-md-4 my-2">
+        <div class="row align-items-center">
+            <label for="typeahead-basic" class="col-form-label py-0 col-md-auto">PA/Name:</label>
+            <div class="col-md-9">
+                <input id="typeahead-basic" class="form-control app-input-field" type="text"
+                    placeholder="Search by PA Number/Name" [ngModelOptions]="{standalone: true}" [(ngModel)]="pa"
+                    [ngbTypeahead]="searchByPa" (selectItem)="selectedPa($event)"
+                    [ngxInputLoader]="searchBy == 'pa' && showProgress"
+                    [ngxInputLoaderConfig]="loaderConfig" />
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-auto my-2">
+        <input type="button" value="Search" class="btn btn-primary btn-change" (click)="searchSignature()"
+            [ngxInputLoader]="searchBy === 'btn' && showProgress" [ngxInputLoaderConfig]="loaderConfig">
+
+    </div>
+</div> -->
+
+
+<div class="row">
+    <div class="col-md-12 col-xl-12">
+        <div class="card-body demo-vertical-spacing demo-only-element" style="padding: 2% 0px 3%;">
+            <div class="input-group input-group-lg">
+                <input id="typeahead-basic" [appNoSpecialCharacters]="'text'" class="form-control app-input-field" type="text"
+                placeholder="Search by PA Number/Name" [ngModelOptions]="{standalone: true}" [(ngModel)]="pa" maxlength="30"
+                [ngbTypeahead]="searchByPa" (selectItem)="selectedPa($event)"
+                [ngxInputLoader]="searchBy == 'pa' && showProgress"
+                [ngxInputLoaderConfig]="loaderConfig" />
+
+
+                <button class="btn btn-primary active" type="button" style="z-index: 1;" (click)="searchSignature()"
+                [ngxInputLoader]="searchBy === 'btn' && showProgress" [ngxInputLoaderConfig]="loaderConfig">Search</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div style="margin-top: 10px; width: 100%;" class="shadow">
+    <angular-slickgrid *ngIf="permissionService.hasPermission(appPermission.SIGNATURE_HISTORY_VIEWER)"
+        id="signatureGridHistory" #signaGridList gridId="signaGridHistoty" style="width: 100%;"
+        [columnDefinitions]="columnsDef" [gridOptions]="gridOptions" [gridHeight]="height" [dataset]="signatureList"
+        (onAngularGridCreated)="angularGridReady($event)">
+    </angular-slickgrid>
+</div>
+
+<div id="temp" style="width: 100%;"></div>
+

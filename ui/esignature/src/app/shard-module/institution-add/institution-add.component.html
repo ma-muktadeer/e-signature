@@ -1,0 +1,105 @@
+<div class="modal-content">
+    <div class="modal-header p-2 bg-color">
+        <h4 class="modal-title">Add Institution</h4>
+        <button type="button" class="close" data-dismiss="modal" [ngbTooltip]="tooltip" aria-label="Close"
+            (click)="closeModale('close by corse')">
+            <div class="sclose">
+                <span class="st" aria-hidden="true">&times;</span>
+            </div>
+        </button>
+    </div>
+    <div class="modal-body p-1 m-3">
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label for="tp"><i class="star">*</i> Institution Type:</label>
+                    <select id="tp" class="form-control" [(ngModel)]="type" [ngClass]="{'is-invalid': click && !type }"
+                        name="type" [disabled]="btnRef === 'View'">
+                        <option value="" disabled>Select Type</option>
+                        <option *ngFor="let institutionType of institutionTypeList" [value]="institutionType.value">
+                            {{ institutionType.name }}
+                        </option>
+                    </select>
+                    <div *ngIf="!type" class="invalid-feedback">
+                        Type is required.
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label for="rej">
+                       <i class="star">*</i> Institution Name:
+                    </label>
+                    <input id="rej" class="form-control" placeholder="Institution Name..." [(ngModel)]="institutionName"
+                        [ngClass]="{'is-invalid': click && !institutionName }" name="institutionName" autocomplete="off"
+                        [readOnly]="btnRef === 'View'" [attr.maxlength]="nameMaxLength"/>
+                    <div *ngIf="!institutionName" class="invalid-feedback">
+                        Institution Name is required.
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+
+                    <label class="" for="inlineFormInputGroup"><i class="star">*</i> Institution DOMAIN:</label>
+                    <div class="input-group mb-2">
+                        <div class="input-group-prepend">
+                            <div class="input-group-text">@</div>
+                        </div>
+                        <input id="rej" class="form-control" placeholder="Institution Domain..." [(ngModel)]="domain"
+                            [ngClass]="{'is-invalid': click && !domain }" name="domain" autocomplete="off" [attr.maxlength]="domainMaxLength"
+                            [readOnly]="btnRef === 'View'" />
+                        <div *ngIf="!domain" class="invalid-feedback">
+                            Institution Domain is required.
+                        </div>
+                    </div>
+
+                    <!-- <label for="rej">Institution DOMAIN:</label>
+                    <input id="rej" class="form-control" placeholder="Institution Name..." [(ngModel)]="domain"
+                        [ngClass]="{'is-invalid': click && !domain }" name="domain" autocomplete="off"
+                        [readOnly]="btnRef === 'View'" />
+                    <div *ngIf="!domain" class="invalid-feedback">
+                        Institution Domain is required.
+                    </div> -->
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label for="mUser"> <i class="star">*</i> Number of Master User:</label>
+                    <input id="mUser" class="form-control" [(ngModel)]="numberUser" name="numberUser"  [appNoSpecialCharacters]="'numericNumber'"[attr.maxlength]="numberUserMaxLength" type="text"
+                        placeholder="Number of Muster User..." autocomplete="off" (change)="changeMasterUserNum()"
+                        [ngClass]="{'is-invalid': click && !numberUser }" [readOnly]="btnRef === 'View'"
+                        (keyup)="keyUp($event)"  (input)="limitInput($event, 5)">
+                    <div *ngIf="!numberUser" class="invalid-feedback">
+                        Number of Master User is required.
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label for="mUser"><i class="star">*</i> Number of General User:</label>
+                    <input id="mUser" class="form-control" [(ngModel)]="numberGenUser" name="numberGenUser" [appNoSpecialCharacters]="'numericNumber'" [attr.maxlength]="numberGenUserMaxLength"
+                     type="text"  (input)="limitInput($event, 5)" placeholder="Number of General User..." autocomplete="off"
+                        [ngClass]="{'is-invalid': click && !numberGenUser }" [readOnly]="btnRef === 'View'" />
+                    <div *ngIf="!numberGenUser" class="invalid-feedback">
+                        Number of Master User is required.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal-footer">
+        <ng-container *ngIf="permissionStoreService.hasPermission(appPermission.INSTITUTION_MAKER)">
+            <div [hidden]="btnRef == 'Update' && exitMasterUser && numberUser < exitMasterUser">
+                <button type="button" class="btn btn-success btn-sm mx-1 text-white" *ngIf="btnRef != 'View'"
+                    (click)="saveInstitution()">{{btnRef}}</button>
+                <button type="button" class="btn btn-primary btn-sm mx-1 text-white" *ngIf="btnRef != 'View'"
+                    (click)="submitWork()">Save &
+                    Submit</button>
+            </div>
+        </ng-container>
+        <button type="button" class="btn btn-danger btn-sm" (click)="closeModale('close by btn')">Close</button>
+    </div>
+
+</div>

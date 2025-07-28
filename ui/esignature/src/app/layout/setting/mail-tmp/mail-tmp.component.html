@@ -1,0 +1,26 @@
+<div class="">
+
+  <!-- only bootstrap  daylog start -->
+  <div *ngIf="permissioinStoreService.hasPermission(appPermission.MAIL_TEMPLATE_MAKER)">
+    <button class="btn btn-success mb-1" (click)="openPopup()">Add New Mail Template</button>
+  </div>
+
+  <!-- daylog end  -->
+
+
+  <div *ngIf="showGrid" class="shadow">
+    <angular-slickgrid id="mlGrid" #userGrid gridId="userGrid" [columnDefinitions]="columnDefinitions"
+      [gridOptions]="gridOptions" [dataset]="dataset" [gridHeight]=height
+      (onAngularGridCreated)="angularGridReady($event)">
+    </angular-slickgrid>
+  </div>
+
+</div>
+<div id="id"></div>
+<ngx-loading [show]="loading" [config]="{
+  primaryColour: '#dd0031',
+  secondaryColour: '#1976d2',
+  tertiaryColour: '#dd0031',
+  backdropBorderRadius: '3px'
+}">
+</ngx-loading>

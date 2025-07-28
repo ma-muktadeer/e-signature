@@ -1,0 +1,30 @@
+Expected API request and response for HRMS
+
+
+Request 
+	Method: POST
+	URL: Bank will decide
+	Request JSON
+	{
+		"employeeId":"123456789"
+	}
+
+Expected Response
+
+	{
+		"employeeName": "",
+		"employeeId":"123456789",
+		"designation": "",
+		"email":"",
+		"telephoneNumber":"",
+		"employeePhoto":"", -- base 64 string
+		"departmentName":"",
+		"divisionName":"",
+		"branchId":"12345",
+		"branchName":""
+
+	}
+
+
+All data type should be string
+Length: Bank will decide

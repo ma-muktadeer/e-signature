@@ -1,0 +1,130 @@
+<div class="shadow">
+    <div class="accordion" id="accordionExample">
+
+        <div class="accordion-item">
+            <h2 class="accordion-header" [id]="'heading-2'">
+                <button class="accordion-button h1" [ngClass]="{'collapsed':!isOpen[1]}" type="button"
+                    data-bs-toggle="collapse" data-bs-target="#collapse-2" (click)="togglePanel(0)"
+                    [attr.aria-expanded]="isOpen[1]">
+                    {{panels[0].title}}
+                </button>
+            </h2>
+            <div id="collapse-2" class="accordion-collapse"
+                [ngClass]="isOpen[1] ? 'show' : (isOpen[1] ? '' : 'collapsed')" aria-labelledby="heading-1"
+                data-bs-parent="#accordionExample">
+                <div class="accordion-body">
+
+                    <div autocomplete="off">
+                        <div class="form-row mb-2 d-flex flex-wrap">
+                            <div class="col-md-6 my-2">
+                                <div class="form-group row align-items-center">
+                                    <label for="ldate" class="col-md-4 col-form-label">Head Office Address:</label>
+                                    <div class="col-md-7">
+                                        <textarea id="ldate" type="text" class="form-control"
+                                            [(ngModel)]="address"></textarea>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6 my-2">
+                                <div class="form-group row align-items-center">
+                                    <label for="lcpass" class="col-md-4 col-form-label">Head Office Phone:</label>
+                                    <div class="col-md-7">
+                                        <textarea id="lcpass" [appNoSpecialCharacters]="'text'" type="text" class="form-control"
+                                            [(ngModel)]="phone"></textarea>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6 my-2">
+                                <div class="form-group row align-items-center">
+                                    <label for="fax" class="col-md-4 col-form-label">Head Office Fax:</label>
+                                    <div class="col-md-7">
+                                        <input id="fax" type="text" class="form-control" [appNoSpecialCharacters]="'text'" [(ngModel)]="fax">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6 my-2">
+                                <div class="form-group row align-items-center">
+                                    <label for="email1" class="col-md-4 col-form-label">Head Office Email:</label>
+                                    <div class="col-md-7">
+                                        <input id="email1" type="text" class="form-control" [(ngModel)]="email">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6 my-2">
+                                <div class="form-group row align-items-center">
+                                    <label for="website" class="col-md-4 col-form-label">Head Office Website:</label>
+                                    <div class="col-md-7">
+                                        <input id="website" type="text" class="form-control" [(ngModel)]="website">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6 my-2">
+                                <div class="form-group row align-items-center">
+                                    <label for="swft" class="col-md-4 col-form-label">Head Office Swift:</label>
+                                    <div class="col-md-7">
+                                        <input id="swft" type="text" class="form-control" [(ngModel)]="swift">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="accordion-footer py-2 d-flex justify-content-end px-4">
+                    <button type="button" class="btn btn-primary"
+                        (click)="save('HEAD_OFFICE_INFO')">{{contHeadInfoBtn}}</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="accordion-item">
+            <h2 class="accordion-header" [id]="'heading-1'">
+                <button class="accordion-button h1" [ngClass]="{'collapsed':!isOpen[0]}" type="button"
+                    data-bs-toggle="collapse" data-bs-target="#collapse-1" (click)="togglePanel(1)"
+                    [attr.aria-expanded]="isOpen[0]">
+                    {{panels[1].title}}
+                </button>
+            </h2>
+            <div id="collapse-1" class="accordion-collapse"
+                [ngClass]="isOpen[0] ? 'show' : (isOpen[0] ? '' : 'collapsed')" aria-labelledby="heading-1"
+                data-bs-parent="#accordionExample">
+                <div class="accordion-body">
+
+                    <div autocomplete="off">
+                        <div class="form-row mb-2 d-flex flex-wrap">
+                            <div class="col-md-6 my-2">
+                                <div class="form-group row align-items-center">
+                                    <label for="cusIdPran" class="col-md-4 col-form-label">24/7 Local Contact:</label>
+                                    <div class="col-md-7">
+                                        <textarea id="cusIdPran" type="text" class="form-control"
+                                            [(ngModel)]="contact1"></textarea>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6 my-2">
+                                <div class="form-group row align-items-center">
+                                    <label for="pa" class="col-md-4 col-form-label">24/7 Overseas Contact:</label>
+                                    <div class="col-md-7">
+                                        <textarea id="pa" type="text" class="form-control"
+                                            [(ngModel)]="contact2"></textarea>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6 my-2">
+                                <div class="form-group row align-items-center">
+                                    <label for="loanAccount" class="col-md-4 col-form-label">24/7 Email:</label>
+                                    <div class="col-md-7">
+                                        <textarea id="loanAccount" type="text" class="form-control"
+                                            [(ngModel)]="email247"></textarea>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="accordion-footer py-2 d-flex justify-content-end px-4">
+                    <button type="button" class="btn btn-primary" (click)="save('24_INFO')">{{cont247InfoBtn}}</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

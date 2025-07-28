@@ -1,0 +1,349 @@
+$pbl-basic: #293c8b;
+$pbl-red: #BF131B;
+$pbl-blue: #304B9F;
+$pbl-green: #136431;
+$input-label: #D8DAE9;
+$pbl-white:#F5F5F5;
+
+.modal-footer{
+    background-color: #293d8b42;
+}
+
+.selectedMain{
+    background: linear-gradient(to top, rgba($pbl-blue, 0.3), rgba($pbl-red, 0.3));
+}
+
+.label.ef{
+    color: #042653 !important;
+}
+.dropsone {
+    width: 450px;
+    height: 200px;
+    padding: 2rem;
+    text-align: center;
+    border: dashed 1px #979797;
+    position: relative;
+    margin: 0 auto;
+}
+
+.bg-bar-color {
+    background-color: RGBA(204, 204, 204, 0.5)
+    ;
+    // color: #1D93D3;
+}
+
+.bg-text-color {
+    color: #1D93D3;
+}
+
+.select-btn-light {
+    background-color: rgb(241, 235, 235);
+    border-bottom: 2px solid #1D93D3 !important;
+}
+
+// .btns:hover::before{
+//     transition: all 0.6s ease;
+// }
+.btns:hover {
+    background-color: rgb(241, 235, 235);
+    border-bottom: 2px solid #1D93D3 !important;
+    transition: all 0.5s ease;
+}
+
+.btns:active {
+    transform: scale(0.85);
+}
+
+.ics {
+    opacity: 0;
+    position: absolute;
+    z-index: 2;
+    width: 100%;
+    top: 0;
+    left: 0;
+}
+
+.lcs {
+    color: white;
+    width: 183px;
+    height: 44px;
+    border-radius: 21.5px;
+    background-color: #db202f;
+    padding: 8px 16px;
+
+}
+
+h3 {
+    font-size: 20px;
+    font-weight: 600px;
+    color: #38424c;
+}
+
+img {
+    width: 50px;
+}
+
+.m-body {
+    width: 100%;
+    height: 100%;
+}
+
+.hdn {
+    display: none;
+}
+
+.body {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    background-color: white;
+    // font-family: "lato", sans-serif;
+    height: 100%;
+}
+
+.uploadForm{
+    background: linear-gradient(to top, rgba($pbl-basic, 0.3), rgba($pbl-white, 0.2)) !important;
+    border-radius: 15px;
+}
+
+ .div-header{
+    top: 0;
+    left: 0;
+    background-color: $pbl-basic;
+    border-top-left-radius: 15px;
+    border-top-right-radius: 15px;
+ }
+.div-style {
+    position: absolute;
+    font-size: 50px;
+    width: 100%;
+    color: white;
+    text-align: center;
+}
+.div-footer {
+    left: 0;
+    bottom: 0;
+    background-color: $pbl-basic;
+    border-bottom-left-radius: 15px;
+    border-bottom-right-radius: 15px;
+}
+
+.inputContainer {
+    position: relative;
+    height: 45px;
+    // width: 90%;
+    margin-bottom: 17px;
+}
+
+.input {
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    height: 100%;
+    width: 98%;
+    border: 1px solid #b8b8b9;
+    border-radius: 7px;
+    font-size: 16px;
+    padding: 0 20px;
+    outline: none;
+    background: none;
+    z-index: 1;
+}
+
+.m-input {
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    height: 100%;
+    width: 98%;
+    border-radius: 7px;
+    font-size: 16px;
+    // padding: 0 20px;
+    outline: none;
+    background: none;
+    z-index: 1;
+}
+
+// .bg-color {
+//     background-color: #610000;
+//     color: rgb(223, 205, 205);
+// }
+
+
+::placeholder {
+    color: transparent;
+}
+
+.label {
+    position: absolute;
+    top: 12px;
+    left: 15px;
+    padding: 0 4px;
+    background-color: transparent;
+    // background-color: white;
+    color: #8e94a0d2;
+    font-size: 16px;
+    transition: 0.5s;
+    z-index: 0;
+}
+
+.input:focus+.label {
+    top: -10px;
+    left: 3px;
+    z-index: 10;
+    font-size: 14px;
+    font-weight: 600;
+    color: #042653;
+    background-color:  $input-label;
+    // background-color: rgba(255, 255, 255, 0) ;
+}
+
+.m-input:focus+.label {
+    top: -10px;
+    left: 3px;
+    z-index: 10;
+    font-size: 14px;
+    font-weight: 600;
+    color: #042653;
+    background-color:  $input-label;
+}
+
+.input:focus {
+    border: 2px solid #042653;
+    // background-color:  rgba($pbl-green, 1);
+}
+
+.input:not(:placeholder-shown)+.label {
+    top: -10px;
+    left: 3px;
+    z-index: 10;
+    font-size: 14px;
+    font-weight: 600;
+    color: #042653;
+    background-color:  $input-label;
+}
+
+.input:not(:placeholder-shown) {
+    border: 2px solid #042653;
+}
+
+.m-input:not(:placeholder-shown)+.label {
+    top: -10px;
+    left: 3px;
+    z-index: 10;
+    font-size: 14px;
+    font-weight: 600;
+    color: #042653;
+    background-color:  $input-label;
+}
+
+.format-pre thead {
+    background: #49483e;
+    color: #f7f7f7;
+    padding: 10px;
+    font-size: 14px;
+}
+
+@keyframes shake {
+    0% {
+        transform: translate(1px, 1px) rotate(0deg)
+    }
+
+    10% {
+        transform: translate(-1px, -2px) rotate(-1deg)
+    }
+
+    20% {
+        transform: translate(-3px, 0px) rotate(1deg)
+    }
+
+    30% {
+        transform: translate(3px, 2px) rotate(0deg)
+    }
+
+    40% {
+        transform: translate(1px, -1px) rotate(1deg)
+    }
+
+    50% {
+        transform: translate(-1px, 2px) rotate(-1deg)
+    }
+
+    60% {
+        transform: translate(-3px, 1px) rotate(0deg)
+    }
+
+    70% {
+        transform: translate(3px, 1px) rotate(-1deg)
+    }
+
+    80% {
+        transform: translate(-3px, -1px) rotate(1deg)
+    }
+
+    90% {
+        transform: translate(1px, 2px) rotate(0deg)
+    }
+
+    100% {
+        transform: translate(1px, -2px) rotate(-1deg)
+    }
+
+
+}
+
+
+// @import url('../../../service/base.scss');
+
+.invald {
+    color: rgb(253, 61, 61);
+    font-size: small;
+}
+
+.bg {
+    min-height: 30px;
+}
+
+.input.is-invalid {
+    border: 1px solid red !important;
+}
+
+.is-invalid+label {
+    color: red !important;
+}
+
+.invalid-feedback {
+    top: 10px;
+}
+
+#status.is-invalid {
+    border: 1px solid red !important;
+}
+
+#status.is-invalid+label {
+    color: red !important;
+}
+
+#status+.invalid-feedback {
+    top: 40px !important;
+}
+
+.invalid-drop {
+    color: #dc3545;
+    font-size: 0.875em;
+}
+
+option {
+    color: black !important;
+}
+
+.pos {
+    top: 35px !important;
+}
+.down{
+    color: rgb(6, 6, 240);
+    cursor: pointer;
+}
+.down:hover{
+    text-decoration: underline;
+}

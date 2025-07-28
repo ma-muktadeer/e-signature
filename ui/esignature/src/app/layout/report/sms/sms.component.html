@@ -1,0 +1,91 @@
+<div class="accordion">
+    <form [formGroup]="searchForm">
+        <div class="row">
+
+            <div class="form-group col-md-2">
+                <label for="outbound">Direction</label>
+                <select formControlName="outbound" class="form-control" id="outbound">
+                    <option [value]=2>All</option>
+                    <option [value]=0>Inbound</option>
+                    <option [value]=1>Outbound</option>
+                </select>
+            </div>
+
+            <!-- <div class="form-group col-md-3">
+                <div class="form-group d-flex flex-column flex-fill ">
+                    <label for="branchId">
+                        <span>Select Branch </span>
+                    </label>
+                    <select placeholder="Select Branch" formControlName="branchId" class="form-control">
+                        <option [value]="null">All Branch</option>
+                        <option *ngFor="let branch of branchService.branchList" [value]="branch.branchId">
+                            {{branch.brunchName}}
+                        </option>
+                    </select>
+
+                </div>
+            </div> -->
+
+
+            <div class="form-group col-md-3">
+                <label for="f20">Referance(F20)</label>
+                <input formControlName="f20" type="text" class="form-control" id="f20">
+            </div>
+
+            <div class="form-group col-md-2">
+                <label for="msgType">MT exp:103</label>
+                <input formControlName="msgType" type="text" class="form-control" id="msgType">
+            </div>
+
+            <div class="form-group col-md-2">
+                <label for="fromDate">From Date</label>
+                <input formControlName="fromDate" type="date" class="form-control" id="fromDate">
+            </div>
+
+            <div class="form-group col-md-2">
+                <label for="toDate">To Date</label>
+                <input formControlName="toDate" type="date" class="form-control" id="toDate">
+            </div>
+
+        </div>
+    </form>
+
+    <button [disabled] ="disabledSearchBtn" (click)="onSearch()" class="btn btn-primary">
+        Search
+        <span class="spinner-border spinner-border-sm" *ngIf="spinnerSearchBtn" [mode]="'indeterminate'"></span>
+    </button>
+    <button style="margin-left: 20px;" (click)="onReset()" class="btn btn-primary">Reset</button>
+</div>
+
+<div class="modal " tabindex="-1" role="dialog" [ngStyle]="{'display':viewDisplayStyle}">
+    <div class="modal-dialog modal-dialog-pdf" role="document">
+        <div class="modal-content modal-content-pdf">
+            <div class="modal-header">
+                <h5 class="card-title">SMS</h5>
+                <div class="form-group row copy-download-close" style="margin: 0px;">
+                    <button title="Close" (click)="onClose()" type="button" class="" data-dismiss="modal">
+                        <a><i class="fa fa-window-close" aria-hidden="true"></i></a>
+                    </button>
+                </div>
+            </div>
+            
+            <div class="card-body">
+                <h5 class="card-title">Message</h5>
+                <hr>
+                <pre>{{msg}}</pre>
+            </div>
+            
+        </div>
+    </div>
+</div>
+
+
+<div *ngIf="showGrid" style="width: 100%;" class="mt-1">
+    <angular-slickgrid #smsGrid gridId="smsGrid" 
+        [columnDefinitions]="columnDefinitions" 
+        [gridOptions]="gridOptions"
+        [dataset]="dataset" 
+        (onAngularGridCreated)="angularGridReady($event)"
+        >
+    </angular-slickgrid>
+  </div>

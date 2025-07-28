@@ -1,0 +1,54 @@
+.col-md-8 {
+    padding-right: 16px;
+}
+
+.btn-selected {
+    background-color: #0182b1;
+    color: aliceblue;
+}
+
+.pointer {
+    cursor: pointer;
+}
+
+.modal-header {
+    background-color: #0c4da2;
+    color: white;
+}
+
+.sclose {
+    background-color: red;
+    display: flex;
+    align-items: center;
+}
+
+.st {
+    width: 30px;
+    height: 30px;
+    color: white;
+}
+
+.inputContainer {
+    position: relative;
+    height: 45px;
+    // width: 90%;
+    margin-bottom: 17px;
+}
+
+select {
+    cursor: pointer;
+
+    option {
+        cursor: pointer;
+    }
+}
+
+.bg-whitet {
+    background-color: antiquewhite !important;
+}
+
+.text-truncate {
+    word-wrap: break-word;
+    word-break: break-word;
+    white-space: normal;
+}

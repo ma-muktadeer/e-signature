@@ -1,0 +1,91 @@
+DROP TABLE T_MAIL_TEMP_AUDIT CASCADE CONSTRAINTS;
+
+CREATE TABLE T_MAIL_TEMP_AUDIT
+(
+  ID_MAIL_TEMP_KEY        NUMBER(19)            NOT NULL,
+  IS_ACTIVE               NUMBER(10),
+  ID_APPROVED_BY_ID       NUMBER(19),
+  DTT_APPROVE             TIMESTAMP(6),
+  ID_CLIENT_KEY           NUMBER(19),
+  DTT_CREATE              TIMESTAMP(6),
+  ID_USER_CREATE_KEY      NUMBER(19),
+  ID_EVENT_KEY            NUMBER(10),
+  DTT_MOD                 TIMESTAMP(6)          NOT NULL,
+  ID_STATE_KEY            NUMBER(10),
+  ID_USER_MOD_KEY         NUMBER(19),
+  ID_AUTHORIZE_BY         NUMBER(19),
+  TX_AUTHORIZE_TIME       TIMESTAMP(6),
+  TX_GROUP                VARCHAR2(96 CHAR),
+  TX_REQ_SUBJECT          VARCHAR2(128 CHAR),
+  TX_STATUS               VARCHAR2(56 CHAR),
+  TX_SUBJECT              VARCHAR2(128 CHAR),
+  TX_TYPE                 VARCHAR2(256 CHAR),
+  TX_UPDATE_STATUS        VARCHAR2(56 CHAR),
+  TX_IP_ADDR              VARCHAR2(255 CHAR),
+  TX_GATEWAY_IP           VARCHAR2(255 CHAR),
+  TX_BODY                 CLOB,
+  TX_REQ_BODY             CLOB,
+  ID_MAIL_TEMP_AUDIT_KEY  NUMBER                NOT NULL
+)
+LOB (TX_BODY) STORE AS SECUREFILE (
+  TABLESPACE  USERS
+  ENABLE      STORAGE IN ROW
+  CHUNK       8192
+  NOCACHE
+  LOGGING
+      STORAGE    (
+                  INITIAL          104K
+                  NEXT             1M
+                  MINEXTENTS       1
+                  MAXEXTENTS       UNLIMITED
+                  PCTINCREASE      0
+                  BUFFER_POOL      DEFAULT
+                 ))
+LOB (TX_REQ_BODY) STORE AS SECUREFILE (
+  TABLESPACE  USERS
+  ENABLE      STORAGE IN ROW
+  CHUNK       8192
+  NOCACHE
+  LOGGING
+      STORAGE    (
+                  INITIAL          104K
+                  NEXT             1M
+                  MINEXTENTS       1
+                  MAXEXTENTS       UNLIMITED
+                  PCTINCREASE      0
+                  BUFFER_POOL      DEFAULT
+                 ))
+TABLESPACE USERS
+PCTUSED    0
+PCTFREE    10
+INITRANS   1
+MAXTRANS   255
+STORAGE    (
+            INITIAL          64K
+            NEXT             1M
+            MINEXTENTS       1
+            MAXEXTENTS       UNLIMITED
+            PCTINCREASE      0
+            BUFFER_POOL      DEFAULT
+           )
+LOGGING 
+NOCOMPRESS 
+NOCACHE
+MONITORING;
+
+
+CREATE INDEX IDEX_MAIL_TMP_ADT ON T_MAIL_TEMP_AUDIT
+(ID_MAIL_TEMP_AUDIT_KEY)
+LOGGING
+TABLESPACE USERS
+PCTFREE    10
+INITRANS   2
+MAXTRANS   255
+STORAGE    (
+            INITIAL          64K
+            NEXT             1M
+            MINEXTENTS       1
+            MAXEXTENTS       UNLIMITED
+            PCTINCREASE      0
+            BUFFER_POOL      DEFAULT
+           );

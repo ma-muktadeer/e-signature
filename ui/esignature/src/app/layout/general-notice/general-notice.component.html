@@ -1,0 +1,174 @@
+<!-- <div class="main" *ngIf="notice">
+    <div class="notice">
+        <marquee onMouseOver="this.stop()" onMouseOut="this.start()" behavior="scroll" direction="left"
+            (click)="loadDetailsValue()">
+            {{notice}}
+        </marquee>
+    </div>
+</div> -->
+
+<!-- 
+<ng-template #template>
+    <div style="height: 100%;">
+        <div class="modal-header bg-color">
+
+            <div class="align-self-center ">
+                <h3 class="mx-auto text-light">Signature Information</h3>
+            </div>
+            <button type="button" class="close" aria-label="Close" title="CLOSE" (click)="closeModale()">
+                <div class="sclose">
+                    <span class="st" aria-hidden="true">&times;</span>
+                </div>
+            </button>
+
+        </div>
+        <div class="modal-body p-1">
+            <div class="col-12">
+                <div *ngIf="cencelValue?.length" class="row d-flex align-items-center mb-2">
+                    <label class="col-md-2" for="rej">Cancel:</label>
+                    <div class="col-md-10" id="rej">
+                        <div class="row">
+
+                            <div class="table-responsive">
+                                <table class="table table-bordered border-primary table-hover responsive">
+                                    <thead>
+                                        <tr class="table-active">
+                                            <th scope="col">Name</th>
+                                            <th scope="col" colspan="2">Information</th>
+                                        </tr>
+
+                                    </thead>
+                                    <ng-container>
+
+                                        <tbody *ngFor="let value of cencelValue">
+                                            <tr>
+                                                <td rowspan='4' style="vertical-align: middle;">
+                                                    {{value.name}} ({{value.pa}})
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>Status</td>
+                                                <td>{{block2CamaleCase(value.signatureStatus)}}</td>
+                                            </tr>
+                                            <tr>
+                                                <td>Cancel Time</td>
+                                                <td>{{value.cancelTime}}</td>
+                                            </tr>
+                                            <tr>
+                                                <td>Cancel Effective Date</td>
+                                                <td>{{value.cancelEffectiveDate}}</td>
+                                            </tr>
+                                        </tbody>
+                                    </ng-container>
+
+                                </table>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+                <hr>
+                <div *ngIf="inactiveValue?.length" class="row d-flex justify-content-center  align-items-center mb-2">
+                    <label class="col-md-2" for="rej">In-Active:</label>
+                    <div class="col-md-10" id="rej">
+                        <div class="row">
+                            <div class="table-responsive">
+                                <table class="table table-bordered border-primary table-hover responsive">
+                                    <thead>
+                                        <tr class="table-active">
+                                            <th scope="col">Name</th>
+                                            <th scope="col" colspan="2">Information</th>
+                                        </tr>
+
+                                    </thead>
+                                    <tbody *ngFor="let value of inactiveValue">
+                                        <tr>
+                                            <td rowspan='4' style="vertical-align: middle;">{{value.name}} ({{value.pa}})</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Status</td>
+                                            <td>{{block2CamaleCase(value.signatureStatus)}}</td>
+                                        </tr>
+                                        <tr>
+                                            <td>In-Active Time</td>
+                                            <td>{{value.inactiveTime}}</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Effective Date</td>
+                                            <td>{{value.effictiveDate}}</td>
+                                        </tr>
+                                    </tbody>
+
+                                </table>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-danger btn-sm" (click)="closeModale()">Close</button>
+        </div>
+    </div>
+</ng-template> -->
+
+
+
+
+<div style="height: 100%; border-radius: 10px;" class="shadow mt-2">
+    <div class="modal-header" style="border-top-left-radius: 10px; border-top-right-radius: 10px;">
+        <div class="text-center h3 mx-auto text-light">
+            Latest News
+        </div>
+
+    </div>
+    <div class="modal-body p-1 mt-2">
+        <div class="col-12">
+            <div class="card-body" *ngIf="detailsValue?.length">
+                <div class="table-responsive">
+                    <table class="table table-bordered">
+                        <thead class="table-head align-middle">
+                            <tr class="table-active text-center" style="font-size: 16px;">
+                                <th scope="col">Serial</th>
+                                <th scope="col">Title</th>
+                                <th scope="col">News</th>
+                                <th scope="col">Effective Date</th>
+                            </tr>
+
+                        </thead>
+                        <tbody style="background-color: white;" class="text-center">
+                            <ng-container *ngFor="let value of detailsValue; let i=index">
+                                <tr *ngIf="value.signatureStatus==='CANCELED'" class="border-bottom border-dark-subtle" >
+                                    <td style="vertical-align: middle;">{{i+1}}</td>
+                                    <td style="vertical-align: middle;">
+                                        Signature {{value.signatureStatus == 'CANCELED' ? 'Cancellation' : 'Inactive' }}
+                                    </td>
+                                    <td class="text-start">
+                                        Specimen Signature of {{value?.name}},
+                                        PA no {{value?.pa}} has been
+                                        {{value.signatureStatus == 'CANCELED' ? 'Cancelled' : 'Inactive' }}
+                                        on {{
+                                        fomateDate2(value.signatureStatus == 'CANCELED' ? value?.cancelEffectiveDate ?  value?.cancelEffectiveDate: value?.modDate :
+                                        value?.inactiveTime ? value?.inactiveTime: value?.modDate)}}
+                                        <!-- fomateDate(value.signatureStatus == 'CANCELED' ? value?.cancelTime : value?.inactiveTime)}} -->
+                                    </td>
+                                    <td>
+                                        <!-- {{fomateDate(value?.modDate)}} -->
+                                         
+                                        {{
+                                            fomateDate2(value.signatureStatus == 'CANCELED' ? value?.cancelEffectiveDate ?  value?.cancelEffectiveDate: value?.modDate :
+                                            value?.inactiveTime ? value?.inactiveTime: value?.modDate)}}
+                                    </td>
+                                </tr>
+                            </ng-container>
+
+                        </tbody>
+
+                    </table>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>

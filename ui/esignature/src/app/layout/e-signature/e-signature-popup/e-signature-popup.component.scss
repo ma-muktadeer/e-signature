@@ -1,0 +1,62 @@
+// .modal-header {
+//     background-color: #0c4da2;
+//     color: white;
+// }
+
+// .sclose {
+//     background-color: red;
+//     display: flex;
+//     align-items: center;
+// }
+
+// .st {
+//     width: 30px;
+//     height: 30px;
+//     color: white;
+// }
+$pbl-red: #BF131B;
+$pbl-blue: #304B9F;
+
+.selectedMain{
+    background: linear-gradient(to top, rgba($pbl-blue, 0.3), rgba($pbl-red, 0.3));
+}
+
+.heading-style {
+    background-color: rgba(223, 223, 223, 0.322);
+}
+
+::ng-deep .nav-tabs {
+    background-color: rgba(192, 192, 192, 0.493);
+    border-bottom: 2px solid white;
+}
+
+::ng-deep .customClass>a {
+    background-color: silver !important;
+    border-bottom: none !important;
+    outline: 0 !important;
+}
+
+.tableFixHead {
+    overflow: auto;
+    height: 350px;
+}
+
+.tableFixHead thead th {
+    position: sticky;
+    top: 0;
+    z-index: 1;
+}
+
+/* Just common table stuff. Really. */
+table {
+    border-collapse: collapse;
+    width: 100%;
+}
+
+th {
+    background-color: #8a9fbb;
+    font-size: 1.1rem;
+}
+.bg-whitet{
+    background-color: antiquewhite !important;
+}

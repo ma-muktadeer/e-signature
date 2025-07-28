@@ -1,0 +1,358 @@
+<div class="layout-navbar-full layout-horizontal layout-without-menu"></div>
+<div class="">
+    <nav class="layout-navbar navbar navbar-expand-xl align-items-center bg-navbar-theme" id="layout-navbar"
+        style="position: fixed; top: 0; width: 100%; z-index: 1000;">
+        <div class="content-wrapper" style="display: flex; justify-content: center; width: 100%;">
+            <a href="index.html">
+                <img src="assets/images/prime-bank-logo (1).png" alt="Prime-Bank" style="height: 35px;">
+            </a>
+        </div>
+    </nav>
+
+    <div class="content-wrapper forgotpass" style="background: #293c8b;">
+        <div class="container flex-grow-1 container-p-y">
+            <div class="row withoutmnu">
+                <div class="col-xl-5 d-flex align-items-center justify-content-center">
+                    <div class="card border shadow-none">
+                        <div class="card-body p-4 d-flex align-items-center">
+                            <ul class="">
+                                <div class="p-2">
+                                    <h5 class="m-0" style="text-decoration: underline; color: black;">Password
+                                        Complexity Requirements
+                                    </h5>
+                                    <ul style="color: black;">
+                                        <li
+                                            [ngClass]="(regiForm.get('password')?.value && !passValidation?.length && !isValid) ? 'invalid': (!regiForm.get('password')?.value && !isValid) ? 'defalt':'valid'">
+                                            Length between 12 and 15 characters.</li>
+                                        <li
+                                            [ngClass]="(regiForm.get('password')?.value && !passValidation?.uppercase && !isValid) ? 'invalid': (!regiForm.get('password')?.value && !isValid) ? 'defalt':'valid'">
+                                            At least one uppercase letter.</li>
+                                        <li
+                                            [ngClass]="(regiForm.get('password')?.value && !passValidation?.lowercase && !isValid) ? 'invalid': (!regiForm.get('password')?.value && !isValid) ? 'defalt':'valid'">
+                                            At least one lowercase letter.</li>
+                                        <li
+                                            [ngClass]="(regiForm.get('password')?.value && !passValidation?.digit && !isValid) ? 'invalid': (!regiForm.get('password')?.value && !isValid) ? 'defalt':'valid'">
+                                            At least one digit.</li>
+                                        <li
+                                            [ngClass]="(regiForm.get('password')?.value && !passValidation?.specialCharacter && !isValid) ? 'invalid': (!regiForm.get('password')?.value && !isValid) ? 'defalt':'valid'">
+                                            At least one special character: !, {{'@'}}, #, $, %, ^, &, *, ?.</li>
+                                        <li
+                                            [ngClass]="(regiForm.get('password')?.value && !passValidation?.successive && !isValid) ? 'invalid': (!regiForm.get('password')?.value && !isValid) ? 'defalt':'valid'">
+                                            No more than 4 successive identical characters.</li>
+                                    </ul>
+
+                                </div>
+                            </ul>
+                        </div>
+
+                    </div>
+                </div>
+                <div class="col-xl-7">
+                    <div class="authentication-inner">
+                        <div class="card">
+                            <div class="card-body">
+
+                                <h3 class="register-heading"><b>Register as a External User</b></h3>
+                                <br>
+                                <form [formGroup]="regiForm" autocomplete="off">
+
+                                    <div class="row ">
+
+                                        <div class="col-md-6">
+                                            <div class="form-group inputContainer mb-4">
+                                                <input id="fName" type="text" class="form-control input"
+                                                    placeholder="First Name *" formControlName="firstName"
+                                                    [ngClass]="{ 'is-invalid': submitted && regiForm.controls.firstName.errors, 'hot-color-readonly': isReadOnly }"
+                                                    [readonly]="isReadOnly" />
+                                                <label for="fName" class="label">First Name</label>
+                                                <div *ngIf="submitted"
+                                                    class="invalid-feedback invalid-feedback-p col-md-12 validation-color"
+                                                    style="bottom: -16px; position: absolute; right: -15px;">
+                                                    <div *ngIf="regiForm.get('firstName')?.hasError('required')"
+                                                        class="float-right">
+                                                        First name is required.
+                                                    </div>
+                                                    <div *ngIf="!regiForm.get('firstName')?.hasError('required') && (regiForm.get('firstName').value?.length<2)"
+                                                        class="float-right">
+                                                        Name must be 2 character.
+                                                    </div>
+                                                    <div *ngIf="(!regiForm.get('firstName')?.hasError('required') && regiForm.get('firstName').value?.length>1)
+                                                            && regiForm.get('firstName')?.hasError('pattern') "
+                                                        class="float-right">
+                                                        Invalid name.
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="form-group inputContainer mb-4">
+                                                <input id="mName" type="text" [appNoSpecialCharacters]="'name'"
+                                                    class="form-control input" placeholder="Middle Name"
+                                                    formControlName="middleName" />
+                                                <label for="mName" class="label">Middle Name</label>
+                                            </div>
+                                            <div class="form-group inputContainer mb-4">
+                                                <input id="lName" type="text" class="form-control input"
+                                                    placeholder="Last Name" formControlName="lastName"
+                                                    [ngClass]="{'is-invalid': submitted && regiForm.controls.lastName.errors, 'hot-color-readonly': isReadOnly}"
+                                                    [readonly]="isReadOnly" />
+                                                <label for="lName" class="label">Last Name</label>
+                                            </div>
+                                            <div class="form-group inputContainer mb-4">
+                                                <input id="uName" type="text" class="form-control input"
+                                                    placeholder="User Name *" formControlName="loginName"
+                                                    [ngClass]="{ 'is-invalid': submitted && regiForm.controls.loginName.errors, 'hot-color-readonly': isReadOnly }"
+                                                    [readOnly]="regiForm.get('loginName')?.value"
+                                                    [readonly]="isReadOnly" />
+                                                <label for="uName" class="label"
+                                                    [ngClass]="{'readonly':regiForm.get('loginName')?.value}">User
+                                                    Name</label>
+                                                <div *ngIf="submitted"
+                                                    class="invalid-feedback invalid-feedback-p col-md-12 validation-color">
+                                                    <div *ngIf="regiForm.get('loginName')?.hasError('required')"
+                                                        class="float-right">
+                                                        Login Name is required.
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="form-group inputContainer mb-4">
+                                                <input id="email" type="email" class="form-control input"
+                                                    placeholder="Email *" formControlName="email"
+                                                    [ngClass]="{ 'is-invalid':(submitted && regiForm.get('email')?.hasError('required') 
+                                                        || regiForm.get('email')?.hasError('pattern')) 
+                                                        ||(regiForm.get('email').errors && regiForm.get('email').touched), 'hot-color-readonly': isReadOnly }"
+                                                    [readOnly]="regiForm.get('email')?.value" [readonly]="isReadOnly" />
+                                                <label for="email" class="label"
+                                                    [ngClass]="{'readonly':regiForm.get('email')?.value}">Email
+                                                    Address</label>
+                                                <div class="invalid-feedback invalid-feedback-p col-md-12 validation-color"
+                                                    *ngIf="submitted || regiForm.get('email').touched">
+                                                    <div *ngIf="regiForm.get('email')?.hasError('required')"
+                                                        class="float-right">
+                                                        Email is required.
+                                                    </div>
+                                                    <div *ngIf="regiForm.get('email')?.hasError('pattern')"
+                                                        class="float-right">
+                                                        Invalid email address.
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="form-group inputContainer mb-4">
+                                                <input id="pNumber" type="text" minlength="10"
+                                                    class="form-control input" placeholder="Phone"
+                                                    formControlName="phoneNumber"
+                                                    [ngClass]="{ 'is-invalid': submitted && regiForm.controls.phoneNumber.errors, 'hot-color-readonly': isReadOnly }"
+                                                    [readOnly]="regiForm.get('phoneNumber')?.value"
+                                                    [readonly]="isReadOnly" />
+                                                <label for="pNumber" class="label"
+                                                    [ngClass]="{'readonly':regiForm.get('phoneNumber')?.value}">Your
+                                                    Phone
+                                                    Number</label>
+                                            </div>
+
+                                            <div class="form-group inputContainer mb-4">
+                                                <input id="instution" type="text" minlength="10"
+                                                    class="form-control input" placeholder="Phone"
+                                                    formControlName="institutionName"
+                                                    [ngClass]="{ 'hot-color-readonly': isReadOnly }" [readOnly]="'true'"
+                                                    [readonly]="isReadOnly" />
+                                                <label for="instution" class="label" [ngClass]="{'readonly':true}">Your
+                                                    Institution
+                                                    Name</label>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-md-6">
+
+
+                                            <div class="form-group inputContainer mb-4">
+                                                <input id="password" type="password" class="form-control input"
+                                                    placeholder="Password *" formControlName="password"
+                                                    (keyup)="checkPassValidation($event)" autocomplete="new-password"
+                                                    [ngClass]="{ 'is-invalid': userType == 'EXTERNAL_USER' && regiForm.get('password')?.touched 
+                                                    && (regiForm.get('password')?.hasError('required') || !isValid)}" />
+                                                <label for="password" class="label">Password</label>
+                                                <div *ngIf="regiForm.get('password')?.touched && (regiForm.get('password')?.hasError('required') || !isValid)"
+                                                    class="invalid-feedback invalid-feedback-p col-md-12 validation-color">
+                                                    <div *ngIf="regiForm.get('password')?.hasError('required')"
+                                                        class="float-right">
+                                                        Password can not be empty.
+                                                    </div>
+                                                    <div *ngIf="!isValid" class="float-right">
+                                                        Invalid Password.
+                                                    </div>
+                                                </div>
+
+                                            </div>
+                                            <div class="form-group inputContainer mb-4" [hidden]="!isValid">
+                                                <input id="cnofPassword" type="password"
+                                                    class="form-control input pass-match"
+                                                    [placeholder]="'Confirm Password *'" autocomplete="new-password"
+                                                    (keyup)="onKey($event.target.value)" formControlName="cnofPassword"
+                                                    [ngClass]="{ 'is-invalid':userType == 'EXTERNAL_USER' && !isPassMatch && isValid
+                                                     && regiForm.value?.password }" />
+                                                <label for="cnofPassword" class="label">Confirm Password</label>
+                                                <div class="t" *ngIf="isPassMatch">
+                                                    <i class="fa fa-check-square-o fa-lg" aria-hidden="true"></i>
+                                                </div>
+                                                <div *ngIf="regiForm.value?.password && isValid"
+                                                    class="invalid-feedback invalid-feedback-p col-md-12 validation-color text-right">
+                                                    <div
+                                                        *ngIf="regiForm.value?.password && regiForm.get('cnofPassword').hasError('required')">
+                                                        Please enter confirm password
+                                                    </div>
+                                                    <div
+                                                        *ngIf=" !regiForm.get('cnofPassword').hasError('required') && !isPassMatch">
+                                                        Password not match
+                                                    </div>
+
+                                                </div>
+                                            </div>
+
+
+                                            <div class="form-group inputContainer mb-4 mlt"
+                                                *ngIf="securityQueList?.length">
+                                                <ng-multiselect-dropdown
+                                                    style="z-index: 100; background-color: whitesmoke;"
+                                                    id="securityQuestion" [ngStyle]="{'color': 'black'}"
+                                                    [placeholder]="'Any three'" name="securityQueList"
+                                                    formControlName="securityQuestionList"
+                                                    (onDeSelect)="deSelectQuestion($event)"
+                                                    (onSelect)="checkSelectedQuestionList($event)"
+                                                    [settings]="dropdownSettings" [data]="securityQueList"
+                                                    (onSelectAll)="onItemSelect($event)">
+                                                </ng-multiselect-dropdown>
+
+                                                <div *ngIf="btnClick"
+                                                    class="invalid-feedback invalid-feedback-p col-md-12 ">
+                                                    <div *ngIf="setStatus()" class="float-right">
+                                                        Please select any three questions.
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="mb-3" *ngIf="selectedSecurityQueList?.length>0">
+                                                <div *ngFor="let question of selectedSecurityQueList; let i=index"
+                                                    class="form-group m0">
+                                                    <label class="text-black"
+                                                        [for]="i">{{question.securityQuestion}}</label>
+                                                    <select [id]="i" [(ngModel)]="question.questionAnswer"
+                                                        class="form-control" [ngModelOptions]="{standalone: true}">
+                                                        <option value="" disabled selected>Select Ans</option>
+                                                        <ng-container *ngFor="let q of question?.questionAnsList">
+                                                            <option [value]="q.value1">
+                                                                {{q.value1}}
+                                                            </option>
+                                                        </ng-container>
+                                                    </select>
+
+                                                </div>
+                                            </div>
+
+
+                                            <div class="row">
+                                                <div class="col-6">
+                                                    <div class="form-group inputContainer">
+                                                        <div class=" d-flex flex-row-reverse ">
+                                                            <!-- <div class="col-1 pl-5">
+                                                                <button type="button" style="height:45px;  color: #293c8b;"
+                                                                    class="btn btn-outline-secondary btn-sm reload-btn"
+                                                                    (click)="generateCapture()">
+                                                                    <i class="fa fa-refresh" aria-hidden="true"></i>
+                                                                </button>
+                                                            </div> -->
+                                                            <div class="col-1">
+                                                                <button
+                                                                    style="height:42px; width: 36px; color: #293c8b !important;"
+                                                                    type="button"
+                                                                    class="btn btn-outline-secondary btn-sm border- rounded-3 hvr reload-btn"
+                                                                    (click)="generateCapture()" title="Reload">
+                                                                    <i class="fa fa-refresh" aria-hidden="true"></i>
+                                                                </button>
+                                                            </div>
+                                                            <div class="col-11 overlay"
+                                                                style="height: 40px; opacity: 0.8;"
+                                                                [ngStyle]="{background: 'url(/assets/images/pattern/2.jpg)'}">
+                                                                <label for="c" style="color: rgb(25, 25, 31);"
+                                                                    class="p-2 d-flex justify-content-center font-weight-bold align-self-center">{{loadCapture()}}</label>
+
+                                                            </div>
+                                                        </div>
+
+                                                    </div>
+                                                </div>
+                                                <div class="col-6">
+                                                    <div class="form-group inputContainer">
+
+                                                        <input id="cap" type="text" class="form-control input"
+                                                            style="height: 40px;" placeholder="Enter Answer *"
+                                                            formControlName="capture"
+                                                            [ngClass]="{ 'is-invalid': submitted && checkCapture()}" />
+                                                        <label for="cap" class="label">Captcha</label>
+                                                        <div *ngIf="submitted && checkCapture()"
+                                                            style="padding: 0; margin: -15px 0; top: 15px"
+                                                            class="invalid-feedback col-md-12 validation-color-cap text-right">
+                                                            <div *ngIf="regiForm.get('capture').hasError('required')">
+                                                                Captcha can not be empty.
+                                                            </div>
+                                                            <div
+                                                                *ngIf="regiForm.get('capture').value?.length>0 && regiForm.get('capture').value != captureSum">
+                                                                Wrong Answer.
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                </div>
+                                                <!-- </div> -->
+
+                                            </div>
+
+                                            <div class="row col-12 justify-content-center mt-3">
+                                                <button class="btn btn-primary d-grid w-100 reg-btn" [disabled]="clicked" (click)="register()">
+                                                    <span class="d-inline-flex align-items-center">
+                                                        Register
+                                                        <span class="spinner-border spinner-border-sm ms-2" *ngIf="showProgress" [mode]="'indeterminate'"></span>
+                                                    </span>
+                                                </button>
+                                            </div>
+                                        </div>
+
+
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+        <footer class="content-footer footer" style="background-color: #ffffff;">
+            <div class="container">
+                <div
+                    class="footer-container d-flex align-items-center justify-content-between py-4 flex-md-row flex-column">
+                    <div class="text-body">
+                        &copy; 2010-
+                        <script>
+                            document.write(new Date().getFullYear());
+                        </script>
+                        2024 Copyrighted by
+                        <a href="#" target="_blank" class="footer-link">Prime Bank</a>
+                    </div>
+                    <div class="d-none d-lg-inline-block">
+                        <a href="https://www.primebank.com.bd/license" class="footer-link me-4" target="_blank">License</a>
+                        <a href="https://www.primebank.com.bd/license" target="_blank" class="footer-link me-4">More Themes</a>
+                        <a href="https://www.primebank.com.bd/license" target="_blank" class="footer-link me-4">Documentation</a>
+                        <a href="https://www.primebank.com.bd/license" target="_blank" class="footer-link d-none d-sm-inline-block">Support</a>
+                    </div>
+                </div>
+            </div>
+        </footer>
+
+        <ngx-loading [show]="loading" [config]="{
+            primaryColour: '#dd0031',
+            secondaryColour: '#1976d2',
+            tertiaryColour: '#dd0031',
+            backdropBorderRadius: '3px'
+          }">
+        </ngx-loading>

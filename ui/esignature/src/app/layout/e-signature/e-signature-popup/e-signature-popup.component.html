@@ -1,0 +1,346 @@
+<div role="dialog" tabindex="-1">
+
+    <!-- <div *ngIf="this.loader.getLoading()" class="cssload-container">
+        <div class="cssload-speeding-wheel"></div>
+    </div> -->
+
+    <div class="modal-header py-2">
+        <div class="align-self-center ">
+            <h3 class="mx-auto text-light">Signature Information</h3>
+        </div>
+        <!-- <button type="button" class="close pull-right" aria-label="Close" (click)="closeModal('Close Button Click')">
+            <span aria-hidCircularden="true" style="color: aliceblue;">X</span>
+        </button> -->
+        <button type="button" class="close" aria-label="Close" title="CLOSE" (click)="closeModal('Close Button Click')">
+            <div class="sclose">
+                <span class="st" aria-hidden="true">&times;</span>
+            </div>
+        </button>
+    </div>
+
+    <div class="modal-body overflow-auto">
+        <div class="mb-3">
+            <!--        <div class="col-lg-12">-->
+            <form [formGroup]="signatureForm">
+                <div class="p-0">
+
+                    <div class="row pb-2 form-group align-items-center">
+                        <label for="PA" class="col-form-label col-md-2">PA:</label>
+                        <div class="col-md-4">
+                            <input type="text" class="form-control mb-3" id="PA" formControlName="pa" required
+                                readonly />
+                        </div>
+                        <label for="Name" class="col-form-label col-md-2">Name:</label>
+                        <div class="col-md-4">
+                            <input [readOnly]="ref=='VIEW' || 'true'" type="text" class="form-control mb-3" id="Name"
+                                formControlName="name" required />
+                        </div>
+                        <!-- </div>
+
+                    <div class="row pb-2 form-group align-items-center"> -->
+                        <label for="Designation" class="col-form-label col-md-2">Designation:</label>
+                        <div class="col-md-4">
+                            <input [readOnly]="ref=='VIEW' || 'true'" type="text" class="form-control mb-3"
+                                [appNoSpecialCharacters]="'name'" id="Designation" formControlName="designation"
+                                required />
+                        </div>
+
+                        <label for="Effictive" class="col-form-label col-md-2">Effictive Date:</label>
+                        <div class="col-md-4">
+                            <input [readOnly]="ref=='VIEW'" type="date" class="form-control mb-3" id="Effictive"
+                                formControlName="effictiveDate" required />
+                        </div>
+                        <label for="status" class="col-form-label col-md-2">Status:</label>
+                        <div class="col-md-4 mb-3">
+                            <select class="form-select col-md-12 p-2" id="status" formControlName="signatureStatus"
+                                [attr.disabled]="isSavePermission() ? null : true">
+                                <option selected> --select--</option>
+                                <option value="ACTIVE"> ACTIVE</option>
+                                <option value="IN_ACTIVE"> IN ACTIVE</option>
+                                <option value="CANCELED"> CANCEL</option>
+                            </select>
+                        </div>
+                        <label for="status" class="col-form-label col-md-2">Email:</label>
+                        <div class="col-md-4">
+                            <input [readOnly]="ref=='VIEW' || 'true'" type="text" class="form-control mb-3"
+                                id="cusIdPran" formControlName="email" required />
+                        </div>
+                        <label *ngIf="signatureForm.get('rejectionCause')?.value" for="status"
+                            class="col-form-label col-md-2">Rejection Cause:</label>
+                        <div class="col-md-4" *ngIf="signatureForm.get('rejectionCause')?.value">
+                            <input [readOnly]="'true'" type="text" class="form-control mb-3" id="cusIdPran"
+                                formControlName="rejectionCause" required />
+                        </div>
+                        <label for="status" *ngIf="signatureForm.get('signatureStatus')?.value == 'IN_ACTIVE'"
+                            class="col-form-label col-md-2">Inactive Date:</label>
+                        <div class="col-md-4" *ngIf="signatureForm.get('signatureStatus')?.value == 'IN_ACTIVE'">
+                            <input
+                                [readOnly]="ref=='VIEW'
+                            || !this.permissionStoreService.hasAnyPermission([this.appPermission.SIGNATORY_MAKER, this.appPermission.UPDATE_SIGNATURE])"
+                                type="date" class="form-control" id="cusIdPran" formControlName="inactiveTime"
+                                [ngClass]="{'is-invalid':(signatureForm.get('signatureStatus').value == 'IN_ACTIVE' && !signatureForm.get('inactiveTime').value) 
+                                && (click || this.signatureForm.controls.inactiveTime.touched)}" required />
+                            <!-- <div class="invalid-feedback">
+                                Inactive Date is Required.
+                            </div> -->
+                            <div *ngIf="!signatureForm.get('inactiveTime').value && signatureForm.get('signatureStatus')?.value == 'IN_ACTIVE'"
+                                class="invalid-feedback">
+                                Inactive Date is Required
+                            </div>
+                        </div>
+
+                        <label for="status" *ngIf="signatureForm.get('signatureStatus')?.value == 'IN_ACTIVE'"
+                            class="col-form-label col-md-2">Remarks:</label>
+                        <div class="col-md-4" *ngIf="signatureForm.get('signatureStatus')?.value == 'IN_ACTIVE'">
+                            <textarea class="form-control" formControlName="remarks" id="exampleFormControlTextarea1"
+                                rows="2"></textarea>
+                        </div>
+                        <!-- [ngClass]="{'mb-3': (!ceDate && signatureForm.get('cancelEffectiveDate').value)}"
+                        [ngClass]="{'is-invalid':ceDate && !signatureForm.get('cancelEffectiveDate').value}" -->
+                        <ng-container
+                            *ngIf="signatureForm.get('signatureStatus')?.value == 'CANCELED' && checkUpdateStatus(signatureForm.value)">
+
+                            <label for="ceDate" class="col-form-label col-md-2">Cancel Effective Date:</label>
+                            <div class="col-md-4">
+                                <input
+                                    [readOnly]="ref=='VIEW'
+                                    || !this.permissionStoreService.hasAnyPermission([this.appPermission.SIGNATORY_MAKER, this.appPermission.UPDATE_SIGNATURE])"
+                                    type="date" class="form-control" id="ceDate" [ngClass]="{
+                                        'is-invalid': (!signatureForm.get('cancelEffectiveDate').value && signatureForm.get('signatureStatus')?.value === 'CANCELED')
+                                         && (click || signatureForm.controls.cancelEffectiveDate.touched)}"
+                                    formControlName="cancelEffectiveDate" required />
+                                <div *ngIf="!signatureForm.get('cancelEffectiveDate').value && signatureForm.get('signatureStatus')?.value == 'CANCELED'"
+                                    class="invalid-feedback">
+                                    Cancel Effective Date is Required.
+                                </div>
+                            </div>
+
+
+                            <label for="cancleCaus" class="col-form-label col-md-2">Cancel Cause:</label>
+                            <div class="col-md-4">
+
+                                <textarea
+                                    [readOnly]="ref=='VIEW' || !this.permissionStoreService.hasAnyPermission([this.appPermission.SIGNATORY_MAKER, this.appPermission.UPDATE_SIGNATURE])"
+                                    class="form-control mb-3" formControlName="calcelCause" id="cancleCaus" cols="30"
+                                    rows="2"></textarea>
+                            </div>
+
+
+                            <label for="cancleApp" class="col-form-label col-md-2">Cancellation Approval:</label>
+                            <div class="col-md-4">
+                                <input #cancelationApprovalFile
+                                    [readOnly]="ref=='VIEW' || !this.permissionStoreService.hasAnyPermission([this.appPermission.SIGNATORY_MAKER, this.appPermission.UPDATE_SIGNATURE])"
+                                    class="form-control mb-3" type="file" id="cancleApp"
+                                    (change)="fileInput($event.target.files, 'CANCELATION_APPROVAL',cancelationApprovalFile)" />
+                            </div>
+                            <label for="cancleCan" class="col-form-label col-md-2">Circular:</label>
+                            <div class="col-md-4">
+
+                                <input #cancelationFile [readOnly]="ref=='VIEW'" class="form-control mb-3" type="file" id="cancleCan"
+                                    (change)="fileInput($event.target.files, 'CANCELATION',cancelationFile)" />
+
+                                <!-- <input [readOnly]="ref=='VIEW'" type="text" class="form-control mb-3" id="cusIdPran"
+                                formControlName="email" required /> -->
+                            </div>
+
+                        </ng-container>
+
+                        <!-- <ng-container *ngIf="['CANCELED', 'IN_ACTIVE'].includes(signatureForm.get('signatureStatus')?.value)"> -->
+                        <ng-container *ngIf="signatureForm.get('status').value != 'PEND_APPROVE' && ref=='EDIT'">
+
+                            <div class="form-row d-flex align-content-center mb-1">
+                                <div class="col-auto">
+                                    <span class="h5">Add Other Documents</span>
+                                </div>
+                                <div class="col-auto">
+                                    <span class="btn btn-primary ml-1 btn-sm" titel="Add"
+                                        (click)="addOrRemoveOtherDocuments('add')">
+                                        <i class="fa fa-plus" aria-hidden="true"></i>
+                                    </span>
+                                    <span class="btn btn-warning ml-1 btn-sm" titel="Remove"
+                                        (click)="addOrRemoveOtherDocuments('remove')">
+                                        <i class="fa fa-minus" aria-hidden="true"></i>
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="form-row bg-whitet">
+                                <ng-container *ngFor="let other of othersDocs; let i = index">
+                                    <div class="col-md-6 form-row my-1">
+                                        <label [for]="i" class="col-md-3">File:</label>
+                                        <div class="col-md-8">
+                                            <input [id]="i" type="file" class="form-control"
+                                            #fileInput
+                                                (change)="otherFile($event.target.files, i,fileInput)" [(ngModel)]="other.file"
+                                                [ngModelOptions]="{standalone: true}">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 form-row my-1">
+                                        <label [for]="'fileName' + i" class="col-md-3">File Name:</label>
+                                        <div class="col-md-8">
+                                            <input [id]="'fileName' + i" type="text" class="form-control"
+                                                [(ngModel)]="other.fileName" [ngModelOptions]="{standalone: true}"
+                                                [ngClass]="{'is-invalid': btnClick && (other.file && !other.fileName)}">
+                                            <div class="invalid-feedback"
+                                                *ngIf="btnClick && (other.file && !other.fileName)">File Name is
+                                                required.</div>
+                                        </div>
+                                    </div>
+                                </ng-container>
+                            </div>
+                        </ng-container>
+
+
+                    </div>
+
+                    <div class="row mb-2" *ngIf="image64">
+                        <div class="col-md-4 p-2" *ngFor="let image of image64; let i = index">
+                            <div class="p-2" [ngClass]="{'selectedMain':i==0}">
+                                <img style="width: 100%; border: 1px solid royalblue; border-radius: 15px;"
+                                    [src]="image" alt="Signature Image" class="preview">
+                            </div>
+                        </div>
+                        <!-- <div class="col-md-4">
+                            <img [src]="image" alt="Signature Image">
+                        </div> -->
+                    </div>
+
+                    <div class="py-2">
+                        <div>
+                            <div *ngIf="isRequestMaker('NEW')" class="form-row">
+                                <button class="btn btn-block btn-success" *ngIf="ref=='EDIT'" [disabled]="showProgress"
+                                    (click)="updateSignature('Update', 'cancel')">Update
+                                    <span class="spinner-border spinner-border-sm"
+                                        *ngIf="showProgress && btnRef == 'Update'" [mode]="'indeterminate'"></span>
+                                </button>
+                            </div>
+                            <div class="form-row"
+                                *ngIf="permissionStoreService.hasAnyPermission([appPermission.SIGNATURE_MAKER]) && signatureForm.get('status').value != 'PEND_APPROVE'">
+                                <button class="btn btn-block btn-success" *ngIf="ref=='VIEW' && checkStatus()"
+                                    (click)="onApproveRequestByBtn('REQUEST_FOR_APPROVE')"
+                                    [disabled]="showProgress && btnRef == 'REQUEST_FOR_APPROVE'">Request For Approver
+                                    <span class="spinner-border spinner-border-sm"
+                                        *ngIf="showProgress && btnRef == 'REQUEST_FOR_APPROVE'"
+                                        [mode]="'indeterminate'"></span>
+                                </button>
+                            </div>
+
+                        </div>
+
+                        <div class="form-row" *ngIf="isRequestApprover('PEND_APPROVE')">
+                            <button class="btn btn-block btn-success" *ngIf="ref=='VIEW' && checkRequestApproveStatus()"
+                                [disabled]="showProgress" (click)="onRequest4ApproverBtn('APPROVE')">Approve Request
+                                <span class="spinner-border spinner-border-sm"
+                                    *ngIf="showProgress && btnRef == 'APPROVE'" [mode]="'indeterminate'"></span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Document section -->
+                    <div class="row mb-2"
+                        *ngIf="permissionStoreService.hasAnyPermission([appPermission.UPDATE_SIGNATURE, appPermission.UPLOAD_SIGNATURE, appPermission.APPROVE_SIGNATURE])">
+                        <div class="col-12">
+                            <tabset>
+                                <tab customClass="heading-style customClass tableFixHead" heading="Documents">
+                                    <table class="table table-striped table-border ">
+                                        <!-- <colgroup>
+                                            <col span="2">
+                                            <col span="3" style="visibility: collapse">
+                                          </colgroup> -->
+                                        <thead>
+                                            <tr>
+                                                <th scope="col">#</th>
+                                                <th scope="col">Name</th>
+                                                <th scope="col">Type</th>
+                                                <th scope="col">Time</th>
+                                                <th scope="col">Action</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr *ngFor="let file of documentFiles; let i = index">
+                                                <td>{{i + 1}}</td>
+                                                <td>{{file?.fileName}}</td>
+                                                <td>{{file?.objectType == file?.fileName ? "" : file?.objectType}}</td>
+                                                <td>{{file?.createDate}}</td>
+                                                <td>
+                                                    <button (click)="downloadDocument(file, 'download')"
+                                                        class="btn-sm btn btn-warning mx-2" title="Download"><i
+                                                            class="fa fa-download" aria-hidden="true"></i>
+                                                    </button>
+                                                    <button (click)="downloadDocument(file, 'view')"
+                                                        *ngIf="viewDocEx.includes(file?.fileName.slice(file?.fileName.lastIndexOf('.')).toLowerCase())"
+                                                        class="btn-sm btn btn-info" style="margin-left: 8px;"
+                                                        title="View">
+                                                        <i class="fa fa-eye" aria-hidden="true"></i>
+                                                    </button>
+                                                </td>
+
+                                            </tr>
+
+                                        </tbody>
+                                    </table>
+
+                                </tab>
+                            </tabset>
+                        </div>
+                    </div>
+                </div>
+                <!-- </form>
+        </div> -->
+
+
+            </form>
+        </div>
+
+    </div>
+</div>
+
+<div class="modal fade" #pop bsModal #popModal="bs-modal" id="staticBackdrop" data-backdrop="static"
+    data-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog  modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="staticBackdropLabel">{{fileName}}</h5>
+                <button type="button" class="close" data-dismiss="modal" [ngbTooltip]="tooltip" aria-label="Close"
+                    (click)="closeFileModal()">
+                    <div class="sclose">
+                        <span class="st" aria-hidden="true">&times;</span>
+                    </div>
+                </button>
+            </div>
+            <div class="modal-body">
+
+                <!-- <pdf-viewer *ngIf="isPdf" [src]="pdfSrc" [rotation]="0" [original-size]="false" [show-all]="true"
+                    [fit-to-page]="false" [zoom]="0.9" [zoom-scale]="'page-width'" [stick-to-page]="false"
+                    [render-text]="true" [external-link-target]="'blank'" [autoresize]="true" [show-borders]="false"
+                    style="width: 100%; height: 100vh;"></pdf-viewer> -->
+
+                <!-- <img [src]="pdfSrc" alt="Blob Image" style="max-width: 100%;" /> -->
+
+                <ng-container *ngIf="fileType === 'application/pdf'; else otherTypes">
+                    <iframe [src]="fileSrc" width="100%" height="600px" frameborder="0"></iframe>
+                    <!-- <pdf-viewer *ngIf="isPdf" [src]="pdfSrc" [rotation]="0" [original-size]="false" [show-all]="true"
+                        [fit-to-page]="false" [zoom]="0.9" [zoom-scale]="'page-width'" [stick-to-page]="false"
+                        [render-text]="true" [external-link-target]="'blank'" [autoresize]="true" [show-borders]="false"
+                        style="width: 100%; height: 100vh;"></pdf-viewer> -->
+                </ng-container>
+                <ng-template #otherTypes>
+                    <ng-container *ngIf="fileType?.startsWith('image/'); else downloadLink">
+                        <img [src]="fileSrc" alt="Image Preview" width="100%" />
+                    </ng-container>
+                    <ng-template #downloadLink>
+                        <a [href]="fileSrc" download>Download File</a>
+                    </ng-template>
+                </ng-template>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<ngx-loading [show]="loading" [config]="{
+    primaryColour: '#dd0031',
+    secondaryColour: '#1976d2',
+    tertiaryColour: '#dd0031',
+    backdropBorderRadius: '3px'
+  }">
+</ngx-loading>

@@ -1,0 +1,14 @@
+1. need to upload file for user creation.
+2. master user config setup 
+3. email is awlays to the master user domain.
+4. request type i)Request for booklet
+		ii) request for sengle signature
+
+5. pass change in 30 days.
+6. signature cancle file send to the internal user.
+7. spasific mail with file or notification need to send to the all/internal/external users.
+8. if any signature download then need to note and nerration for cause.
+
+----------------------
+[OBSERVATION]
+9. No action handle [SELECT_ALL] ----SignatoryService() => SOLVED

@@ -1,0 +1,45 @@
+.main{
+    width: 100%;
+    // background-color: rgba(128, 128, 128, 0.5);
+    color: white;
+    // padding: 5px 0;
+    .notice{
+        padding: 0 5px;
+        font-size: 1.2rem;
+        cursor: pointer;
+    }
+}
+.modal-header{
+    // background-color: #1864c7;
+       background-color: #293C8B;
+    color: white;
+    height: 80px;
+    .sclose{
+        background-color: red;
+        display: flex;
+        align-items: center;
+        .st{
+            width: 30px;
+            // height: 30px;
+            color: white;
+        }
+    }
+}
+.modal-lg{
+    height: 100% !important;
+}
+
+.table-head{
+background-color: #293C8B;
+}
+.table-head th {
+    background-color: #293C8B;
+    color: white;
+}
+.table{
+    
+table {
+    caption-side: bottom;
+    border-collapse: collapse;
+}
+}

@@ -1,0 +1,84 @@
+<div cdkDropListGroup class=" text-center">
+  <h2 class="mb-2 text-nowrap bd-highlight"><em><u>User: {{loginName}}</u></em></h2>
+  <div class="row">
+    <div class="col-6">
+      <div class="example-container container-fluid ">
+        <h6><u>Available Role</u></h6>
+        <div style="margin-top: 2px;" class="col-md-12">
+          <div class="col-md-12 row mb-2">
+            <input class="col-md-12" style="border-radius: 20px; border: 1px solid #b9c1c0;" placeholder="Search"
+              type="text" (keyup)="onRoleSearch($event)" />
+          </div>
+        </div>
+
+        <div cdkDropList [cdkDropListData]="filteredUnassignRoleList" class="example-list"
+          (cdkDropListDropped)="drop($event)">
+          <div class="example-box" *ngFor="let role of filteredUnassignRoleList" cdkDrag style="width: 100%;"
+            [ngClass]="{'selected': selectedRoles.includes(role)}" (click)="toggleSelection(role, $event)">
+            {{ role.displayName }}
+          </div>
+        </div>
+
+      </div>
+    </div>
+    <div class="col-6">
+
+      <div class="example-container container-fluid ">
+        <h6><u>Assign Role</u></h6>
+
+        <div style="margin-top: 2px; " class="col-md-12 row mb-2">
+          <div class="col-md-12" style="height: 30px;">
+
+          </div>
+        </div>
+
+        <div cdkDropList [cdkDropListData]="assignRoleList" class="example-list" style="overflow-x: hidden;"
+          (cdkDropListDropped)="drop($event)">
+
+          <ng-container *ngFor="let role of assignRoleList">
+            <div class="row example-box" [ngClass]="{'selected': selectedRoles.includes(role)}"
+              (click)="toggleSelection(role, $event)" cdkDrag>
+
+              <div class="col-auto d-flex justify-content-start">
+                {{ role.displayName }}
+              </div>
+              <div class="align-self-center float-right col d-flex justify-content-end">
+                <!-- Buttons for managing roles (Undo, Approve) -->
+                <button *ngIf="(role.genericMapStatus === 'PEND_DEASSINED' || role.genericMapStatus === 'PEND_ASSIGN') &&
+                                 permissioinStoreService.hasPermission(appPermission.USER_MAKER) && showSameUserBtn"
+                  title="Undo" (click)="onUndoAssignDeAssign(role)" class="btn" style="padding: 2px; font-size: 14px;">
+                  <i class="fa fa-undo btnUndo"></i>
+                </button>
+                <button
+                  *ngIf="role.genericMapStatus === 'PEND_ASSIGN' && permissioinStoreService.hasPermission(appPermission.USER_APPROVER) && showSameUserBtn"
+                  title="Approve" (click)="onApprove(role)" class="btn" style="padding: 2px; font-size: 14px;">
+                  <i class="fa fa-check btnApprove"></i>
+                </button>
+                <button
+                  *ngIf="role.genericMapStatus === 'PEND_DEASSINED' && permissioinStoreService.hasPermission(appPermission.USER_APPROVER) && showSameUserBtn"
+                  title="Approve De-assign" (click)="onApproveDeassign(role)" class="btn"
+                  style="padding: 2px; font-size: 14px;">
+                  <i class="fa fa-times btnDeAssign"></i>
+                </button>
+              </div>
+            </div>
+            <!-- </div> -->
+
+          </ng-container>
+        </div>
+        <div style="margin-top: 10px;">
+          <button
+            *ngIf="showSameUserBtn && permissioinStoreService.hasPermission(this.permissioinStoreService.appPermission.USER_MAKER)"
+            style="margin: auto;" [(disabled)]="manageRoleBtnDisabled" (click)="manageRoleBtnClick()" type="button"
+            class="btn btn-primary" pButton>Submit
+            <span class="spinner-border spinner-border-sm" *ngIf="spinnerManage" [mode]="'indeterminate'"></span>
+
+          </button>
+
+          <button style="margin-left: 10px;" (click)="backBtnClick()" type="button" class="btn btn-primary"
+            pButton>Back</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

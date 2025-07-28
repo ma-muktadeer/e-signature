@@ -1,0 +1,78 @@
+<div [@routerTransition]>
+
+  <h2 class="text-muted ml-1">At a glance:
+    <span *ngIf="dashbordLoading" style="float: right; font-size: 20px; margin-left: 10px; margin-right: 20px;margin-top: 9px;">
+      <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+      <span class="visually-hidden">Loading...</span>
+    </span>
+    <i *ngIf="!dashbordLoading" (click)="onRefreshClick()"
+      style="float: right; font-size: 20px; cursor: pointer; margin-left: 10px;margin-right: 25px;margin-top: 14px;" title="Refresh"
+      class="fa fa-refresh"></i>
+    <div style="float: right; ; margin-top: 15px;" class="spinner-grow spinner-grow-sm" role="status">
+      <span class="visually-hidden"></span>
+    </div>
+  </h2>
+  <hr>
+  <div *ngIf="false">
+    <button (click)="downloadVideo()">Download Video</button>
+    <div *ngIf="progress > 0">{{ progress }}%</div>
+  </div>
+  <div *ngIf="showDashboardMenuUser()" class="main-content row font-color-item shadow">
+    <div style="width: 100%;">
+      <div class="total-msg-count col-12 row main-card-style">
+        <div class="col-12 mb-1">
+          <h1 style="text-align: center;">Status of Signature</h1>
+        </div>
+
+        <div class="col-md-12 py-2">
+          <div class="row">
+
+            <div class="total-msg-show-box table-container col-md-6 px-2 mb-4">
+              <table *ngIf="dahsbordDetails?.length > 0" class="table-hover table-striped table-dark">
+                <!-- <caption>Maturity</caption> -->
+                <!-- (click)="showDetails(value)" -->
+                <thead>
+                  <tr class="h5 ">
+                    <!-- <th colspan="3" scope="col" class="text-center border-bottom thead-color">Total Signature Status
+                    </th> -->
+                  </tr>
+                  <tr>
+                    <th style="font-size: 0.7em; text-align: left !important;" colspan="1" scope="col"
+                      class="col-sm-4 col-4 px-1 text-center border-bottom thead-color">#</th>
+                    <th style="font-size: 0.7em; text-align: left !important;" colspan="1" scope="col"
+                      class="col-sm-4 col-4 px-1 text-center border-bottom thead-color">Status</th>
+                    <th style="font-size: 0.7em; text-align: left !important;" colspan="1" scope="col"
+                      class="col-sm-4 col-4 px-1 text-center border-bottom thead-color">Number Of Count</th>
+                  </tr>
+                </thead>
+                <tbody class="text-center text-md-left" style="cursor: pointer; font-size: 0.85em;">
+                  <ng-container *ngFor="let d of dahsbordDetails; let i = index">
+                    <tr class="">
+                      <td scope="col" style="text-align: left !important;" class="col-sm-4 col-4 px-1">{{i + 1}}
+                      </td>
+                      <td scope="col" style="text-align: left !important;" class="col-sm-4 col-4 px-1">{{statusChange(d.status)}}
+                      </td>
+                      <td scope="col" style="text-align: left !important;" class="col-sm-4 col-4 px-1">{{d.count}}</td>
+                    </tr>
+
+                  </ng-container>
+                </tbody>
+              </table>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+</div>
+
+<ngx-loading [show]="loading" [config]="{
+        primaryColour: primaryColour,
+        secondaryColour: secondaryColour,
+        tertiaryColour: primaryColour,
+        backdropBorderRadius: '3px'
+      }">
+</ngx-loading>

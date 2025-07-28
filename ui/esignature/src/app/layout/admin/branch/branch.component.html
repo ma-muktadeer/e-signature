@@ -1,0 +1,91 @@
+<!-- only bootstrap  daylog start -->
+
+<div *ngIf="showBranchAddbtn">
+    <button class="btn btn-success" (click)="openPopup('NEW')">Add New Branch</button>
+</div>
+
+<div class="modal" tabindex="-1" role="dialog" [ngStyle]="{'display':displayStyle}">
+    <div class="modal-dialog modal-xl" role="document">
+        <div class="modal-content">
+
+            <div class="card">
+                <div class="card-body">
+                    <h2 style="text-align: center;">Branch Details</h2>
+                    <div class="row my-4">
+                        <div class="col">
+                            <form [formGroup]="branchForm">
+                                <div class="row">
+                                    <div class="col-md-12 row">
+
+                                        <div class="form-group text-start col-md-6">
+                                            <label class="tx-medium">CBS Branch Id</label>
+                                            <input [readonly]="isView" [appNoSpecialCharacters]="'name'"
+                                                placeholder="CBS Branch Id" formControlName="cbsBranchId"
+                                                [attr.maxlength]="cbsBranchIdMaxLength" class="form-control"
+                                                type="text">
+
+                                        </div>
+                                        <div class="form-group text-start col-md-6">
+                                            <label class="tx-medium">Branch Name <app-red-star></app-red-star></label>
+                                            <input [readonly]="isView" [appNoSpecialCharacters]="'name'"
+                                                placeholder="Branch Name" formControlName="branchName"
+                                                class="form-control" type="text" [attr.maxlength]="branchNameMaxLength">
+                                            <div *ngIf="branchForm.controls.branchName?.touched && branchForm.controls.branchName.errors?.required"
+                                                class="text text-danger mt-1">
+                                                Branch Name Required
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group text-start col-md-6">
+                                            <label class="tx-medium">AD Code</label>
+                                            <input [readonly]="isView" placeholder="AD Code" formControlName="adCode"
+                                                class="form-control" [appNoSpecialCharacters]="'name'"
+                                                [attr.maxlength]="adCodeMaxLength" type="text">
+                                        </div>
+
+                                        <div class="form-group text-start col-md-6">
+                                            <label class="tx-medium">Routing Number</label>
+                                            <input [readonly]="isView" placeholder="Routing Number"
+                                                formControlName="routingNumber"
+                                                [appNoSpecialCharacters]="'numericNumber'"
+                                                [attr.maxlength]="routingNumberMaxLength" class="form-control"
+                                                type="text">
+                                        </div>
+
+                                    </div>
+                                </div>
+
+                            </form>
+
+                        </div>
+                    </div>
+                    <div style="text-align: center;">
+                        <button
+                            *ngIf="permissionStore.hasPermission(appPermission.SAVE_BRANCH) && !isRequestDelete"
+                            (click)="onSaveBtnClick('save')" [disabled]="!branchForm.valid" class="btn btn-primary"
+                            style="margin-top: 10px;">{{saveBtn}}
+                            <span class="spinner-border spinner-border-sm" *ngIf="showProgress && btnRef == 'save'"
+                                [mode]="'indeterminate'"></span>
+                        </button> &nbsp;
+                        <button
+                            *ngIf="permissionStore.hasPermission(appPermission.APPROVE_BRANCH) && isApprovedFlag && isView"
+                            [hidden]="showApproveBtn" (click)="onApprovedBtnClick('aprv')"
+                            [disabled]="!branchForm.valid" class="btn btn-primary"
+                            style="margin-top: 10px;">{{isRequestDelete ? 'Approved delete': 'Approved'}}
+                            <span class="spinner-border spinner-border-sm" *ngIf="showProgress && btnRef == 'aprv'"
+                                [mode]="'indeterminate'"></span>
+                        </button> &nbsp;
+                        <button (click)="closePopup()" class="btn btn-danger" style="margin-top: 10px;">Cancel</button>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<div *ngIf="showGrid" style="margin-top: 20px;" class="shadow">
+    <angular-slickgrid #branchGrid gridId="branchGrid" [columnDefinitions]="columnDefinitions"
+        [gridOptions]="gridOptions" [dataset]="branchList" (onAngularGridCreated)="angularGridReady($event)">
+    </angular-slickgrid>
+</div>

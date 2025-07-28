@@ -1,0 +1,61 @@
+.main-container {
+    margin-top: 56px;
+    margin-left: 250px;
+    padding: 0 15px;
+    overflow-y: auto; /* Changed to auto to allow scrolling if content exceeds container height */
+    position: relative;
+    flex: 1; /* This allows the main content to grow and fill the remaining space */
+}
+
+@media screen and (max-width: 992px) {
+    .main-container {
+        margin-left: 0; /* Removed !important and set to 0 */
+    }
+}
+
+@media print {
+    .main-container {
+        margin-top: 0;
+        margin-left: 0;
+    }
+}
+
+
+$pbl-red: #BF131B;
+$pbl-blue: #304B9F;
+$pbl-green: #136431;
+$input-label: #D8DAE9;
+
+.selectedMainBody{
+    // background: linear-gradient(to top, rgba($pbl-red, 0.1), rgba($pbl-green, 0.1));
+    background-color:#F3F3F7;
+    z-index: -9999999999;
+}
+
+  
+  
+.move-up {
+    position: relative;
+    bottom: 8px; /* Adjust this value as per your requirement */
+  }
+ .e-size{
+    font-size: 20px;
+    font-style: italic;
+ } 
+
+ a.app-brand-link {
+    text-decoration: none; 
+}
+
+a.app-brand-link:hover {
+    text-decoration: none; 
+}
+
+::ng-deep .slick-viewport {
+    scrollbar-width: thick;
+}
+
+::ng-deep .slick-viewport::-webkit-scrollbar {
+    width: 16px;
+    height: 16px;
+}

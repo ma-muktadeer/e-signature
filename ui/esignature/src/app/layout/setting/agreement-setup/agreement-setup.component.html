@@ -1,0 +1,75 @@
+<div *ngIf="permissionStoreService.hasPermission(appPermission.AGREEMENT_SETUP_MAKER)">
+    <div id="accordion">
+        <div class="card">
+            <div class="card-header" id="headingOne">
+                <button class="btn btn-block" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true"
+                    aria-controls="collapseOne">
+                    <h4 class="mb-0">
+                        Add Agreements
+                    </h4>
+                </button>
+            </div>
+
+            <div id="collapseOne" class="collapse show" aria-labelledby="headingOne" data-parent="#accordion">
+                <div class="card-body">
+                    <!-- <div class="form-group">
+                        <label for="file">Choose File</label>
+                        <input type="file" class="form-control-file" id="file" name="file" (change)="onFileSelected($event)">
+                    </div> -->
+
+                    <ng-container *ngIf="!isSaveGeneralNotic || !isSaveInstructionFile">
+                        <div class="row ">
+                            <div class="col-md-6 form-row my-1 d-flex align-items-center" *ngIf="!isSaveGeneralNotic">
+                                <label for="file" class="px-2">General Notic:</label>
+                                <div class="col-auto">
+                                    <input #generalNotic class="form-control" type="file" [accept]="imageType"
+                                        placeholder="File Upload" multiple="false"
+                                        (change)="fileInput($event.target.files, generalNotic, 'GENERAL_NOTIC_FILE')">
+                                </div>
+                            </div>
+                            <div class="col-md-6 form-row my-1 d-flex align-items-center"
+                                *ngIf="!isSaveInstructionFile">
+                                <label for="file" class="px-2">Instructions From:</label>
+                                <div class="col-auto">
+                                    <input #instruction class="form-control" type="file" [accept]="imageType"
+                                        placeholder="File Upload" multiple="false"
+                                        (change)="fileInput($event.target.files, instruction, 'INSTRUCTION_FILE')">
+
+                                    <!-- (change)="fileInput($event.target.files)" -->
+                                </div>
+                            </div>
+
+                        </div>
+
+
+                        <div class="pt-3 d-flex justify-content-end">
+                            <button type="submit" class="btn btn-primary" (click)="uploadFile($event)">Upload</button>
+                        </div>
+                    </ng-container>
+
+                    <ng-container *ngIf="isSaveGeneralNotic && isSaveInstructionFile">
+                        <div class="h5 text-center">
+                            All File are uploaded. For change please delete first.
+                        </div>
+                    </ng-container>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- <div style="margin-top: 10px; width: 100%;">
+    <div *ngIf="permissionStoreService.hasPermission(appPermission.AGREEMENT_SETUP_VIEWER)">
+        <angular-slickgrid id="agreementtureGrid" #agreementGridList gridId="agreementGrid" style="width: 100%;"
+            [columnDefinitions]="columnDefinitions" [gridOptions]="gridOptions" [gridHeight]="height"
+            [dataset]="agreementLis" (onAngularGridCreated)="angularGridReady($event)">
+        </angular-slickgrid>
+    </div>
+</div>
+
+<div id="temp" style="width: 100%;"></div> -->
+
+<div *ngIf="permissionStoreService.hasPermission(appPermission.AGREEMENT_SETUP_VIEWER) && agreementLis?.length" class="shadow">
+    <app-common-file-view-grid [dataSet]=agreementLis (valueSelected)="handleValueChanged($event)" [agreement]="true"></app-common-file-view-grid>
+</div>

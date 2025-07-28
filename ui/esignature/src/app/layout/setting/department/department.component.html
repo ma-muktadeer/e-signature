@@ -1,0 +1,136 @@
+
+<div>
+    <div class="row col-md-12">
+  
+      <div class="left-panel row col-md-4">
+        <div class="col-md-12">
+            <button 
+             style="width: 100%;" (click)="onAddDepartment()" class="btn btn-primary">Add Department </button>
+        </div>
+        <!-- <div style="margin-top: 2px;" class="col-md-12">
+            <div class="col-md-12 row mb-2">
+                <input class="col-md-12" style="border-radius: 20px; border: 1px solid #b9c1c0;" placeholder="Search"
+                    type="text" (keyup)="onGroupSearch($event)" />
+            </div>
+        </div> -->
+        <div style="margin-top: 10px;" class="ul-scrollable">
+            <div></div>
+            <div class="col-sm-12" *ngFor="let department of departmentList">
+                <div class="row">
+                    <div class="col-sm-12">
+                        <a (click)="onClickGroupItem($event, department)" style="padding: 2px; font-size: 12px;"
+                            class="list-group-item hover-color btn mr-1 text-left">
+                            {{department.value1}}
+                            
+                            <button 
+                            *ngIf = "permissioinStoreService.hasPermission(this.permissioinStoreService.appPermission.SAVE_DEPARTMENT)" 
+                             title="edit" (click)="openEdit($event, department)"  class="btn float-right"
+                              style="padding: 2px; font-size: 12px;">
+                              <i class="fa fa-edit"></i>
+                            </button>
+                            <button *ngIf = "department.value5 != 'APPROVED' && permissioinStoreService.hasPermission(this.permissioinStoreService.appPermission.APPROVE_DEPARTMENT)"      
+                                title="Approve" (click)="onApprove($event, department)" class="btn float-right"
+                                style="padding: 2px; font-size: 12px;">
+                                <i class="fa fa-check"></i>
+                            </button>
+                            
+                        </a>
+                    </div>
+                </div>
+  
+  
+            </div>
+        </div>
+    </div>
+  
+  
+      <!-- <div *ngIf="clickedItem" class="right-panel row col-sm-8 mt-3">
+        <h2 style="background-color: rgb(161, 212, 212);" class="text-center">{{clickedItem ?
+          clickedItem.name : ''}}
+        </h2>
+
+      
+        <div *ngIf="showGrid" class="container">
+          <angular-slickgrid #groupGrid gridId="groupGrid" 
+              [columnDefinitions]="columnDefinitions" 
+              [gridOptions]="gridOptions"
+              [dataset]="dataset" 
+              (onAngularGridCreated)="angularGridReady($event)"
+              >
+          </angular-slickgrid>
+        </div>
+      </div> -->
+    </div>
+  
+  </div>
+  
+  <div class="modal" tabindex="-1" role="dialog" [ngStyle]="{'display':displayStyle}">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+  
+        <div class="card">
+          <div class="card-body">
+            <h2 style="text-align: center;">Department Name</h2>
+            <div class="row my-4">
+              <div class="col">
+  
+                <form [formGroup]="departmentForm">
+  
+                  <div class="row">
+  
+                    <div class="col-md-12">
+                      <div class="form-group d-flex flex-column flex-fill ">
+                        <label for="distributorCode">
+                          <span>Department Name<span style="color: red;">*</span></span>
+                        </label>
+  
+                        <input type="text" formControlName="name" class="form-control" name="name">
+                        <div *ngIf="departmentForm.controls.name?.touched && departmentForm.controls.name.errors?.required"
+                          class="text text-danger mt-1">
+                          Name Is Required
+                        </div>
+                      </div>
+  
+                    </div>
+                    <div class="col-md-12">
+                      <div class="form-group d-flex flex-column flex-fill ">
+                        <label for="distributorCode">
+                          <span>Short Department Name</span>
+                        </label>
+  
+                        <input type="text" formControlName="shortName" class="form-control" name="shortName">
+                        <!-- <div *ngIf="departmentForm.controls.shortName?.touched && departmentForm.controls.shortName.errors?.required"
+                          class="text text-danger mt-1">
+                          Name Is Required
+                        </div> -->
+                      </div>
+  
+                    </div>
+                  </div>
+  
+                  <div *ngIf="showError" class="col-md-12">
+                    <p style="color: red;">Distributor not found</p>
+                  </div>
+  
+                  <div style="text-align: center;">
+                  <button  [disabled]="!departmentForm.valid " (click)="onSave()" class="btn btn-primary"
+                    style="margin-top: 5px;">{{buttonSaveOrUpdate}}
+                    <span class="spinner-border spinner-border-sm" *ngIf="spinnerSaveBtn" [mode]="'indeterminate'"></span>
+                  </button>
+                  &nbsp;
+                  <button (click)="closePopup()" class="btn btn-danger">Cancel</button>
+                  </div>
+  
+                </form>
+  
+  
+              </div>
+            </div>
+          </div>
+        </div>
+  
+      </div>
+    </div>
+  </div>
+  
+

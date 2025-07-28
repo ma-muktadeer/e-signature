@@ -1,0 +1,23 @@
+<button *ngIf="checkParmission([appPermission.REQUEST_MAKER])" type="button" class="btn btn-success mb-3"
+    data-toggle="modal" data-target="#staticBackdrop" (click)="openPop('add')">
+    <i class="fa fa-plus" aria-hidden="true"></i>
+    <span>
+        | Add Request
+    </span>
+</button>
+<div *ngIf="showGrid" class="container1 shadow">
+    <angular-slickgrid #reportGrid id="requestGrid" gridId="reporttGrid" [columnDefinitions]="columnDefinitions"
+        [gridHeight]="height" (onPaginationChanged)="onPaginationChanged($event, $event.detail)"
+        [gridOptions]="gridOptions" [dataset]="allList" (onAngularGridCreated)="angularGridReady($event)">
+    </angular-slickgrid>
+</div>
+<div id="gw" style="width: 100%;"></div>
+
+
+<ngx-loading [show]="loading" [config]="{
+    primaryColour: '#dd0031',
+    secondaryColour: '#1976d2',
+    tertiaryColour: '#dd0031',
+    backdropBorderRadius: '3px'
+  }">
+</ngx-loading>

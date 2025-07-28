@@ -1,0 +1,255 @@
+User Make
+	internal
+		mail to user email
+		mail to who have user authorization permission AND role USER_ADMIN.
+	external
+		mail to user email
+		mail to who have user authorization permission AND role USER_ADMIN.
+
+User Authorization/CHECK
+	internal
+		mail to user email
+		mail to role USER_ADMIN.
+	external
+		mail to user email
+		mail to role USER_ADMIN.
+		mail to external master user who initialize the user creation
+
+User Inactivation make
+	internal
+		mail to user email
+		mail to who have user authorization permission AND role USER_ADMIN.
+	external
+		mail to user email
+		mail to who have user authorization permission AND role USER_ADMIN.
+
+User Inactivation authorize
+	internal
+		mail to user email
+		mail to role USER_ADMIN.
+	external
+		mail to user email
+		mail to role USER_ADMIN.
+		mail to external master user who initialize the user creation
+
+
+User activation authorize
+	internal
+		mail to user email
+		mail to role USER_ADMIN.
+	external
+		mail to user email
+		mail to role USER_ADMIN.
+		mail to external master user who initialize the user creation
+
+
+PA Make
+	mail to PA Holder
+	Mail to HR_ADMIN
+	mail to who can authorize the PA creation
+
+
+PA Authorize/check
+	mail to PA Holder
+	Mail to HR_ADMIN
+	mail to SIGNATURE_ADMIN
+
+
+
+PA Cancel MAKE
+	mail to PA Holder
+	Mail to HR_ADMIN
+	mail to who can authorize the PA creation
+
+PA Cancel CHECK
+	mail to PA Holder
+	Mail to HR_ADMIN
+
+Signature Make
+	mail to signatory/ PA Holder
+	Mail to SIGNATURE_ADMIN
+	mail to who has authorize permission
+
+Signature Authorize/CHECK
+	mail to signatory
+	mail to SIGNATURE_ADMIN
+
+
+Signature Cancel MAKE
+	mail to signatory
+	mail to SIGNATURE_ADMIN
+	mail to who can authorize permission
+
+
+Signature Cancel CHECK/AUTHORIZE
+	mail to signatory
+	mail to SIGNATURE_ADMIN
+	send email to all user in the system
+
+
+
+Signature Cancel to active MAKE
+	mail to signatory
+	mail to SIGNATURE_ADMIN
+	mail to who can authorize permission
+
+
+Signature Cancel to active CHECK/AUTHORIZE
+	mail to signatory
+	mail to SIGNATURE_ADMIN
+	send email to all user in the system
+
+
+Signature Inactive MAKE
+	mail to signatory
+	mail to SIGNATURE_ADMIN
+	mail to who can authorize permission
+
+
+Signature Inactive CHECK/AUTHORIZE
+	mail to signatory
+	mail to SIGNATURE_ADMIN
+
+
+Request
+	Requst For Booklet MAKE
+		mail to request checker
+		mail to SIGNATURE_ADMIN
+
+	Requst For Booklet CHECK [approve]
+		mail to request maker maker
+		mail to SIGNATURE_ADMIN
+
+	Requst For Booklet REJECT [Decline]
+		mail to request maker maker
+		mail to SIGNATURE_ADMIN
+
+
+	Requst For Verify Signature MAKE
+		mail to request checker
+		mail to SIGNATURE_ADMIN
+
+	Requst For Verify Signature CHECK [approve]
+		mail to request maker maker
+		mail to SIGNATURE_ADMIN
+
+	Requst For Verify Signature CHECK [Decline]
+		mail to request maker maker
+		mail to SIGNATURE_ADMIN
+
+
+	Requst For Generate Link MAKE
+		mail to request checker
+		mail to SIGNATURE_ADMIN
+
+	Requst For Generate Link CHECK [approve]
+		mail to request maker maker
+		mail to SIGNATURE_ADMIN
+
+	Requst For Generate Link CHECK [Decline]
+		mail to request maker maker
+		mail to SIGNATURE_ADMIN
+
+
+	Requst For Others MAKE
+		mail to request checker
+		mail to APPLICATION_ADMIN
+
+	Requst For Others CHECK [approve]
+		mail to request maker maker
+		mail to APPLICATION_ADMIN
+
+	Requst For Others CHECK [Decline]
+		mail to request maker maker
+		mail to APPLICATION_ADMIN
+
+
+
+	Requst For User Creation MAKE
+		mail to request checker
+		mail to USER_ADMIN
+
+
+	Requst For User Creation CHECK [approve]
+		mail to request maker maker
+		mail to USER_ADMIN
+		mail to who has permission to make user
+
+	Requst For User Creation CHECK [Decline]
+		mail to request maker maker
+		mail to USER_ADMIN
+
+
+	Requst For User Active MAKE
+		mail to request checker
+		mail to USER_ADMIN
+
+
+	Requst For User Creation CHECK [approve]
+		mail to request maker maker
+		mail to USER_ADMIN
+		mail to who has permission to make user
+
+	Requst For User Creation CHECK [Decline]
+		mail to request maker maker
+		mail to USER_ADMIN
+
+
+
+USER
+	INTERNAL_USER_MAKE
+	INTERNAL_USER_CHECK
+	INTERNAL_INACTIVATION_MAKE
+	INTERNAL_INACTIVATION_CHECK
+	INTERNAL_ACTIVATION_MAKE
+	INTERNAL_ACTIVATION_CHECK
+
+	EXTERNAL_USER_MAKE
+	EXTERNAL_USER_CHECK
+	EXTERNAL_INACTIVATION_MAKE
+	EXTERNAL_INACTIVATION_CHECK
+	INTERNAL_ACTIVATION_MAKE
+	EXTERNAL_ACTIVATION_CHECK
+
+
+SIGNATURE
+	SIGNATURE_MAKE
+	SIGNATURE_CHECK
+	CANCEL_MAKE
+	CANCEL_CHECK
+	CANCEL_TO_ACTIVE_MAKE
+	CANCEL_TO_ACTIVE_CHECK
+	INACTIVATION_MAKE
+	INACTIVATION_CHECK
+
+PA
+	PA_MAKE
+	PA_CHECK
+	CANCEL_MAKE
+	CANCEL_CHECK
+REQUEST
+	BOOKLET_MAKE
+	BOOKLET_CHECK
+	BOOKLET_REJECT
+	VERIFY_SIGNATURE_MAKE
+	VERIFY_SIGNATURE_CHECK
+	VERIFY_SIGNATURE_REJECT
+	GENERATE_LINK_MAKE
+	GENERATE_LINK_CHECK
+	GENERATE_LINK_REJECT
+	OTHERS_MAKE
+	OTHERS_CHECK
+	OTHERS_CHECK_REJECT
+	USER_CREATION_MAKE
+	USER_CREATION_CHECK
+	USER_CREATION_REJECT
+	USER_ACTIVATION_MAKE
+	USER_ACTIVATION_CHECK
+
+
+
+
+
+
+
+

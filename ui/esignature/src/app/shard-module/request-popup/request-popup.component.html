@@ -1,0 +1,467 @@
+<div class="modal-content border-0">
+    <div class="modal-header">
+        <h4 class="modal-title">Add Request</h4>
+        <button type="button" class="close" data-dismiss="modal" [ngbTooltip]="tooltip" aria-label="Close"
+            (click)="closeModale('close by corse')">
+            <div class="sclose">
+                <span class="st" aria-hidden="true">&times;</span>
+            </div>
+        </button>
+    </div>
+    <div class="modal-body p-1 m-3">
+        <div class="m-1">
+            <form [formGroup]="requestForm" autocomplete="off">
+                <div class="form-row mb-2">
+                    <div class="col-md-6 form-row my-1">
+                        <label for="type" class="col-md-4">Type<span style="color: red;"><sup>*</sup></span>
+                            :</label>
+                        <!-- disableType() -->
+                        <div class="col-md-8">
+                            <select id="type" class="form-control" [disabled]="disableType()"
+                                (change)="changeType($event)" [(ngModel)]="type" [ngModelOptions]="{standalone: true}"
+                                [ngClass]="{'is-invalid': click && requestForm.get('type').errors, 'dis': disableType()}">
+                                <option selected value="null" disabled> Select All</option>
+                                <option *ngFor="let item of typeList" [value]="item.value">{{item.type}}
+                                </option>
+                            </select>
+
+                            <div *ngIf="requestForm.get('type').hasError('required')"
+                                class="invalid-feedback col-md-12 ">
+                                Type is required.
+                            </div>
+
+                        </div>
+                    </div>
+                    <div class="col-md-6 form-row my-1" *ngIf="requestForm.get('type').value == 'REQUEST_CREATION'">
+                        <label for="type" class="col-md-4">Request For<span style="color: red;"><sup>*</sup></span>
+                            :</label>
+                        <div class="col-md-8">
+                            <select id="type" class="form-control" [ngModelOptions]="{standalone: true}"
+                                [(ngModel)]="userRequestType" [disabled]="disableType()">
+
+                                <option selected value="null" disabled> Select All</option>
+                                <option *ngFor="let item of reqTypeList" [ngValue]="item.value">{{item.type}}
+                                </option>
+                            </select>
+
+                            <!-- <div *ngIf="requestForm.get('type').hasError('required')"
+                                class="invalid-feedback col-md-12 ">
+                                Type is required.
+                            </div> -->
+
+                        </div>
+                    </div>
+
+                    <ng-container *ngIf="requestForm.get('type').value == 'VERIFY_SIGNATURE'">
+
+                        <div class="col-md-6 form-row my-1">
+                            <label for="pa" class="col-md-4">PA Number:</label>
+                            <div class="col-md-8">
+                                <input class="form-control" id="pa" [appNoSpecialCharacters]="'numericNumber'"
+                                    type="text" placeholder="PA Number" formControlName="pa" maxlength="20" [readOnly]="ref==='view'"
+                                    [ngClass]="{'is-invalid': click && !requestForm.get('signatoryId').value}"
+                                    [ngModelOptions]="{standalone: true}" [(ngModel)]="pa" [ngbTypeahead]="searchByPa"
+                                    (selectItem)="selectedPa($event)"
+                                    [ngxInputLoader]="searchBy == 'pa' && showProgress"
+                                    [ngxInputLoaderConfig]="loaderConfig">
+
+                                <div *ngIf="!requestForm.get('signatoryId').value" class="invalid-feedback col-md-12 ">
+                                    Please enter PA Number Or Name.
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6 form-row my-1">
+                            <label for="name" class="col-md-4">Name:</label>
+                            <div class="col-md-8">
+                                <input class="form-control" id="name" [appNoSpecialCharacters]="'name'" type="text"
+                                    placeholder="Name" [readOnly]="ref==='view'"maxlength="50"
+                                    [ngClass]="{'is-invalid': click && !requestForm.get('signatoryId').value}"
+                                    [ngModelOptions]="{standalone: true}" [(ngModel)]="name"
+                                    [ngbTypeahead]="searchByName" (selectItem)="selectedName($event)"
+                                    [ngxInputLoader]="searchBy == 'name' && showProgress"
+                                    [ngxInputLoaderConfig]="loaderConfig">
+                                <div *ngIf="!requestForm.get('signatoryId').value" class="invalid-feedback col-md-12 ">
+                                    Please enter PA Number Or Name.
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6 form-row my-1" [hidden]="ref==='view'">
+                            <label for="file" class="col-md-4">Upload File:</label>
+                            <div class="col-md-8">
+                                <input class="form-control" type="file" placeholder="File Upload"
+                                    (change)="fileInput($event.target.files)">
+                            </div>
+                        </div>
+                    </ng-container>
+
+                    <ng-container
+                        *ngIf="requestForm.get('type').value != null
+                         && (requestForm.get('type').value == 'REQUEST_FOR_BOOKLET' || requestForm.get('type').value == 'OTHERS')">
+                        <div class="col-md-12 my-1">
+                            <div class="row">
+                                <label for="description" class="col-md-2">Description:</label>
+                                <div class="col-md-10" style="padding-left: 10px;">
+                                    <textarea formControlName="description" maxlength="200" id="description" cols="30" rows="3"
+                                        style="width: 100%;" class="form-control" [readOnly]="ref==='view'" [ngClass]="{'is-invalid': click && requestForm.get('type').value === 'OTHERS' 
+                                        && requestForm.get('description').value == null}">
+                                    </textarea>
+
+                                    <div *ngIf="requestForm.get('description').value == null"
+                                        class="invalid-feedback col-md-12 ">
+                                        Description is required.
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                    </ng-container>
+                    <ng-container
+                        *ngIf="requestForm.get('type').value != null && requestForm.get('type').value == 'GENERATE_LINK'">
+                        <div class="col-md-6 form-row my-1">
+                            <label for="type" class="col-md-4">Link Type<span style="color: red;"><sup>*</sup></span>
+                                :</label>
+                            <div class="col-md-8">
+                                <select id="type" class="form-control" [ngModelOptions]="{standalone: true}"
+                                    [(ngModel)]="linkType" [disabled]="disableType()"
+                                    [ngClass]="{'is-invalid': click && !linkType, 'dis': disableType()}">
+                                    <option selected value="null" disabled> Select All</option>
+                                    <option *ngFor="let item of linkTypeList" [ngValue]="item.value">{{item.type}}
+                                    </option>
+                                </select>
+
+                                <div *ngIf="click && !linkType" class="invalid-feedback col-md-12 ">
+                                    Link Type is required.
+                                </div>
+
+                            </div>
+                        </div>
+                        <div class="col-md-6 form-row my-1">
+                            <label for="type" class="col-md-4">Valid From<span style="color: red;"><sup>*</sup></span>
+                                :</label>
+
+                            <div class="col-md-8">
+                                <div class="dp-hidden position-absolute">
+                                    <div class="input-group">
+                                        <input name="datepicker" class="form-control" [readOnly]="ref==='view'"
+                                            [disabled]="ref === 'view'" ngbDatepicker #datepicker="ngbDatepicker"
+                                            [autoClose]="'outside'" (dateSelect)="onDateSelection($event)"
+                                            [displayMonths]="2" [dayTemplate]="t" outsideDays="hidden"
+                                            [startDate]="fromDate!" tabindex="-1" />
+                                        <ng-template #t let-date let-focused="focused">
+                                            <span class="custom-day" [class.focused]="focused"
+                                                [class.range]="isRange(date)"
+                                                [class.faded]="isHovered(date) || isInside(date)"
+                                                (mouseenter)="hoveredDate = date" (mouseleave)="hoveredDate = null">
+                                                {{ date.day }}
+                                            </span>
+                                        </ng-template>
+
+                                    </div>
+                                </div>
+                                <div class="input-group">
+                                    <input #dpFromDate class="form-control" [readOnly]="ref==='view'"
+                                        [disabled]="ref === 'view'" placeholder="yyyy-mm-dd" name="dpFromDate"
+                                        [value]="formatter.format(fromDate)"
+                                        (input)="fromDate = validateInput(fromDate, dpFromDate.value)"
+                                        [ngClass]="{'is-invalid':!startDate && click}" />
+                                    <button class="btn btn-outline-secondary fa fa-calendar"
+                                        (click)="datepicker.toggle()" type="button"></button>
+                                    <div class="invalid-feedback" *ngIf="click">
+                                        From Date is required.
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6 form-row my-1">
+
+                            <label for="type" class="col-md-4">To<span style="color: red;"><sup>*</sup></span>
+                                :</label>
+                            <div class="col-md-8">
+                                <div class="input-group">
+                                    <input #dpToDate class="form-control" [readOnly]="ref==='view'"
+                                        placeholder="yyyy-mm-dd" name="dpToDate" [value]="formatter.format(toDate)"
+                                        (input)="toDate = validateInput(toDate, dpToDate.value)"
+                                        [ngClass]="{'is-invalid':!endDate && click}" />
+                                    <button class="btn btn-outline-secondary fa fa-calendar"
+                                        (click)="datepicker.toggle()" type="button"></button>
+                                    <div class="invalid-feedback" *ngIf="click">
+                                        To Date is required.
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- </div> -->
+
+
+                        </div>
+
+                    </ng-container>
+                </div>
+
+            </form>
+            <div *ngIf=" isRequestFormOpen()">
+
+                <form [formGroup]="userCDForm" autocomplete="off">
+                    <div class="form-row mb-2">
+
+                        <div class="col-md-6 form-row my-1">
+                            <label for="pa" class="col-md-4">Emp. Name:</label>
+                            <div class="col-md-8">
+                                <input class="form-control" id="pa" [appNoSpecialCharacters]="'name'" type="text"
+                                    placeholder="Employee Name" maxlength="50" formControlName="name" [readOnly]="ref==='view'"
+                                    [ngClass]="{'is-invalid': click && !userCDForm.get('name').value}">
+
+                                <div *ngIf="!userCDForm.get('name').value" class="invalid-feedback col-md-12 ">
+                                    Please enter Employee Name.
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6 form-row my-1">
+                            <label for="email" class="col-md-4">Email:</label>
+                            <div class="col-md-8">
+                                <input class="form-control" maxlength="30" id="email" type="text" placeholder="Email"
+                                    formControlName="email" [readOnly]="ref==='view'"
+                                    [ngClass]="{'is-invalid': click && userCDForm.controls.email.errors}">
+                                <div *ngIf="(click || userCDForm.controls.email?.touched) && userCDForm.get('email').errors"
+                                    class="invalid-feedback">
+                                    <div *ngIf="userCDForm.controls.email.errors?.required">
+                                        Email Is Required!
+                                    </div>
+                                    <div *ngIf="userCDForm.get('email').hasError('pattern')">
+                                        Email Is Invalid!
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6 form-row my-1">
+                            <label for="nid" class="col-md-4">NID:</label>
+                            <div class="col-md-8">
+                                <input class="form-control" appNoSpe [appNoSpecialCharacters]="'numericNumber'" [attr.maxlength]="nidMaxLength"
+                                    cialCharacters [readOnly]="ref==='view'" id="nid" type="text" placeholder="NID"
+                                    formControlName="nid"
+                                    [ngClass]="{'is-invalid': click && userCDForm.get('nid').errors}">
+                                <!-- <div *ngIf="!userCDForm.get('nid').value" class="invalid-feedback col-md-12 ">
+                                    Please enter NID.
+                                </div> -->
+                                <div *ngIf="(click || userCDForm.controls.nid?.touched) && userCDForm.get('nid').errors"
+                                    class="invalid-feedback">
+                                    <div *ngIf="userCDForm.controls.nid.errors?.required">
+                                        NID Is Required!
+                                    </div>
+                                    <div *ngIf="userCDForm.get('nid').hasError('pattern')">
+                                        NID Is Invalid!
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6 form-row my-1">
+                            <label for="designation" class="col-md-4">Designation:</label>
+                            <div class="col-md-8">
+                                <input class="form-control" [appNoSpecialCharacters]="'name'" [attr.maxlength]="designationUMaxLength" [readOnly]="ref==='view'"
+                                    id="designation" type="text" placeholder="Designation" formControlName="designation"
+                                    [ngClass]="{'is-invalid': click && !userCDForm.get('designation').value}">
+                                <!-- <div *ngIf="!userCDForm.get('designation').value" class="invalid-feedback col-md-12 ">
+                                    Please enter Designation.
+                                </div> -->
+                            </div>
+                        </div>
+                        <div class="col-md-6 form-row my-1">
+                            <label for="division" class="col-md-4">Division:</label>
+                            <div class="col-md-8">
+                                <input class="form-control" [appNoSpecialCharacters]="'text'" [readOnly]="ref==='view'"
+                                    id="division" type="text" placeholder="Division" formControlName="division" maxlength="30"
+                                    [ngClass]="{'is-invalid': click && !userCDForm.get('division').value}">
+                                <!-- <div *ngIf="!userCDForm.get('division').value" class="invalid-feedback col-md-12 ">
+                                    Please enter division.
+                                </div> -->
+                            </div>
+                        </div>
+                        <div class="col-md-6 form-row my-1">
+                            <label for="mobile" class="col-md-4">Mobile:</label>
+                            <div class="col-md-8">
+                                <input class="form-control" [appNoSpecialCharacters]="'numericNumber'" [attr.maxlength]="phoneNumberMaxLength"
+                                    [readOnly]="ref==='view'" id="phoneNumber" type="text" placeholder="phoneNumber"
+                                    formControlName="phoneNumber"
+                                    [ngClass]="{'is-invalid': click && userCDForm.get('phoneNumber').errors}">
+                                <div *ngIf="(click || userCDForm.controls.phoneNumber?.touched) && userCDForm.get('phoneNumber').errors"
+                                    class="invalid-feedback">
+                                    <div *ngIf="userCDForm.controls.phoneNumber.errors?.required">
+                                        phoneNumber Is Required!
+                                    </div>
+                                    <div *ngIf="userCDForm.get('phoneNumber').hasError('pattern')">
+                                        Mobile Is Invalid!
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6 form-row my-1">
+                            <label for="dob" class="col-md-4">DOB:</label>
+                            <div class="col-md-8">
+                                <input class="form-control" [readOnly]="ref==='view'" id="dob" type="date"
+                                    placeholder="Date of Birth" formControlName="dob"
+                                    [ngClass]="{'is-invalid': click && !userCDForm.get('dob').value}">
+                            </div>
+                        </div>
+                        <div class="col-md-6 form-row my-1">
+                            <label for="dob" class="col-md-4">Institution:</label>
+                            <div class="col-md-8">
+                                <input class="form-control " list="institutionList"
+                                    id="datalistInput" readonly
+                                    [ngClass]="{ 'is-invalid': click && userCDForm.controls.institutionId?.errors}"
+                                    [ngModelOptions]="{standalone: true}" [(ngModel)]="selectedInstitutionName"
+                                    (change)="getInstitutionId()" />
+                                <div *ngIf="userCDForm.controls.institutionId?.errors" class="invalid-feedback ">
+                                    Institution can not be empty.
+                                </div>
+
+                                <datalist id="institutionList">
+                                    <option *ngFor="let institution of institutionList">
+                                        {{ institution.institutionName }}</option>
+                                </datalist>
+                            </div>
+                        </div>
+
+                        <!-- </div> -->
+                    </div>
+
+                </form>
+
+            </div>
+
+            <div *ngIf=" isCreationLnkOpn()">
+
+                <form [formGroup]="lnkCreationFrm" autocomplete="off">
+                    <div class="form-row mb-2">
+
+                        <div class="col-md-6 form-row my-1">
+                            <label for="pa" class="col-md-4">Signatory:</label>
+                            <div class="col-md-8">
+                                <input class="form-control" [appNoSpecialCharacters]="'text'" id="pa" type="text"
+                                    placeholder="PA or Name" maxlength="30" [readOnly]="ref==='view' || isFromView"
+                                    [ngClass]="{'is-invalid': click && !requestForm.get('signatoryId').value}"
+                                    [ngModelOptions]="{standalone: true}" [(ngModel)]="paAndName"
+                                    [ngbTypeahead]="searchByPa" (selectItem)="selectedPa($event)"
+                                    [ngxInputLoader]="searchBy == 'pa' && showProgress"
+                                    [ngxInputLoaderConfig]="loaderConfig">
+
+                                <div *ngIf="!requestForm.get('signatoryId').value" class="invalid-feedback col-md-12 ">
+                                    Please enter PA Number Or Name.
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6 form-row my-1">
+                            <label for="email1" class="col-md-4">Viewer Email:</label>
+                            <div class="col-md-8">
+                                <input class="form-control" maxlength="45" [readOnly]="ref==='view'" id="email1" type="text"
+                                    placeholder="Email" formControlName="lnkSendingEmail"
+                                    [ngClass]="{'is-invalid': click && lnkCreationFrm.controls.lnkSendingEmail.errors}">
+                                <div *ngIf="(click || lnkCreationFrm.controls.lnkSendingEmail?.touched) && lnkCreationFrm.get('lnkSendingEmail').errors"
+                                    class="invalid-feedback">
+                                    <div *ngIf="lnkCreationFrm.controls.lnkSendingEmail.errors?.required">
+                                        lnkSendingEmail Is Required!
+                                    </div>
+                                    <div *ngIf="lnkCreationFrm.get('lnkSendingEmail').hasError('pattern')">
+                                        Email Is Invalid!
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+
+                    </div>
+
+                </form>
+
+            </div>
+
+            <div *ngIf="selectedInfo && selectedInfo?.pa" class="col-12">
+                <div class="row">
+                    <div class="col-md-12">
+
+                        <div *ngIf="selectedInfo">
+                            <table class="table-hover table table-striped table-bordered">
+                                <thead class="header">
+                                    <tr>
+                                        <th colspan="4" style="text-align: center;">
+                                            <h4> User Information</h4>
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr scope="row">
+                                        <td>
+                                            Name:
+                                        </td>
+                                        <td>
+                                            {{selectedInfo?.name}}
+                                        </td>
+                                        <!-- </tr>
+                                    <tr scope="row"> -->
+                                        <td>
+                                            PA:
+                                        </td>
+                                        <td>
+                                            {{selectedInfo?.pa}}
+                                        </td>
+                                    </tr>
+                                    <tr scope="row">
+                                        <td>
+                                            Designation:
+                                        </td>
+                                        <td>
+                                            {{selectedInfo?.designation}}
+                                        </td>
+                                        <!-- </tr>
+                                    <tr scope="row"> -->
+                                        <td class="text-wrap">
+                                            Email:
+                                        </td>
+                                        <td>
+                                            {{selectedInfo?.email}}
+                                        </td>
+                                    </tr>
+                                    <!-- <tr scope="row">
+                                        <td>
+                                            Effective Date:
+                                        </td>
+                                        <td>
+                                            {{selectedInfo?.effictiveDate}}
+                                        </td>
+                                    </tr> -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <ng-container *ngIf="imageList.length > 0">
+                <div class="d-flex justify-content-center row">
+                    <div *ngFor="let image of imageList" class="col-md-4">
+                        <img [src]="image" alt="image" class="image w-100">
+                    </div>
+                </div>
+            </ng-container>
+
+        </div>
+    </div>
+
+    <div class="modal-footer">
+
+        <ng-container *ngIf="(ref != 'view' && isRequestCreatePermission()) && type">
+            <button type="button" class="btn btn-primary" (click)="onSave()">{{btnName}}</button>
+        </ng-container>
+        <button type="button" class="btn btn-danger" (click)="closeModal('close by corse')">Close</button>
+        <!-- <ng-container *ngIf="ref == 'view' && checkPermission('NEW', appPermission.REQUEST_CHECKER)">
+            <button type="button" class="btn btn-primary" (click)="approveRequest()">Approve</button>
+        </ng-container>
+        <ng-container *ngIf="ref == 'view' && checkPermission('PEND_APPROVED', this.appPermission.REQUEST_APPROVER)">
+            <button type="button" class="btn btn-primary" (click)="approveRequest()">Complete</button>
+        </ng-container> -->
+    </div>
+
+</div>

@@ -1,0 +1,117 @@
+<div class="row col-md-12">
+    <div class="left-panel row col-md-4">
+        <div *ngIf="hasRole(userService.userAdminMakerRoles)" class="col-md-12">
+            <button style="width: 100%;" (click)="onAddRoleGroup()" class="btn btn-primary">Add Role Group</button>
+        </div>
+        <div style="margin-top: 10px;" class="ul-scrollable">
+            <div></div>
+            <div class="col-sm-12" *ngFor="let group of roleGroupList">
+                <div class="row">
+                    <div class="col-sm-10">
+                        <a (click)="onClickGroupItem($event, group)"
+                        style="padding: 2px; font-size: 12px;"
+                            class="list-group-item hover-color btn mr-1 text-left">
+                            {{group.roleGroupName}}
+                        </a>
+                    </div>
+                    <button *ngIf="hasRole(userAdminChekerRoles) || hasRole(userAdminMakerRoles)" title="edit"
+                        (click)="onEdit(group)" class=" btn btn-info col-sm-1.5 ">
+                        <i class="fa fa-edit"></i>
+                    </button> &nbsp;
+                    <button *ngIf="allowApprove(group)" title="approve" (click)="onApprove(group)"
+                        class=" btn btn-info col-sm-1.5">
+                        <i class="fa fa-check"></i>
+                    </button>
+                </div>
+
+
+            </div>
+        </div>
+    </div>
+
+    <div *ngIf="clickedItem" class="right-panel row col-md-8">
+        <h2 style="background-color: rgb(161, 212, 212);" class="text-center">{{clickedItem ?
+            clickedItem.roleGroupName : ''}}
+        </h2>
+        <div style="text-align: center;">
+            <div cdkDropListGroup>
+                <div class="example-container">
+                    <h2 class="mb-3"><u>Available Role</u></h2>
+
+                    <div class="" cdkDropList [cdkDropListData]="unassignRoleList" class="example-list"
+                        (cdkDropListDropped)="drop($event)">
+                        <div class="example-box" *ngFor="let role of unassignRoleList" cdkDrag>{{role.roleName}}</div>
+                    </div>
+                </div>
+
+                <div class="example-container ">
+                    <h2 class="mb-3"><u>Assign Role</u></h2>
+
+                    <div cdkDropList [cdkDropListData]="assignRoleList" class="example-list"
+                        (cdkDropListDropped)="drop($event)">
+                        <div class="example-box " *ngFor="let role of assignRoleList" cdkDrag>{{role.roleName}}</div>
+                    </div>
+                    <div style="text-align: center;">
+                        <button *ngIf="showRoleGroupAssignSave" (click)="onSaveRoleManage()" class="btn btn-primary"
+                            style="margin-top: 5px;">Save</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- <div style="text-align: center;">
+            <button (click)="onSaveRoleManage()" class="btn btn-primary" style="margin-top: 5px;">Save</button>
+            &nbsp;
+
+        </div> -->
+
+    </div>
+    <div class="modal" tabindex="-1" role="dialog" [ngStyle]="{'display':displayStyle}">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+
+                <div class="card">
+                    <div class="card-body">
+                        <div class="row my-4">
+                            <div class="col">
+
+                                <form [formGroup]="roleGroupForm">
+
+                                    <div class="row">
+
+                                        <div class="col-md-12">
+                                            <div class="form-group d-flex flex-column flex-fill ">
+                                                <label for="distributorCode">
+                                                    <span>Role Group Name<span style="color: red;">*</span></span>
+                                                </label>
+
+                                                <input type="text" formControlName="roleGroupName"
+                                                    [value]="roleGroupName" class="form-control" name="roleGroupName">
+                                                <div *ngIf="roleGroupForm.controls.roleGroupName?.touched && roleGroupForm.controls.roleGroupName.errors?.required"
+                                                    class="text text-danger mt-1">
+                                                    Name Is Required
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                    <div style="text-align: center;">
+                                        <button [disabled]="!roleGroupForm.valid" (click)="onSave()"
+                                            class="btn btn-primary"
+                                            style="margin-top: 5px;">{{buttonSaveOrUpdate}}</button>
+                                        &nbsp;
+                                        <button (click)="closePopup()" class="btn btn-danger">Cancel</button>
+                                    </div>
+
+                                </form>
+
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
