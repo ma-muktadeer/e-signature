@@ -27,7 +27,7 @@ This system allows storage, search, and verification of signatures with multi-so
 ### 5. Tech Stack
 - **Frontend**: Angular (SPA, responsive UI)
 - **Backend**: Spring Boot (REST API)
-- **Database**: Relational DB (PostgreSQL/MySQL)
+- **Database**: ORACLE 19c
 - **Authentication**: LDAP + JWT
 - **Deployment**: Docker / On-premise server support
 
@@ -50,7 +50,7 @@ This system allows storage, search, and verification of signatures with multi-so
 ### Prerequisites
 - **Node.js** (v16+) & Angular CLI  
 - **Java 17+** & Maven  
-- **Database** (PostgreSQL/MySQL)  
+- **Database** ORACLE 19c  
 - **LDAP server** (optional, if using LDAP login)
 
 ---
@@ -59,7 +59,7 @@ This system allows storage, search, and verification of signatures with multi-so
 ```bash
 # Clone repository
 git clone <repo-url>
-cd backend
+cd server/esignature-server
 
 # Configure application.yml
 # - Database credentials
@@ -76,7 +76,7 @@ java -jar target/e-signature-app.jar
 ### Frontend (Angular)
 ```bash
 # Navigate to frontend
-cd frontend
+cd ui/esignature
 
 # Install dependencies
 npm install
