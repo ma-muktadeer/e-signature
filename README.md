@@ -27,6 +27,69 @@ This system allows storage, search, and verification of signatures with multi-so
 ### 5. Tech Stack
 - **Frontend**: Angular (SPA, responsive UI)
 - **Backend**: Spring Boot (REST API)
+- **Database**: Relational DB (PostgreSQL/MySQL)
+- **Authentication**: LDAP + JWT
+- **Deployment**: Docker / On-premise server support
+
+---
+
+## Architecture Diagram
+
+```mermaid
+flowchart LR
+    A[User Browser - Angular App] --> B[Spring Boot API Layer]
+    B --> C[Database]
+    B --> D[LDAP Server]
+    B --> E[Notification Service]
+```
+
+---
+
+## Workflow Diagram
+
+```mermaid
+sequenceDiagram
+    participant U as User
+    participant A as Angular UI
+    participant S as Spring Boot API
+    participant DB as Database
+    participant L as LDAP
+
+    U->>A: Login Request
+    A->>S: Send Credentials
+    alt LDAP Login
+        S->>L: Verify via LDAP
+    else DB Login
+        S->>DB: Verify from DB
+    end
+    S-->>A: Auth Token
+    U->>A: Upload/Search Signature
+    A->>S: API Request (Upload/Search)
+    S->>DB: Save/Retrieve Signature
+    S-->>A: Response with Data
+    S->>U: Trigger Notifications
+```
+
+---
+
+## Installation & Setup
+
+### Prerequisites
+- **Node.js** (v16+) & Angular CLI  
+- **Java 17+** & Maven  
+- **Database** (PostgreSQL/MySQL)  
+- **LDAP server** (optional, if using LDAP login)
+
+--- 
+
+### 4. Authentication
+- Supports both:
+  - **LDAP-based login** (corporate users).
+  - **Database-based login** (application-managed users).
+
+### 5. Tech Stack
+- **Frontend**: Angular (SPA, responsive UI)
+- **Backend**: Spring Boot (REST API)
 - **Database**: ORACLE 19c
 - **Authentication**: LDAP + JWT
 - **Deployment**: Docker / On-premise server support
@@ -58,10 +121,10 @@ This system allows storage, search, and verification of signatures with multi-so
 ### Backend (Spring Boot)
 ```bash
 # Clone repository
-git clone <repo-url>
+git clone https://github.com/ma-muktadeer/e-signature.git
 cd server/esignature-server
 
-# Configure application.yml
+# Configure application.properties
 # - Database credentials
 # - LDAP settings
 # - JWT secret keys
