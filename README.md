@@ -166,7 +166,7 @@ Open browser at: `http://localhost:4200`
 
 | **1** |
 |-------|
-| <img src="sc/login.png" height="250"> |
+| <img src="sc/login.png" height="100%"> |
 
 
 ---
