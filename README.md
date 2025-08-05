@@ -160,9 +160,12 @@ Open browser at: `http://localhost:4200`
 
 ---
 
-## Screenshots (Optional)
+## Screenshots 
 
-*(Add images of dashboard, signature management, login page, etc.)*
+### 1. Login Page
+
+- **1**: <img src="sc/login.png" height="250">
+
 
 ---
 
